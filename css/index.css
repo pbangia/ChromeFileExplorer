@@ -1,0 +1,64 @@
+
+body {
+	background: #f2f2f2;
+}
+
+nav {
+	background-color: #4285f4;
+	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.light-text {
+	color: white; font-weight: lighter;
+}
+
+.navbar-element {
+	background-color:#6da3f9; border: 0;  box-shadow: none; color: white; margin: auto;
+}
+
+.nav-btn {
+	background-color:#6da3f9; border-color:#6da3f9; color: white;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  	font-weight: lighter;
+}
+
+.search-btn {
+	background-color:#6da3f9; border-color:#6da3f9; color: white;
+}
+
+
+.nav-section {
+	display:inline-block; margin: auto; padding-top:5px;
+}
+
+a {
+	color:white;
+}
+
+a:hover {
+	color: #23467f;
+	text-decoration: none;
+
+}
+
+.btn-default:hover {
+	color: white;
+	background-color: #adccff;
+	text-decoration: none;
+	border-color: #adccff;
+}
+
+.form-control::-webkit-input-placeholder {
+color:#fff;
+}
+.form-control:-moz-placeholder {
+color:#fff;
+}
+ 
+.form-control::-moz-placeholder {
+color:#fff;
+}
+ 
+.form-control:-ms-input-placeholder {
+color:#fff;
+}
