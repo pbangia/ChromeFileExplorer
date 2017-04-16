@@ -7,3 +7,26 @@ nav {
 .light-text {
 	color: white; font-weight: lighter;
 }
+
+.search-bar {
+	background-color:#6da3f9; border: 0;  box-shadow: none; color: white;
+}
+
+.search-btn {
+	background-color:#6da3f9; border-color:#6da3f9; color: white;
+}
+
+.form-control::-webkit-input-placeholder {
+color:#fff;
+}
+.form-control:-moz-placeholder {
+color:#fff;
+}
+ 
+.form-control::-moz-placeholder {
+color:#fff;
+}
+ 
+.form-control:-ms-input-placeholder {
+color:#fff;
+}
