@@ -8,12 +8,20 @@ nav {
 	color: white; font-weight: lighter;
 }
 
-.search-bar {
-	background-color:#6da3f9; border: 0;  box-shadow: none; color: white;
+.navbar-element {
+	background-color:#6da3f9; border: 0;  box-shadow: none; color: white; margin: auto;
 }
 
 .search-btn {
 	background-color:#6da3f9; border-color:#6da3f9; color: white;
+}
+
+.breadcrumbs {
+	display:inline-block; margin: auto; padding-top:5px;
+}
+
+.breadcrumb-item a {
+	color:white;
 }
 
 .form-control::-webkit-input-placeholder {
