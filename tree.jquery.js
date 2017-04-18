@@ -2362,6 +2362,11 @@ var ElementsRenderer = (function () {
         if (this.tree_widget.options.buttonLeft) {
             div.appendChild(button_link);
         }
+
+        //TODO Add file icon here
+        //li.prepend($('<img>',{id:'theImg',src:'folderImage.png'}));
+
+
         // title span
         div.appendChild(this.createTitleSpan(node.name, level, is_selected, node.is_open, true));
         if (!this.tree_widget.options.buttonLeft) {
@@ -2384,6 +2389,10 @@ var ElementsRenderer = (function () {
         div.className = "jqtree-element jqtree_common";
         div.setAttribute("role", "presentation");
         li.appendChild(div);
+
+        //TODO Add file icon here
+       // li.prepend($('<img>', { id: 'theImg', src: 'folderImage.png' }));
+
         // title span
         div.appendChild(this.createTitleSpan(node.name, level, is_selected, node.is_open, false));
         return li;
