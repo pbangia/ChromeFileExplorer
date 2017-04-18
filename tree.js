@@ -14,8 +14,9 @@ var data = [
     }
 ];
 
+//
 $(function () {
-    $('#tree1').tree({
+    $('#fileTree').tree({
         data: data
     });
 });
