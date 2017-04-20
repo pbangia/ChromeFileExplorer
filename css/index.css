@@ -78,8 +78,20 @@ color:#fff;
 }
 
 .main-content {
-    margin-left: 170px;
     border-left: 1px solid gray;
     padding: 1em;
     height: 100%;
+}
+
+
+.hamburger{
+  background:none;
+  color:#6da3f9;
+  border:0;
+  outline:none;
+  z-index:10000000000000;
+}
+
+.hamburger:hover {
+	color:#23467f;
 }
