@@ -3,6 +3,11 @@ body {
 	background: #f2f2f2;
 }
 
+html, body {
+	min-height: 100% !important;
+	height: 100%;
+}
+
 nav {
 	background-color: #4285f4;
 	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
@@ -61,4 +66,20 @@ color:#fff;
  
 .form-control:-ms-input-placeholder {
 color:#fff;
+}
+
+/* Side menu */
+.side-menu {
+    float: left;
+    max-width: 160px;
+    margin: 0;
+    padding: 1em;
+    height: 100%;
+}
+
+.main-content {
+    margin-left: 170px;
+    border-left: 1px solid gray;
+    padding: 1em;
+    height: 100%;
 }
