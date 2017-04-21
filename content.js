@@ -2,6 +2,7 @@
 
 // Global variables
 var currentFiles = [];
+var currentDirectory;
 
 // Listener for messages from background.js
 chrome.runtime.onMessage.addListener(
@@ -14,8 +15,9 @@ chrome.runtime.onMessage.addListener(
 );
 
 class DirectoryFile {
-  constructor(fileName, link, size, sizeRaw, dateModified, dateModifiedRaw) {
+  constructor(fileName, isFolder, link, size, sizeRaw, dateModified, dateModifiedRaw) {
     this.fileName = fileName;
+    this.isFolder = isFolder;
     this.link = link;
     this.size = size;
     this.sizeRaw = sizeRaw;
@@ -23,8 +25,8 @@ class DirectoryFile {
     this.dateModifiedRaw = dateModifiedRaw;
   }
 
-  setLink(link) {
-    this.link = link;
+  setIsFolder(isFolder) {
+    this.isFolder = isFolder;
   }
 }
 
@@ -34,26 +36,26 @@ function readFiles() {
   for (var i = 0, row; row = table.rows[i]; i++) {
     console.log(row);
     var fileName = row.cells[0].dataset.value;
-    var link = null;
+    var isFolder = false;
+    var link = currentDirectory + fileName;
     var size = row.cells[1].innerHTML;
     var sizeRaw = row.cells[1].dataset.value;
     var dateModified = row.cells[2].innerHTML;
     var dateModifiedRaw = row.cells[2].dataset.value;
 
-    var dirFile = new DirectoryFile(fileName, link, size, sizeRaw, dateModified, dateModifiedRaw);
+    var dirFile = new DirectoryFile(fileName, isFolder, link, size, sizeRaw, dateModified, dateModifiedRaw);
 
     if (isDirectory(fileName) || isParentDirectoryLink(fileName)) {
-      var formattedLink = formatLink(row.cells[0].getElementsByTagName('a')[0].getAttribute("href"))
-      dirFile.setLink(formattedLink);
+      dirFile.setIsFolder(true);
     }
 
     currentFiles.push(dirFile);
   }
 }
 
-// Formats the link
-function formatLink(link) {
-  return link.substring(1, link.length);
+function setCurrentDirectory() {
+  var url = window.location.href;
+  currentDirectory = url.substring(8 ,url.length).replace('%20', ' ');
 }
 
 // Checks if current row contains a directory
@@ -77,14 +79,14 @@ function addNewDivs(divs){
 
     numberOfFiles=divs.length;   //Set i's max value to the number of files
 
-    for(var i=0; i < numberOfFiles; i++){  
+    for(var i=0; i < numberOfFiles; i++){
 
         newDiv = createDiv("div"+i);
 
         //Add file icon to div
         var newFile = document.createElement('img');
         newFile.src = "pic.png";   // Replace this with the path to a folder icon
-        
+
         //Set event handlers
         newFile.draggable = true;
         newFile.ondragstart = function(event) {drag(event)};
@@ -117,6 +119,8 @@ function createDiv(id){
     return newDiv
 }
 
+setCurrentDirectory();
 readFiles();
 console.log("length=" + currentFiles.length);
 console.log(currentFiles);
+console.log("Current Dir:" + currentDirectory);
