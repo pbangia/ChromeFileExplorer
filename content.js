@@ -117,6 +117,49 @@ function createDiv(id){
     return newDiv
 }
 
+var idgenerator = 0;
+
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);    
+}
+
+function drop(ev) {
+    ev.preventDefault();
+
+    var divs = document.getElementsByClassName('slot');
+
+    var image = document.getElementById(ev.dataTransfer.getData("text"));
+    //If the image is dragged onto a div containing an image
+    if ((ev.target instanceof HTMLImageElement)||(ev.target instanceof HTMLDivElement)){
+        var newDiv = createDiv("newdiv"+idgenerator);   //Create a new div
+        idgenerator++;
+        newDiv.appendChild(image);                      //Add the old image to it
+        if (ev.target instanceof HTMLImageElement){
+            ev.target.parentNode.insertAdjacentHTML('beforebegin', newDiv.outerHTML);   //And put it to the side of the target image's div.
+        }else{
+            ev.target.insertAdjacentHTML('beforebegin', newDiv.outerHTML);   //And put it to the side of the targeted div.
+        }
+
+        document.getElementById("newdiv"+(idgenerator-1)).addEventListener('drop', function(ev) {drop(ev)}, false);
+        document.getElementById("newdiv"+(idgenerator-1)).addEventListener('dragover', function(ev) {allowDrop(ev)}, false);
+        document.getElementById("newdiv"+(idgenerator-1)).addEventListener('dragstart', function(ev) {drag(ev)}, false);
+    }else{
+        ev.target.appendChild(image);   //If the div is blank, put the new image in it. 
+    }
+
+    for (var i=0; i<divs.length; i++){
+        if (divs[i].innerHTML===""){
+            var divToRemove = document.getElementById(divs[i].id);
+            divToRemove.parentNode.removeChild(divToRemove);
+            break;
+        }
+    }
+}
+
 readFiles();
 console.log("length=" + currentFiles.length);
 console.log(currentFiles);
