@@ -1,4 +1,3 @@
-
 body {
 	background: #f2f2f2;
 }
@@ -61,4 +60,11 @@ color:#fff;
  
 .form-control:-ms-input-placeholder {
 color:#fff;
+}
+
+.slot {
+    float: left;
+    width: 100px;
+    height: 35px;
+    padding: 10px;
 }

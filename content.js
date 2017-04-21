@@ -72,6 +72,51 @@ function isParentDirectoryLink(fileName) {
   return false;
 }
 
+function addNewDivs(divs){
+    var toAdd = document.createDocumentFragment();
+
+    numberOfFiles=divs.length;   //Set i's max value to the number of files
+
+    for(var i=0; i < numberOfFiles; i++){  
+
+        newDiv = createDiv("div"+i);
+
+        //Add file icon to div
+        var newFile = document.createElement('img');
+        newFile.src = "pic.png";   // Replace this with the path to a folder icon
+        
+        //Set event handlers
+        newFile.draggable = true;
+        newFile.ondragstart = function(event) {drag(event)};
+
+        //Image details, change as needed
+        newFile.id = "img"+i;
+        newFile.width = "88";
+        newFile.height = "31";
+
+        newDiv.innerHTML = newFile.outerHTML;
+        toAdd.appendChild(newDiv);
+    }
+
+    // Create blank div at the end so the user can drag to the end
+    newDiv = createDiv("div"+i);
+    toAdd.appendChild(newDiv);
+
+    var wrapper = document.getElementById("wrapper");
+    wrapper.appendChild(toAdd);
+}
+
+function createDiv(id){
+    // Make a drag-and-drop directory div with the parameter as it's id.
+    var newDiv = document.createElement('div');
+    newDiv.id = id;
+    newDiv.className = 'slot';
+    newDiv.addEventListener('drop', function(ev) {drop(ev)}, false);
+    newDiv.addEventListener('dragover', function(ev) {allowDrop(ev)}, false);
+    newDiv.addEventListener('dragstart', function(ev) {drag(ev)}, false);
+    return newDiv
+}
+
 readFiles();
 console.log("length=" + currentFiles.length);
 console.log(currentFiles);
