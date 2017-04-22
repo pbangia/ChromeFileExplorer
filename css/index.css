@@ -101,3 +101,24 @@ color:#fff;
     height: 35px;
     padding: 10px;
 }
+
+/* Folder item */
+.btn-radio {
+	width: 100%;
+}
+.img-radio {
+	opacity: 0.5;
+	margin: 5px;
+	max-width: 100px;
+	max-height: 100px;
+	cursor: pointer;
+
+}
+figcaption {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	cursor: pointer;
+}
+.folderItem {
+	display: inline-table;
+}
