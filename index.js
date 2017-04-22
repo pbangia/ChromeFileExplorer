@@ -7,7 +7,7 @@ function disableButtons(boolean){
 $( document ).ready(function() {
     	//disable buttons on load
     	disableButtons(true);
- 
+ 	
 });
 
 /* toggles side menu when hamburger clicked */
@@ -26,9 +26,36 @@ $(function () {
     });
 });
 
+/* called when folder item is clicked. */
 function changeDir(folderItem) {
 	var caption = folderItem.getElementsByClassName('caption')[0];
 	var path = caption.getAttribute('name');
 	console.log('Clicked on folder/file with path: ' + path);
 	$(folderItem).addClass('selected');
 }
+
+/* called when pin icon is clicked*/
+function pin(event, item){
+	// stop onclick propogating to parent folderItem onclick. 
+	event.stopPropagation();
+	// get parent folderItem
+	var folderItem = item.parentElement;
+	var caption = folderItem.getElementsByClassName('caption')[0];
+	// path of folder to pin
+	var path = caption.getAttribute('name');
+	console.log('Pinning: ' + path);
+}
+
+/* called when clipboard copy icon is clicked */
+function copy(event, item){
+	// stop onclick propogating to parent folderItem onclick. 
+	event.stopPropagation();
+	// get parent folderItem
+	var folderItem = item.parentElement;
+	var caption = folderItem.getElementsByClassName('caption')[0];
+	var path = caption.getAttribute('name');
+	//path of folder to copy to clipboard
+	console.log('Copying: ' + path);
+}
+
+
