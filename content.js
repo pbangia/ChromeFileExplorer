@@ -58,6 +58,16 @@ function readFiles() {
     caption.innerHTML = fileName;
     var path = currentDirectory + '/' + fileName;
     caption.setAttribute('name', path);
+    //Set next folder click action to reload folders
+    if (dirFile.isFolder){
+      fvClone.addEventListener('click', (function(e) {
+        var param = path;
+        return function(e) {
+          return reloadFolders(param);
+        }
+      })(), false);
+    }
+
     contentList.appendChild(fvClone);
 
     currentFiles.push(dirFile);
@@ -175,10 +185,10 @@ function drop(ev) {
 
 
 $(document).ready(function () {
-  setCurrentDirectory();
+    setCurrentDirectory();
   //read in source code of native file explorer
   //replace currentDirectory with "Users/priyankitbangia/...." for testing
-  $.get( "file:///"+currentDirectory, function( data ) {
+    $.get( "file:///"+currentDirectory, function( data ) {
     //inject source code into html 
     $( ".result" ).html( data );
 
@@ -190,5 +200,24 @@ $(document).ready(function () {
     //addNewDivs(5);
   });
 });
+
+function reloadFolders(path){
+    currentDirectory=path;
+    
+    //read in source code of native file explorer
+    //replace currentDirectory with "Users/priyankitbangia/...." for testing
+    currentFiles = [];
+    $.get( "file:///"+path, function( data ) { 
+    $( ".result" ).html( data );
+    //clear current folder item divs (except for first)
+    $('#wrapper').find('div').slice(1).remove();
+    //Parse input from new folders
+    readFiles();
+    console.log("length=" + currentFiles.length);
+    console.log(currentFiles);
+    console.log("Current Dir:" + currentDirectory);
+    //addNewDivs(5);
+  });
+}
 
 
