@@ -59,11 +59,19 @@
 
   <!-- Side menu -->
   <div class="side-menu light-text" id="fileTree">
-
   </div>
+
+  <!-- Dummy div used to parse native explorer source code -->
+  <div class="result" style = "visibility: hidden; height:0; width:0;"></div>
 
   <!-- Main file content -->
   <div class="main-content" id="wrapper">
+
+    <div class="folderItem" onclick = "changeDir(this)" id = "f" >
+      <img src="folderImage.png" class="img-responsive img-radio">
+      <figcaption class="caption img-radio">...</figcaption>
+      <input type="checkbox" class="hidden">
+    </div>    
     <!--Javascript will add fields here-->
   </div>
 
