@@ -74,9 +74,17 @@ function readFiles() {
   }
 }
 
-function setCurrentDirectory() {
-  var url = window.location.href;
-  currentDirectory = url.substring(8 ,url.lastIndexOf('/')).replace('%20', ' ');
+function setCurrentDirectory(path) {
+  if (!path){
+    var url = window.location.href;
+    currentDirectory = url.substring(8 ,url.lastIndexOf('/')).replace('%20', ' ');
+  }
+  else { 
+    url = path 
+    currentDirectory = url.substring(0 ,url.lastIndexOf('/')).replace('%20', ' ');
+  };
+  
+
 }
 
 // Checks if current row contains a directory
@@ -202,8 +210,8 @@ $(document).ready(function () {
 });
 
 function reloadFolders(path){
-    currentDirectory=path;
-    
+    setCurrentDirectory(path);
+
     //read in source code of native file explorer
     //replace currentDirectory with "Users/priyankitbangia/...." for testing
     currentFiles = [];
