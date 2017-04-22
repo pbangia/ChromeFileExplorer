@@ -32,6 +32,8 @@ class DirectoryFile {
 
 // Reads the files from the current directory and stores them in currentFiles
 function readFiles() {
+  var contentList = document.getElementById("wrapper");
+
   var table = document.getElementById("tbody");
   for (var i = 0, row; row = table.rows[i]; i++) {
     console.log(row);
@@ -49,13 +51,22 @@ function readFiles() {
       dirFile.setIsFolder(true);
     }
 
+    //Make new folder view element for each file
+    var folderView = document.getElementById("f");
+    var fvClone = folderView.cloneNode(true);
+    var caption = fvClone.getElementsByClassName("caption")[0];
+    caption.innerHTML = fileName;
+    var path = currentDirectory + '/' + fileName;
+    caption.setAttribute('name', path);
+    contentList.appendChild(fvClone);
+
     currentFiles.push(dirFile);
   }
 }
 
 function setCurrentDirectory() {
   var url = window.location.href;
-  currentDirectory = url.substring(8 ,url.length).replace('%20', ' ');
+  currentDirectory = url.substring(8 ,url.lastIndexOf('/')).replace('%20', ' ');
 }
 
 // Checks if current row contains a directory
@@ -75,9 +86,10 @@ function isParentDirectoryLink(fileName) {
 }
 
 function addNewDivs(divs){
-    var toAdd = document.createDocumentFragment();
+  var toAdd = document.createDocumentFragment();
 
-    numberOfFiles=divs.length;   //Set i's max value to the number of files
+    // numberOfFiles=divs.length; //Set i's max value to the number of files
+    numberOfFiles=5;   
 
     for(var i=0; i < numberOfFiles; i++){
 
@@ -85,8 +97,7 @@ function addNewDivs(divs){
 
         //Add file icon to div
         var newFile = document.createElement('img');
-        newFile.src = "pic.png";   // Replace this with the path to a folder icon
-
+        newFile.src = "folderImage.png";   // Replace this with the path to a folder icon
         //Set event handlers
         newFile.draggable = true;
         newFile.ondragstart = function(event) {drag(event)};
@@ -119,8 +130,65 @@ function createDiv(id){
     return newDiv
 }
 
-setCurrentDirectory();
-readFiles();
-console.log("length=" + currentFiles.length);
-console.log(currentFiles);
-console.log("Current Dir:" + currentDirectory);
+  var idgenerator = 0;
+
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);    
+}
+
+function drop(ev) {
+  ev.preventDefault();
+
+  var divs = document.getElementsByClassName('slot');
+
+  var image = document.getElementById(ev.dataTransfer.getData("text"));
+  //If the image is dragged onto a div containing an image
+  if ((ev.target instanceof HTMLImageElement)||(ev.target instanceof HTMLDivElement)){
+      var newDiv = createDiv("newdiv"+idgenerator);   //Create a new div
+      idgenerator++;
+      newDiv.appendChild(image);                      //Add the old image to it
+      if (ev.target instanceof HTMLImageElement){
+          ev.target.parentNode.insertAdjacentHTML('beforebegin', newDiv.outerHTML);   //And put it to the side of the target image's div.
+        }else{
+          ev.target.insertAdjacentHTML('beforebegin', newDiv.outerHTML);   //And put it to the side of the targeted div.
+        }
+
+        document.getElementById("newdiv"+(idgenerator-1)).addEventListener('drop', function(ev) {drop(ev)}, false);
+        document.getElementById("newdiv"+(idgenerator-1)).addEventListener('dragover', function(ev) {allowDrop(ev)}, false);
+        document.getElementById("newdiv"+(idgenerator-1)).addEventListener('dragstart', function(ev) {drag(ev)}, false);
+      }else{
+      ev.target.appendChild(image);   //If the div is blank, put the new image in it. 
+    }
+
+    for (var i=0; i<divs.length; i++){
+      if (divs[i].innerHTML===""){
+        var divToRemove = document.getElementById(divs[i].id);
+        divToRemove.parentNode.removeChild(divToRemove);
+        break;
+      }
+    }
+  }
+
+
+$(document).ready(function () {
+  setCurrentDirectory();
+  //read in source code of native file explorer
+  //replace currentDirectory with "Users/priyankitbangia/...." for testing
+  $.get( "file:///"+currentDirectory, function( data ) {
+    //inject source code into html 
+    $( ".result" ).html( data );
+
+    //Parse input from native explorer
+    readFiles();
+    console.log("length=" + currentFiles.length);
+    console.log(currentFiles);
+    console.log("Current Dir:" + currentDirectory);
+    //addNewDivs(5);
+  });
+});
+
+
