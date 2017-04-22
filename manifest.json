@@ -2,12 +2,15 @@
   "manifest_version": 2,
   "name": "Chrome File Explorer",
   "version": "0.1",
+  "permissions": [
+    "file://*/*"
+  ],
   "content_scripts": [
     {
       "matches": [
         "file:///*"
       ],
-      "js": ["content.js"]
+      "js": ["jquery.min.js", "content.js"]
     }
   ],
   "browser_action": {
