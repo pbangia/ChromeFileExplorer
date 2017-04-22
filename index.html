@@ -67,10 +67,10 @@
   <!-- Main file content -->
   <div class="main-content" id="wrapper">
 
-    <div class="folderItem" onclick = "changeDir(this)" id = "f" >
+    <div class="folderItem" onclick="changeDir(this)" id = "f" >
       <img src="folderImage.png" class="img-responsive img-radio">
-      <i class="glyphicon glyphicon-pushpin pin"></i>
-      <i class="glyphicon  glyphicon-paperclip pin" style="padding-right: 0;"></i>
+      <i class="glyphicon glyphicon-pushpin pin" onclick="pin(event, this)"></i>
+      <i class="glyphicon  glyphicon-paperclip pin" onclick="copy(event, this)" style="padding-right: 0;"></i>
       <figcaption class="caption img-radio">...</figcaption>
       
       <input type="checkbox" class="hidden">
