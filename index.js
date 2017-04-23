@@ -78,11 +78,11 @@ function drop(ev) {
 	// Delete the old div
 	draggedItem.parentElement.removeChild(draggedItem);
 
-	// And insert the clone to the side of the target.
+	// Insert the clone to the side of the target.
 	if ($(ev.target).hasClass("folderItem")){
 		ev.target.insertAdjacentHTML('afterend', newDiv.outerHTML);
 	}else{
-		// Note that if we put divs inside the divs with the class folderItem, this will stop working
+		// Note that if we put divs inside the divs with the class folderItem, this will stop working.
 		ev.target.parentNode.insertAdjacentHTML('afterend', newDiv.outerHTML);
 	}
 }
