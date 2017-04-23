@@ -1,4 +1,3 @@
-
 /* function to enable/disable buttons if file is selected */
 function disableButtons(boolean){
 	$("#buttons :button").attr("disabled", boolean);
@@ -58,4 +57,32 @@ function copy(event, item){
 	console.log('Copying: ' + path);
 }
 
+function allowDrop(ev) {
+	// Override default behaviour of not allowing drag and drop.
+	ev.preventDefault();
+}
 
+function drag(ev) {
+	// Save the id of the div that we are transferring.
+	ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+	// Override default behaviour of not allowing drag and drop.
+	ev.preventDefault();
+
+	// Clone the original div
+	var draggedItem = document.getElementById(ev.dataTransfer.getData("text"));
+	var newDiv = draggedItem.cloneNode(true);	
+	
+	// Delete the old div
+	draggedItem.parentElement.removeChild(draggedItem);
+
+	// Insert the clone to the side of the target.
+	if ($(ev.target).hasClass("folderItem")){
+		ev.target.insertAdjacentHTML('afterend', newDiv.outerHTML);
+	}else{
+		// Note that if we put divs inside the divs with the class folderItem, this will stop working.
+		ev.target.parentNode.insertAdjacentHTML('afterend', newDiv.outerHTML);
+	}
+}
