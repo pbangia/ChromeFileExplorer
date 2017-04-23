@@ -12,7 +12,7 @@
   <script src="tree.jquery.js" type="text/javascript"></script>
   <link rel="stylesheet" href="jqtree.css">
   <script src="tree.js" type="text/javascript"></script>
-  <script src="index.js"></script>
+  <script src="index.js" type="text/javascript"></script>
 </head>
 <body>
 
@@ -67,13 +67,13 @@
   <!-- Main file content -->
   <div class="main-content" id="wrapper">
 
-    <div class="folderItem" onclick="changeDir(this)" id = "f" >
-      <img src="folderImage2.png" class="img-responsive img-radio">
-      <i class="glyphicon glyphicon-pushpin pin" onclick="pin(event, this)"></i>
-      <i class="glyphicon  glyphicon-paperclip pin" onclick="copy(event, this)" style="padding-right: 0;"></i>
-      <figcaption class="caption img-radio">...</figcaption>
+    <div class="folderItem" onclick="changeDir(this)" id = "f" ondragstart="drag(event)" ondragover="allowDrop(event)" ondrop="drop(event)" draggable="true">
+      <img src="folderImage2.png" class="img-responsive img-radio" draggable="false">
+      <i class="glyphicon glyphicon-pushpin pin" onclick="pin(event, this)" draggable="false"></i>
+      <i class="glyphicon  glyphicon-paperclip pin" onclick="copy(event, this)" style="padding-right: 0;" draggable="false"></i>
+      <figcaption class="caption img-radio" draggable="false">...</figcaption>
       
-      <input type="checkbox" class="hidden">
+      <input type="checkbox" class="hidden" draggable="false">
     </div>    
     <!--Javascript will add fields here-->
   </div>
