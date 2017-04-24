@@ -1,4 +1,7 @@
 var config = {
-  extension_path : "C:/Users/gtio848/AndroidStudio Projects/Wobury/",
-  default_path : "C:/Users/gtio848/"
+  extension_path : "",
+  default_path : "",
+  windows_path : "C:/Users/",
+  mac_path : "Users/",
+  linux_path : "Users/"
 };
