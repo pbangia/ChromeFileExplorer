@@ -1,6 +1,6 @@
-var constans = {
-  'indexFile' = "index.html",
-  'urlBase' = "file:///"
+var constants = {
+  'indexFile': "index.html",
+  'urlBase': "file:///"
 }
 
 /* File extension names for icons */
