@@ -21,12 +21,18 @@ class DirectoryFile {
 }
 
 $(document).ready(function () {
+  config.extension_path = window.location.href; 
+  if (navigator.appVersion.indexOf("Win")!=-1) config.default_path = config.windows_path;
+  if (navigator.appVersion.indexOf("Mac")!=-1) config.default_path = config.mac_path;
+  if (navigator.appVersion.indexOf("Linux")!=-1) config.default_path = config.linux_path;
+
   currentDirectory = config.default_path;
   loadPage(currentDirectory);
 });
 
 function loadPage(path) {
   setCurrentDirectory(path);
+
   $.get( constants.urlBase + path, function( data ) {
     $( ".result" ).html( data );
     $('#wrapper').find('div').slice(1).remove();
@@ -211,7 +217,7 @@ chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     switch(request.message) {
       case "clicked_browser_action":
-        var url = config.extension_path + constants.indexFile;
+        var url = config.extension_path;
         chrome.runtime.sendMessage({"message": "open_new_tab", "url": url});
         break;
       default:
