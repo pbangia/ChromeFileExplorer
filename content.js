@@ -5,20 +5,6 @@ var currentFiles = [];
 var currentDirectory;
 var idgenerator = 0;
 
-// Listener for messages from background.js
-chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    switch(request.message) {
-      case "clicked_browser_action":
-        var url = config.extension_path + "/index.html";
-        chrome.runtime.sendMessage({"message": "open_new_tab", "url": url});
-        break;
-      default:
-        break;
-    }
-  }
-);
-
 class DirectoryFile {
   constructor(fileName, isFolder, link, size, sizeRaw, dateModified, dateModifiedRaw) {
     this.fileName = fileName;
@@ -35,10 +21,27 @@ class DirectoryFile {
   }
 }
 
+$(document).ready(function () {
+  currentDirectory = config.default_path;
+  loadPage(currentDirectory);
+});
+
+function loadPage(path) {
+  setCurrentDirectory(path);
+  $.get( constants.urlBase + path, function( data ) {
+    $( ".result" ).html( data );
+    $('#wrapper').find('div').slice(1).remove();
+    readFiles();
+  });
+}
+
+function reloadFolders(path){
+    currentFiles = [];
+    loadPage(path);
+}
+
 // Reads the files from the current directory and stores them in currentFiles
 function readFiles() {
-  var contentList = document.getElementById("wrapper");
-
   var table = document.getElementById("tbody");
   for (var i = 0, row; row = table.rows[i]; i++) {
     var fileName = row.cells[0].dataset.value;
@@ -54,61 +57,39 @@ function readFiles() {
     if (isDirectory(fileName) || isParentDirectoryLink(fileName)) {
       dirFile.setIsFolder(true);
     }
-
-    //Make new folder view element for each file
-    var folderView = document.getElementById("f");
-    var fvClone = folderView.cloneNode(true);
-    var caption = fvClone.getElementsByClassName("caption")[0];
-    caption.innerHTML = fileName;
-    var path = currentDirectory + '/' + fileName;
-    caption.setAttribute('name', path);
-    //Set next folder click action to reload folders
-    if (dirFile.isFolder){
-      fvClone.addEventListener('click', (function(e) {
-        var param = path;
-        return function(e) {
-          return reloadFolders(param);
-        }
-      })(), false);
-    } else {
-      //if file, set appropriate file icon
-      var img = fvClone.getElementsByTagName('img')[0];
-      var imgPath = fileName.split(".");
-      var extension = imgPath[imgPath.length-1] + '.png';
-      if (!fileTypeIcons[extension]) extension = 'file.png';
-      img.setAttribute("src", 'fileTypeIcons/'+extension);
-    }
-
-    contentList.appendChild(fvClone);
-    currentFiles.push(dirFile);
+    createFolderViewElement(dirFile);
   }
 }
 
-function setCurrentDirectory(path) {
-  if (!path){
-    var url = window.location.href;
-    currentDirectory = url.substring(8 ,url.lastIndexOf('/')).replace('%20', ' ');
+function createFolderViewElement(dirFile) {
+  var contentList = document.getElementById("wrapper");
+  //Make new folder view element for each file
+  var folderView = document.getElementById("f");
+  var fvClone = folderView.cloneNode(true);
+  var caption = fvClone.getElementsByClassName("caption")[0];
+  var fileName = dirFile.fileName;
+  caption.innerHTML = fileName;
+  var path = currentDirectory + '/' + fileName;
+  caption.setAttribute('name', path);
+  //Set next folder click action to reload folders
+  if (dirFile.isFolder){
+    fvClone.addEventListener('click', (function(e) {
+      var param = path;
+      return function(e) {
+        return reloadFolders(param);
+      }
+    })(), false);
+  } else {
+    //if file, set appropriate file icon
+    var img = fvClone.getElementsByTagName('img')[0];
+    var imgPath = fileName.split(".");
+    var extension = imgPath[imgPath.length-1] + '.png';
+    if (!fileTypeIcons[extension]) extension = 'file.png';
+    img.setAttribute("src", 'fileTypeIcons/'+extension);
   }
-  else {
-    url = path
-    currentDirectory = url.substring(0 ,url.lastIndexOf('/')).replace('%20', ' ');
-  };
-}
 
-// Checks if current row contains a directory
-function isDirectory(fileName) {
-  if (fileName[fileName.length - 1] === "/") {
-    return true;
-  }
-  return false;
-}
-
-// Checks if current row contains the parent folder link
-function isParentDirectoryLink(fileName) {
-  if (fileName === "..") {
-    return true;
-  }
-  return false;
+  contentList.appendChild(fvClone);
+  currentFiles.push(dirFile);
 }
 
 function addNewDivs(divs){
@@ -197,77 +178,43 @@ function drop(ev) {
     }
   }
 
-$(document).ready(function () {
-  //setCurrentDirectory();
-  currentDirectory = config.default_path;
-  loadPage();
-});
-
-function loadPage() {
-  //read in source code of native file explorer
-  //replace currentDirectory with "Users/priyankitbangia/...." for testing
-  $.get( "file:///"+currentDirectory, function( data ) {
-    //inject source code into html
-    $( ".result" ).html( data );
-    //Parse input from native explorer
-    readFiles();
-  });
+function setCurrentDirectory(path) {
+  if (!path){
+    var url = window.location.href;
+    currentDirectory = url.substring(8 ,url.lastIndexOf('/')).replace('%20', ' ');
+  } else {
+    url = path
+    currentDirectory = url.substring(0 ,url.lastIndexOf('/')).replace('%20', ' ');
+  };
+  console.log("currentDirectory= " + currentDirectory);
 }
 
-function reloadFolders(path){
-    setCurrentDirectory(path);
-
-    //read in source code of native file explorer
-    //replace currentDirectory with "Users/priyankitbangia/...." for testing
-    currentFiles = [];
-    $.get( "file:///"+path, function( data ) {
-    $( ".result" ).html( data );
-    //clear current folder item divs (except for first)
-    $('#wrapper').find('div').slice(1).remove();
-    //Parse input from new folders
-    readFiles();
-  });
+// Checks if current row contains a directory
+function isDirectory(fileName) {
+  if (fileName[fileName.length - 1] === "/") {
+    return true;
+  }
+  return false;
 }
 
-/* File extension names for icons */
-var fileTypeIcons =
-{
-    'ai.png':true,
-    'audition.png':true,
-    'avi.png':true,
-    'bridge.png':true,
-    'css.png':true,
-    'csv.png':true,
-    'dbf.png':true,
-    'doc.png':true,
-    'dreamweaver.png':true,
-    'dwg.png':true,
-    'exe.png':true,
-    'file.png':true,
-    'fireworks.png':true,
-    'fla.png':true,
-    'flash.png':true,
-    'html.png':true,
-    'illustrator.png':true,
-    'indesign.png':true,
-    'iso.png':true,
-    'jpg.png':true,
-    'js.png':true,
-    'json.png':true,
-    'mp3.png':true,
-    'mp4.png':true,
-    'pdf.png':true,
-    'photoshop.png':true,
-    'png.png':true,
-    'ppt.png':true,
-    'prelude.png':true,
-    'premiere.png':true,
-    'psd.png':true,
-    'rtf.png':true,
-    'search.png':true,
-    'svg.png':true,
-    'txt.png':true,
-    'xls.png':true,
-    'xml.png':true,
-    'zip.png':true
+// Checks if current row contains the parent folder link
+function isParentDirectoryLink(fileName) {
+  if (fileName === "..") {
+    return true;
+  }
+  return false;
 }
+
+// Listener for messages from background.js
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    switch(request.message) {
+      case "clicked_browser_action":
+        var url = config.extension_path + constants.indexFile;
+        chrome.runtime.sendMessage({"message": "open_new_tab", "url": url});
+        break;
+      default:
+        break;
+    }
+  }
+);
