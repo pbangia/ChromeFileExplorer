@@ -56,8 +56,14 @@ function copy(event, item){
 	// get parent folderItem
 	var folderItem = item.parentElement;
 	var caption = folderItem.getElementsByClassName('caption')[0];
+	// set oncopy action then execute action 
 	var path = caption.getAttribute('name');
-	//path of folder to copy to clipboard
+	document.oncopy = function(event) {
+		event.clipboardData.setData('text/plain', path);
+		event.preventDefault();	
+	};
+	document.execCommand("Copy", false, null);
+	
 	console.log('Copying: ' + path);
 }
 
