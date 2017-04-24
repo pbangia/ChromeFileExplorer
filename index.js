@@ -63,6 +63,11 @@ function copy(event, item){
 		event.preventDefault();	
 	};
 	document.execCommand("Copy", false, null);
+
+	var notification = document.getElementById("snackbar")
+    notification.className = "show";
+    notification.innerHTML = 'Coppied to clipboard: ' + path;
+    setTimeout(function(){ notification.className = notification.className.replace("show", ""); }, 3000);
 	
 	console.log('Copying: ' + path);
 }
