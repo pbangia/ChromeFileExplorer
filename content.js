@@ -1,10 +1,9 @@
-// content.js
-
-// Global variables
+/* Global variables */
 var currentFiles = [];
 var currentDirectory;
 var idgenerator = 0;
 
+/* Classes */
 class DirectoryFile {
   constructor(fileName, isFolder, link, size, sizeRaw, dateModified, dateModifiedRaw) {
     this.fileName = fileName;
@@ -61,6 +60,7 @@ function readFiles() {
   }
 }
 
+/* HTML component creation and manipulation */
 function createFolderViewElement(dirFile) {
   var contentList = document.getElementById("wrapper");
   //Make new folder view element for each file
@@ -178,6 +178,7 @@ function drop(ev) {
     }
   }
 
+/* Getters, setters, and checks */
 function setCurrentDirectory(path) {
   if (!path){
     var url = window.location.href;
@@ -189,7 +190,7 @@ function setCurrentDirectory(path) {
   console.log("currentDirectory= " + currentDirectory);
 }
 
-// Checks if current row contains a directory
+// Checks if file is a directory
 function isDirectory(fileName) {
   if (fileName[fileName.length - 1] === "/") {
     return true;
@@ -197,7 +198,7 @@ function isDirectory(fileName) {
   return false;
 }
 
-// Checks if current row contains the parent folder link
+// Checks if parent folder link
 function isParentDirectoryLink(fileName) {
   if (fileName === "..") {
     return true;
@@ -205,7 +206,7 @@ function isParentDirectoryLink(fileName) {
   return false;
 }
 
-// Listener for messages from background.js
+/* Listener for messages from background.js */
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     switch(request.message) {
