@@ -101,3 +101,40 @@ color:#fff;
     height: 35px;
     padding: 10px;
 }
+
+/* Folder item */
+.btn-radio {
+	width: 100%;
+}
+.img-radio {
+	margin: 5px;
+	max-width: 100px;
+	max-height: 100px;
+	cursor: pointer;
+
+}
+figcaption {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	cursor: pointer;
+}
+.folderItem {
+	background: #fff;
+	border-radius: 3px;
+	margin: 1rem;
+	max-width: 100px;
+	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+	display: inline-table;
+}
+
+.folderItem:hover {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.pin {
+	color: #6da3f9; float: right; padding: 5px;
+}
+
+.pin:hover {
+	color: #23467f;
+}
