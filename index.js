@@ -28,8 +28,12 @@ $(function () {
 /* called when folder item is clicked. */
 function changeDir(folderItem) {
 	var caption = folderItem.getElementsByClassName('caption')[0];
-	var path = caption.getAttribute('name');
+	var path = 'file:///' + caption.getAttribute('name');
 	console.log('Clicked on folder/file with path: ' + path);
+	if (caption.innerHTML.split('.').length>1){
+		console.log(path);
+		window.open(path);
+	}
 	$(folderItem).addClass('selected');
 }
 
