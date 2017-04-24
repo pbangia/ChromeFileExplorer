@@ -116,6 +116,7 @@ color:#fff;
 figcaption {
 	overflow: hidden;
 	text-overflow: ellipsis;
+	white-space:nowrap;
 	cursor: pointer;
 }
 .folderItem {
