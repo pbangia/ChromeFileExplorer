@@ -1,5 +1,6 @@
 //Tree Data
 var data = [];
+treeID = '#fileTree';
 
 /*
  = [
@@ -40,25 +41,35 @@ var data = [];
         ]
     }
 */
+//call to refresh tree
+function refreshTree(){
+    $(treeID).tree({
+        data: data
+        //onCreateLi: function()    //called for each on create node
+    });
+}
 
 //Set up intial Tree;
 $(function () {
     console.log("in here");
 
-    data.push({
-        name: "this",//currentDirectory
-        children: [""]
-    });
+    //data.push({
+    //    name: "currentDirectory",//TODO change to currentDirectory name
+    //    children: [""]
+    //});
 
     refreshTree();   
+
+    $(treeID).tree('appendNode',
+        {
+            name: "currentDirectory"//TODO change to currentDirectory name
+            //id: //full path
+        }
+        );
+
 });
 
-//call to refresh tree
-function refreshTree(){
-    $('#fileTree').tree({
-        data: data
-    });
-}
+
 
 //takes single DirectoryFile object and name of current directory
 function currentDirectoryToJSONFormat(directoryFile, curDirectory) {
@@ -67,22 +78,29 @@ function currentDirectoryToJSONFormat(directoryFile, curDirectory) {
         var dirNames = dirString.link.split("/"); //TODO change this so that windows and linux can use
         var dirLength = dirNames.length;
 
+        //get the position of the current directory(root) and work from there
         var currentDirPos;
         for(var i=0;i<dirLength;i++){
             if (dirNames[i] == curDirectory) {
                 currentDirPos = i;
-                data.push({
-                    name: curDirectory,
-                    children: []
-                });
                 break;
             }
         }
 
-        //if just adding 
+        //if just adding to the root directory
+        //if if second to last element is the current directory
         if ((dirLength - 2) == i) {
-
+            //var parentNode = $(treeID).tree('getNodeById', );
+            //$(treeID).tree('appendNode',
+            //   {
+            //       name: "currentDirectory"//TODO change to currentDirectory name
+            //       //id: //full path
+            //   },
+            //   parentNode
+            //   );
+            
         }
+        //else need to go through nested data array
         else {
 
         }
@@ -95,14 +113,19 @@ function currentDirectoryToJSONFormat(directoryFile, curDirectory) {
             var childDir = dirNames[i + 1];
 
         }
-
-    }
 }
 
 function addToTree(item) {
     da
 }
 
+function checkDirHasChildren(directoryPath) {
+
+    //if directory in directoryPath has children dir return true
+
+
+    return false;
+}
 /*
 $scope.addItem = function() {
 				$scope.menuItems.push({
