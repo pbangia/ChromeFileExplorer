@@ -116,11 +116,12 @@ color:#fff;
 figcaption {
 	overflow: hidden;
 	text-overflow: ellipsis;
+	white-space:nowrap;
 	cursor: pointer;
 }
 .folderItem {
 	background: #fff;
-	border-radius: 2px;
+	border-radius: 3px;
 	margin: 1rem;
 	max-width: 100px;
 	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
@@ -137,4 +138,46 @@ figcaption {
 
 .pin:hover {
 	color: #23467f;
+}
+
+/* Copy to clipboard notification */
+#snackbar {
+    visibility: hidden;
+    background-color: rgba(35,70,127, 0.6);
+    text-align: center;
+    margin-left: 10px;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    bottom: 30px;
+    font-size: 17px;
+    color: white; 
+    font-weight: lighter;
+
+}
+
+#snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;} 
+    to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+    from {bottom: 30px; opacity: 1;} 
+    to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
 }
