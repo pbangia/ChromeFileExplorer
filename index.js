@@ -28,8 +28,12 @@ $(function () {
 /* called when folder item is clicked. */
 function changeDir(folderItem) {
 	var caption = folderItem.getElementsByClassName('caption')[0];
-	var path = caption.getAttribute('name');
+	var path = 'file:///' + caption.getAttribute('name');
 	console.log('Clicked on folder/file with path: ' + path);
+	if (caption.innerHTML.split('.').length>1){
+		console.log(path);
+		window.open(path);
+	}
 	$(folderItem).addClass('selected');
 }
 
@@ -52,8 +56,19 @@ function copy(event, item){
 	// get parent folderItem
 	var folderItem = item.parentElement;
 	var caption = folderItem.getElementsByClassName('caption')[0];
+	// set oncopy action then execute action 
 	var path = caption.getAttribute('name');
-	//path of folder to copy to clipboard
+	document.oncopy = function(event) {
+		event.clipboardData.setData('text/plain', path);
+		event.preventDefault();	
+	};
+	document.execCommand("Copy", false, null);
+
+	var notification = document.getElementById("snackbar")
+    notification.className = "show";
+    notification.innerHTML = 'Coppied to clipboard: ' + path;
+    setTimeout(function(){ notification.className = notification.className.replace("show", ""); }, 3000);
+	
 	console.log('Copying: ' + path);
 }
 
