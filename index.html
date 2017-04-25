@@ -115,15 +115,15 @@
             <table style="width:100%;">
               <tr>
                 <td>Default folder</td>
-                <td><input type="text" class="form-control" id="defaultPath" ></td>
-                <td><button type="button" class="btn btn-primary" >Save</button></td>
+                <td><input type="text" class="form-control" id="defaultDir" ></td>
+                <td><button type="button" class="btn btn-primary" onclick="saveDefaultDir();" >Save</button></td>
               </tr>
               <tr>
-                <td>Hidden files:</td>
+                <td>Hidden files</td>
                 <td>
                   <button type="button" class="btn btn-primary" onclick="toggleHiddenFiles(this)">
-                    <i style="display:none;" class="glyphicon glyphicon glyphicon-eye-open"></i>
-                    <i class="glyphicon glyphicon-eye-close"></i>
+                    <i id="show" style="display:none;" class="glyphicon glyphicon glyphicon-eye-open"></i>
+                    <i id="hide" class="glyphicon glyphicon-eye-close"></i>
                   </button>
                 </td>
               </tr>
