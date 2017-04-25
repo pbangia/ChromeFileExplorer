@@ -19,15 +19,15 @@
   <!-- Navigation bar -->
   <nav>
     <div class="container-fluid light-text">
-      
+
       <div class="navbar-header">
-        
+
         <a class="navbar-brand light-text" href="#" >
         <button class="hamburger" onclick="toggleSideMenu()">&#9776;</button>
         Chrome File Explorer</a>
       </div>
       <div class="nav-section">
-        <ul class="breadcrumb navbar-element" >
+        <ul class="breadcrumb navbar-element" id="breadcrumbs">
           <li class="breadcrumb-item"><a href="#">Documents</a></li>
           <li class="breadcrumb-item"><a href="#">750</a></li>
           <li class="breadcrumb-item">Lectures</li>
@@ -38,7 +38,7 @@
             <button class="btn btn-default nav-btn " type="submit">PASTE</button>
             <button class="btn btn-default nav-btn " type="submit">CUT</button>
             <button class="btn btn-default nav-btn " type="submit">DELETE</button>
-            <button class="btn btn-default nav-btn " type="submit">NEW FOLDER</button>                             
+            <button class="btn btn-default nav-btn " type="submit">NEW FOLDER</button>
       </div>
       <form class="navbar-form navbar-right">
         <div class="input-group" >
@@ -72,9 +72,9 @@
       <i class="glyphicon glyphicon-pushpin pin" onclick="pin(event, this)" draggable="false"></i>
       <i class="glyphicon  glyphicon-paperclip pin" onclick="copy(event, this)" style="padding-right: 0;" draggable="false"></i>
       <figcaption class="caption img-radio" draggable="false">...</figcaption>
-      
+
       <input type="checkbox" class="hidden" draggable="false">
-    </div>    
+    </div>
     <!--Javascript will add fields here-->
   </div>
 
@@ -83,4 +83,3 @@
 
 </body>
 </html>
-
