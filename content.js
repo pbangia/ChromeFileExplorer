@@ -30,34 +30,6 @@ $(document).ready(function () {
   loadPage(currentDirectory);
 });
 
-function updateBreadcrumbs() {
-  var breadcrumbs = document.getElementById("breadcrumbs");
-  var pathElements = getPathElements(currentDirectory);
-  //Remove existing breadcrumbs
-  while (breadcrumbs.firstChild) {
-    breadcrumbs.removeChild(breadcrumbs.firstChild);
-  }
-  // Add new crumbs
-  for (var i = 0; i < pathElements.length; i++) {
-  var pathToCurrentElement = getPathToCurrentElement(i, pathElements);
-    var crumb = createBreadCrumb(pathElements[i], pathToCurrentElement);
-    breadcrumbs.appendChild(crumb);
-  }
-}
-
-function createBreadCrumb(pathElement, pathToCurrentElement) {
-  var crumb = document.createElement('li');
-  var a = document.createElement('a');
-  var att = document.createAttribute("path");
-  att.value = pathToCurrentElement;
-  a.setAttribute('href',"#");
-  a.innerHTML = pathElement;
-  crumb.setAttributeNode(att);
-  crumb.class = 'breadcrumb-item'
-  crumb.appendChild(a);
-  return crumb;
-}
-
 function loadPage(path) {
   setCurrentDirectory(path);
   updateBreadcrumbs();
@@ -212,7 +184,43 @@ function drop(ev) {
     }
   }
 
-/* breadcrumbs code goes here*/
+/* Breadcrumb manipulation*/
+function updateBreadcrumbs() {
+  var breadcrumbs = document.getElementById("breadcrumbs");
+  var pathElements = getPathElements(currentDirectory);
+  //Remove existing breadcrumbs
+  while (breadcrumbs.firstChild) {
+    breadcrumbs.removeChild(breadcrumbs.firstChild);
+  }
+  // Add new crumbs
+  for (var i = 0; i < pathElements.length; i++) {
+  var pathToCurrentElement = getPathToCurrentElement(i, pathElements);
+    var crumb = createBreadCrumb(pathElements[i], pathToCurrentElement);
+    breadcrumbs.appendChild(crumb);
+  }
+}
+
+function createBreadCrumb(pathElement, pathToCurrentElement) {
+  var crumb = document.createElement('li');
+  var a = document.createElement('a');
+  var att = document.createAttribute("path");
+
+  att.value = pathToCurrentElement;
+  a.setAttribute('href',"#");
+  a.innerHTML = pathElement;
+  a.setAttributeNode(att);
+  a.addEventListener('click', function(ev){onCrumbClick(ev)}, false);
+  crumb.class = 'breadcrumb-item'
+  crumb.appendChild(a);
+  console.log(crumb);
+  return crumb;
+}
+
+function onCrumbClick(ev) {
+  ev.preventDefault();
+  var path = ev.target.getAttribute("path");
+  loadPage(path);
+}
 
 /* Getters, setters, and checks */
 function setCurrentDirectory(path) {
