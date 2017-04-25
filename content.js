@@ -20,6 +20,7 @@ class DirectoryFile {
   }
 }
 
+
 $(document).ready(function () {
   config.extension_path = window.location.href; 
   if (navigator.appVersion.indexOf("Win")!=-1) config.default_path = config.windows_path;
