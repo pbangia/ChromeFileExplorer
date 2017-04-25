@@ -22,7 +22,7 @@ class DirectoryFile {
 
 
 $(document).ready(function () {
-  config.extension_path = window.location.href; 
+  config.extension_path = window.location.href;
   if (navigator.appVersion.indexOf("Win")!=-1) config.default_path = config.windows_path;
   if (navigator.appVersion.indexOf("Mac")!=-1) config.default_path = config.mac_path;
   if (navigator.appVersion.indexOf("Linux")!=-1) config.default_path = config.linux_path;
@@ -33,7 +33,7 @@ $(document).ready(function () {
 
 function loadPage(path) {
   setCurrentDirectory(path);
-
+  updateBreadcrumbs();
   $.get( constants.urlBase + path, function( data ) {
     $( ".result" ).html( data );
     $('#wrapper').find('div').slice(1).remove();
@@ -73,8 +73,11 @@ function createFolderViewElement(dirFile) {
   //Make new folder view element for each file
   var folderView = document.getElementById("f");
   var fvClone = folderView.cloneNode(true);
+  fvClone.id = idgenerator;
+  idgenerator++;
   var caption = fvClone.getElementsByClassName("caption")[0];
   var fileName = dirFile.fileName;
+  fvClone.setAttribute('title', fileName);
   caption.innerHTML = fileName;
   var path = currentDirectory + '/' + fileName;
   caption.setAttribute('name', path);
@@ -99,91 +102,43 @@ function createFolderViewElement(dirFile) {
   currentFiles.push(dirFile);
 }
 
-function addNewDivs(divs){
-  var toAdd = document.createDocumentFragment();
-
-    // numberOfFiles=divs.length; //Set i's max value to the number of files
-    numberOfFiles=5;
-
-    for(var i=0; i < numberOfFiles; i++){
-
-        newDiv = createDiv("div"+i);
-
-        //Add file icon to div
-        var newFile = document.createElement('img');
-        newFile.src = "folderImage.png";   // Replace this with the path to a folder icon
-        //Set event handlers
-        newFile.draggable = true;
-        newFile.ondragstart = function(event) {drag(event)};
-
-        //Image details, change as needed
-        newFile.id = "img"+i;
-        newFile.width = "88";
-        newFile.height = "31";
-
-        newDiv.innerHTML = newFile.outerHTML;
-        toAdd.appendChild(newDiv);
-    }
-
-    // Create blank div at the end so the user can drag to the end
-    newDiv = createDiv("div"+i);
-    toAdd.appendChild(newDiv);
-
-    var wrapper = document.getElementById("wrapper");
-    wrapper.appendChild(toAdd);
-}
-
-function createDiv(id){
-    // Make a drag-and-drop directory div with the parameter as it's id.
-    var newDiv = document.createElement('div');
-    newDiv.id = id;
-    newDiv.className = 'slot';
-    newDiv.addEventListener('drop', function(ev) {drop(ev)}, false);
-    newDiv.addEventListener('dragover', function(ev) {allowDrop(ev)}, false);
-    newDiv.addEventListener('dragstart', function(ev) {drag(ev)}, false);
-    return newDiv
-}
-
-function allowDrop(ev) {
-  ev.preventDefault();
-}
-
-function drag(ev) {
-  ev.dataTransfer.setData("text", ev.target.id);
-}
-
-function drop(ev) {
-  ev.preventDefault();
-
-  var divs = document.getElementsByClassName('slot');
-
-  var image = document.getElementById(ev.dataTransfer.getData("text"));
-  //If the image is dragged onto a div containing an image
-  if ((ev.target instanceof HTMLImageElement)||(ev.target instanceof HTMLDivElement)){
-      var newDiv = createDiv("newdiv"+idgenerator);   //Create a new div
-      idgenerator++;
-      newDiv.appendChild(image);                      //Add the old image to it
-      if (ev.target instanceof HTMLImageElement){
-          ev.target.parentNode.insertAdjacentHTML('beforebegin', newDiv.outerHTML);   //And put it to the side of the target image's div.
-        }else{
-          ev.target.insertAdjacentHTML('beforebegin', newDiv.outerHTML);   //And put it to the side of the targeted div.
-        }
-
-        document.getElementById("newdiv"+(idgenerator-1)).addEventListener('drop', function(ev) {drop(ev)}, false);
-        document.getElementById("newdiv"+(idgenerator-1)).addEventListener('dragover', function(ev) {allowDrop(ev)}, false);
-        document.getElementById("newdiv"+(idgenerator-1)).addEventListener('dragstart', function(ev) {drag(ev)}, false);
-      }else{
-      ev.target.appendChild(image);   //If the div is blank, put the new image in it.
-    }
-
-    for (var i=0; i<divs.length; i++){
-      if (divs[i].innerHTML===""){
-        var divToRemove = document.getElementById(divs[i].id);
-        divToRemove.parentNode.removeChild(divToRemove);
-        break;
-      }
-    }
+/* Breadcrumb manipulation*/
+function updateBreadcrumbs() {
+  var breadcrumbs = document.getElementById("breadcrumbs");
+  var pathElements = getPathElements(currentDirectory);
+  //Remove existing breadcrumbs
+  while (breadcrumbs.firstChild) {
+    breadcrumbs.removeChild(breadcrumbs.firstChild);
   }
+  // Add new crumbs
+  for (var i = 0; i < pathElements.length; i++) {
+  var pathToCurrentElement = getPathToCurrentElement(i, pathElements);
+    var crumb = createBreadCrumb(pathElements[i], pathToCurrentElement);
+    breadcrumbs.appendChild(crumb);
+  }
+}
+
+function createBreadCrumb(pathElement, pathToCurrentElement) {
+  var crumb = document.createElement('li');
+  var a = document.createElement('a');
+  var att = document.createAttribute("path");
+
+  att.value = pathToCurrentElement;
+  a.setAttribute('href',"#");
+  a.innerHTML = pathElement;
+  a.setAttributeNode(att);
+  a.addEventListener('click', function(ev){onCrumbClick(ev)}, false);
+  crumb.class = 'breadcrumb-item'
+  crumb.appendChild(a);
+  console.log(crumb);
+  return crumb;
+}
+
+function onCrumbClick(ev) {
+  ev.preventDefault();
+  var path = ev.target.getAttribute("path");
+  loadPage(path);
+}
 
 /* Getters, setters, and checks */
 function setCurrentDirectory(path) {
@@ -211,6 +166,22 @@ function isParentDirectoryLink(fileName) {
     return true;
   }
   return false;
+}
+
+function getPathElements(path) {
+  var pathElements = path.split("/");
+  if (pathElements[pathElements.length - 1] === '') {
+    pathElements.pop();
+  }
+  return pathElements;
+}
+
+function getPathToCurrentElement(index, pathElements) {
+  var path = '';
+  for (var i = 0; i <= index; i++) {
+    path += pathElements[i] + '/';
+  }
+  return path;
 }
 
 /* Listener for messages from background.js */
