@@ -23,63 +23,84 @@
       <div class="navbar-header">
 
         <a class="navbar-brand light-text" href="#" >
-        <button class="hamburger" onclick="toggleSideMenu()">&#9776;</button>
-        Chrome File Explorer</a>
-      </div>
-      <div class="nav-section">
-        <ul class="breadcrumb navbar-element" id="breadcrumbs">
-          <li class="breadcrumb-item"><a href="#">Documents</a></li>
-          <li class="breadcrumb-item"><a href="#">750</a></li>
-          <li class="breadcrumb-item">Lectures</li>
-        </ul>
-      </div>
-      <div class="nav-section" id="buttons">
-            <button class="btn btn-default nav-btn " type="submit">COPY</button>
-            <button class="btn btn-default nav-btn " type="submit">PASTE</button>
-            <button class="btn btn-default nav-btn " type="submit">CUT</button>
-            <button class="btn btn-default nav-btn " type="submit">DELETE</button>
-            <button class="btn btn-default nav-btn " type="submit">NEW FOLDER</button>
-      </div>
-      <form class="navbar-form navbar-right">
-        <div class="input-group" >
-          <input type="text" class="form-control navbar-element" placeholder="Search">
-          <div class="input-group-btn">
-            <button class="btn btn-default search-btn" type="submit">
-              <i class="glyphicon glyphicon-search" ></i>
-            </button>
-          </div>
-
+          <button class="hamburger" onclick="toggleSideMenu()">&#9776;</button>
+          Chrome File Explorer</a>
         </div>
-        <button class="btn btn-default nav-btn" type="submit">
-          <i class="glyphicon glyphicon-cog" ></i>
-        </button>
-      </form>
+        <div class="nav-section">
+          <ul class="breadcrumb navbar-element" id="breadcrumbs">
+            <li class="breadcrumb-item"><a href="#">Documents</a></li>
+            <li class="breadcrumb-item"><a href="#">750</a></li>
+            <li class="breadcrumb-item">Lectures</li>
+          </ul>
+        </div>
+
+        <div class="dropdown">
+          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <i class="glyphicon glyphicon-sort" ></i>
+            <i class="glyphicon glyphicon-option-vertical" ></i>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li><a href="#">Name <i class="glyphicon glyphicon-sort-by-alphabet"></i></a></li>
+            <li><a href="#">&zwnj;<i class="glyphicon glyphicon-sort-by-alphabet-alt"></i></a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">Date modified <i class="glyphicon glyphicon-sort-by-attributes"></i></a></li>
+            <li><a href="#">&zwnj;<i class="glyphicon glyphicon-sort-by-attributes-alt"></i></a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">Size <i class="glyphicon glyphicon-sort-by-attributes"></i></a></li>
+            <li><a href="#">&zwnj;<i class="glyphicon glyphicon-sort-by-attributes-alt"></i></a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">Type <i class="glyphicon glyphicon-sort-by-alphabet"></i></a></li>
+            <li><a href="#">&zwnj;<i class="glyphicon glyphicon-sort-by-alphabet-alt"></i></a></li>          
+          </ul>
+        </div>
+        <!-- will delete buttons (keeping for now just in case)
+        <div class="nav-section" id="buttons">
+          <button class="btn btn-default nav-btn " type="submit">COPY</button>
+          <button class="btn btn-default nav-btn " type="submit">PASTE</button>
+          <button class="btn btn-default nav-btn " type="submit">CUT</button>
+          <button class="btn btn-default nav-btn " type="submit">DELETE</button>
+          <button class="btn btn-default nav-btn " type="submit">NEW FOLDER</button>
+        </div> -->
+        <form class="navbar-form navbar-right">
+          <div class="input-group" >
+            <input type="text" class="form-control navbar-element" placeholder="Search">
+            <div class="input-group-btn">
+              <button class="btn btn-default search-btn" type="submit">
+                <i class="glyphicon glyphicon-search" ></i>
+              </button>
+            </div>
+
+          </div>
+          <button class="btn btn-default nav-btn" type="submit">
+            <i class="glyphicon glyphicon-cog" ></i>
+          </button>
+        </form>
+      </div>
+    </nav>
+
+    <!-- Side menu -->
+    <div class="side-menu light-text" id="fileTree">
     </div>
-  </nav>
 
-  <!-- Side menu -->
-  <div class="side-menu light-text" id="fileTree">
-  </div>
+    <!-- Dummy div used to parse native explorer source code -->
+    <div class="result" style = "visibility: hidden; height:0; width:0;" id = 'result'></div>
 
-  <!-- Dummy div used to parse native explorer source code -->
-  <div class="result" style = "visibility: hidden; height:0; width:0;" id = 'result'></div>
+    <!-- Main file content -->
+    <div class="main-content" id="wrapper">
 
-  <!-- Main file content -->
-  <div class="main-content" id="wrapper">
+      <div class="folderItem" onclick="changeDir(this)" id = "f" ondragstart="drag(event)" ondragover="allowDrop(event)" ondrop="drop(event)" draggable="true">
+        <img src="folderImage2.png" class="img-responsive img-radio" draggable="false">
+        <i class="glyphicon glyphicon-pushpin pin" onclick="pin(event, this)" draggable="false"></i>
+        <i class="glyphicon  glyphicon-paperclip pin" onclick="copy(event, this)" style="padding-right: 0;" draggable="false"></i>
+        <figcaption class="caption img-radio" draggable="false">...</figcaption>
 
-    <div class="folderItem" onclick="changeDir(this)" id = "f" ondragstart="drag(event)" ondragover="allowDrop(event)" ondrop="drop(event)" draggable="true">
-      <img src="folderImage2.png" class="img-responsive img-radio" draggable="false">
-      <i class="glyphicon glyphicon-pushpin pin" onclick="pin(event, this)" draggable="false"></i>
-      <i class="glyphicon  glyphicon-paperclip pin" onclick="copy(event, this)" style="padding-right: 0;" draggable="false"></i>
-      <figcaption class="caption img-radio" draggable="false">...</figcaption>
-
-      <input type="checkbox" class="hidden" draggable="false">
+        <input type="checkbox" class="hidden" draggable="false">
+      </div>
+      <!--Javascript will add fields here-->
     </div>
-    <!--Javascript will add fields here-->
-  </div>
 
-  <!-- Show snackbar notification for copy to clipboard -->
-  <div id="snackbar">Copied to clipboard.</div>
+    <!-- Show snackbar notification for copy to clipboard -->
+    <div id="snackbar">Copied to clipboard.</div>
 
-</body>
-</html>
+  </body>
+  </html>
