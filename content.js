@@ -21,7 +21,7 @@ class DirectoryFile {
 }
 
 $(document).ready(function () {
-  config.extension_path = window.location.href; 
+  config.extension_path = window.location.href;
   if (navigator.appVersion.indexOf("Win")!=-1) config.default_path = config.windows_path;
   if (navigator.appVersion.indexOf("Mac")!=-1) config.default_path = config.mac_path;
   if (navigator.appVersion.indexOf("Linux")!=-1) config.default_path = config.linux_path;
@@ -30,9 +30,34 @@ $(document).ready(function () {
   loadPage(currentDirectory);
 });
 
+function updateBreadcrumbs() {
+  var breadcrumbs = document.getElementById("breadcrumbs");
+  var pathElements = getPathElements(currentDirectory);
+  console.log(pathElements);
+  //Remove existing breadcrumbs
+  while (breadcrumbs.firstChild) {
+    breadcrumbs.removeChild(breadcrumbs.firstChild);
+  }
+  // Add new crumbs
+  for (var i = 0; i < pathElements.length; i++) {
+    var crumb = createBreadCrumb(pathElements[i]);
+    breadcrumbs.appendChild(crumb);
+  }
+}
+
+function createBreadCrumb(pathElement) {
+  var crumb = document.createElement('li');
+  var a = document.createElement('a');
+  a.setAttribute('href',"#");
+  a.innerHTML = pathElement;
+  crumb.class = 'breadcrumb-item'
+  crumb.appendChild(a);
+  return crumb;
+}
+
 function loadPage(path) {
   setCurrentDirectory(path);
-
+  updateBreadcrumbs();
   $.get( constants.urlBase + path, function( data ) {
     $( ".result" ).html( data );
     $('#wrapper').find('div').slice(1).remove();
@@ -184,6 +209,8 @@ function drop(ev) {
     }
   }
 
+/* breadcrumbs code goes here*/
+
 /* Getters, setters, and checks */
 function setCurrentDirectory(path) {
   if (!path){
@@ -210,6 +237,14 @@ function isParentDirectoryLink(fileName) {
     return true;
   }
   return false;
+}
+
+function getPathElements(path) {
+  var pathElements = path.split("/");
+  if (pathElements[pathElements.length - 1] === '') {
+    pathElements.pop();
+  }
+  return pathElements;
 }
 
 /* Listener for messages from background.js */
