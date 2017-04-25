@@ -187,7 +187,7 @@ figcaption {
     display: inline;  
 }
 
-.dropdown-toggle, .dropdown-toggle:focus, .dropdown-toggle.active:focus, .dropdown-toggle.active {
+.btn, .btn:focus, .btn.active:focus, .btn.active {
     background-color:#6da3f9; border-color:#6da3f9; color: white; 
 }
 
@@ -198,4 +198,9 @@ figcaption {
 
 .dropdown-menu li{
     color: blue;
+}
+
+/* Settings popup */
+td {
+    padding: 2px;
 }

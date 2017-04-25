@@ -69,10 +69,9 @@
                 <i class="glyphicon glyphicon-search" ></i>
               </button>
             </div>
-
           </div>
-          <button class="btn btn-default nav-btn" type="submit">
-            <i class="glyphicon glyphicon-cog" ></i>
+          <button class="btn btn-default settings" type="button" data-toggle="modal" data-target="#settingsPopup">
+            <i class="glyphicon glyphicon-cog"></i>
           </button>
         </form>
       </div>
@@ -101,6 +100,39 @@
 
     <!-- Show snackbar notification for copy to clipboard -->
     <div id="snackbar">Copied to clipboard.</div>
+
+    <!-- Settings modal popup -->
+    <div class="modal fade" id="settingsPopup" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Settings content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Settings</h4>
+          </div>
+          <div class="modal-body">
+            <table style="width:100%;">
+              <tr>
+                <td>Default folder</td>
+                <td><input type="text" class="form-control" id="defaultPath" ></td>
+                <td><button type="button" class="btn btn-primary" >Save</button></td>
+              </tr>
+              <tr>
+                <td>Hidden files:</td>
+                <td>
+                  <button type="button" class="btn btn-primary" onclick="toggleHiddenFiles(this)">
+                    <i style="display:none;" class="glyphicon glyphicon glyphicon-eye-open"></i>
+                    <i class="glyphicon glyphicon-eye-close"></i>
+                  </button>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>    
 
   </body>
   </html>
