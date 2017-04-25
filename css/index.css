@@ -181,3 +181,26 @@ figcaption {
     from {bottom: 30px; opacity: 1;}
     to {bottom: 0; opacity: 0;}
 }
+
+/* Drop down menus */
+.dropdown {
+    display: inline;  
+}
+
+.btn, .btn:focus, .btn.active:focus, .btn.active {
+    background-color:#6da3f9; border-color:#6da3f9; color: white; 
+}
+
+.dropdown-menu .glyphicon {
+    float: right;
+    color: #6da3f9;
+}
+
+.dropdown-menu li{
+    color: blue;
+}
+
+/* Settings popup */
+td {
+    padding: 2px;
+}
