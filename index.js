@@ -64,12 +64,17 @@ function copy(event, item){
 	};
 	document.execCommand("Copy", false, null);
 
-	var notification = document.getElementById("snackbar")
-    notification.className = "show";
-    notification.innerHTML = 'Coppied to clipboard: ' + path;
-    setTimeout(function(){ notification.className = notification.className.replace("show", ""); }, 3000);
+    var message = 'Copied to clipboard: ' + path;
+    showNotification(message);
 	
 	console.log('Copying: ' + path);
+}
+
+function showNotification(message) {
+	var notification = document.getElementById("snackbar")
+    notification.className = "show";
+    notification.innerHTML = message;
+    setTimeout(function(){ notification.className = notification.className.replace("show", ""); }, 3000);	
 }
 
 function allowDrop(ev) {
@@ -100,4 +105,21 @@ function drop(ev) {
 		// Note that if we put divs inside the divs with the class folderItem, this will stop working.
 		ev.target.parentNode.insertAdjacentHTML('afterend', newDiv.outerHTML);
 	}
+}
+
+/* Called from setting menu */
+//Toggle hidden files and folders from settings menu
+function toggleHiddenFiles(btn) {
+	var show = document.getElementById('show');
+	var hide = document.getElementById('hide');
+	$("#show").toggle();
+	$("#hide").toggle();
+}
+//Save new default folder path
+function saveDefaultDir(path) {
+	if (!path) {
+		var path = document.getElementById('defaultDir').value;
+	}
+	var message = 'Updated default directory: ' + path;
+	showNotification(message);
 }
