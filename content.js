@@ -74,6 +74,7 @@ function createFolderViewElement(dirFile) {
   var fvClone = folderView.cloneNode(true);
   var caption = fvClone.getElementsByClassName("caption")[0];
   var fileName = dirFile.fileName;
+  fvClone.setAttribute('title', fileName);
   caption.innerHTML = fileName;
   var path = currentDirectory + '/' + fileName;
   caption.setAttribute('name', path);
