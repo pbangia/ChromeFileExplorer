@@ -5,7 +5,7 @@ var idgenerator = 0;
 
 var sortStringPrimer = function(a) {return a.toUpperCase();}
 var sortSizePrimer = null;
-var sortDateModifiedPrimer = null;
+var sortDateModifiedPrimer = function(a) {return new Date(a)};
 var sortFileTypePrimer = sortStringPrimer;
 
 var sortDict = {
