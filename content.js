@@ -72,7 +72,7 @@ function createFolderViewElement(dirFile) {
   //Make new folder view element for each file
   var folderView = document.getElementById("f");
   var fvClone = folderView.cloneNode(true);
-  fvClone.id = idgenerator;
+  fvClone.id = "f"+idgenerator;
   idgenerator++;
   var caption = fvClone.getElementsByClassName("caption")[0];
   var fileName = dirFile.fileName;
@@ -80,6 +80,16 @@ function createFolderViewElement(dirFile) {
   caption.innerHTML = fileName;
   var path = currentDirectory + '/' + fileName;
   caption.setAttribute('name', path);
+  fvClone.addEventListener('dragstart', (function(e) {
+      return drag(e);
+    }), false);          				
+	fvClone.addEventListener('dragover', (function(e) {
+		return allowDrop(e);
+	}), false);
+	fvClone.addEventListener('drop', (function(e) {
+		return drop(e)
+	}), false);        
+
   //Set next folder click action to reload folders
   if (dirFile.isFolder){
     fvClone.addEventListener('click', (function(e) {
@@ -196,3 +206,5 @@ chrome.runtime.onMessage.addListener(
     }
   }
 );
+
+

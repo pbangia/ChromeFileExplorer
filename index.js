@@ -100,4 +100,26 @@ function drop(ev) {
 		// Note that if we put divs inside the divs with the class folderItem, this will stop working.
 		ev.target.parentNode.insertAdjacentHTML('afterend', newDiv.outerHTML);
 	}
+
+	newDiv = document.getElementById(newDiv.id);
+
+	// TODO: this is duplicate code from content.js
+
+	// Add the event listeners from the original to the new folders
+	newDiv.addEventListener('dragstart', (function(e) {
+	  	return drag(e);
+    }), false);          				
+	newDiv.addEventListener('dragover', (function(e) {
+		return allowDrop(e);
+	}), false);
+	newDiv.addEventListener('drop', (function(e) {
+		return drop(e)
+	}), false);          				
+	// This can only be done on folders.
+	var param = draggedItem.getElementsByClassName('caption')[0].getAttribute('name');
+	if (param.endsWith("/")){
+		newDiv.addEventListener('click', (function(e) {
+    	    return reloadFolders(param);
+    	}), false);
+	}
 }
