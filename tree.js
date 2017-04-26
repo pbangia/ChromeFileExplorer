@@ -23,7 +23,16 @@ function setUpTree() {
     'tree.open',
     function (e) {
         console.log("open node");
-        getChildrenFolders(e.node.id);
+        var node = e.node;
+
+        console.log("length " + node.children.length);
+        console.log("child \'" + node.children[0].name +"\'");
+        //check if children do not exist (would only have 1 placeholder child whose value is "")
+        if (node.children.length == 1 && node.children[0].name == "*") {
+            //remove the blank placeholder
+            removeChildrenFromNode(node);
+            getChildrenFolders(node.id);
+        }        
     }
 );
 }
@@ -35,29 +44,43 @@ function refreshTree() {
 
 }
 
-//takes single DirectoryFile object and name of current directory
-function currentDirectoryToJSONFormat(fileName, isFolder, link, size, sizeRaw, dateModified, dateModifiedRaw) {
-    
-    var directoryFile = new DirectoryFile(fileName, isFolder, link, size, sizeRaw, dateModified, dateModifiedRaw);
+//Remove all children from node
+function removeChildrenFromNode(node) {
+    console.log("node name " + node.name);
+    console.log("node id " + node.id);
 
-    var dirNames = directoryFile.link.split("/"); //TODO change this so that windows and linux can use
+    $(treeID).tree(
+        'updateNode',
+        node,
+        {
+            name: node.name,
+            id: node.id,
+            children: []
+        }
+    );
+}
+
+//takes single DirectoryFile object and name of current directory
+function currentDirectoryToJSONFormat(fileName, link) {
+  
+    var dirNames = link.split("/"); //TODO change this so that windows and linux can use
     var dirLength = dirNames.length;
 
     //second to last in dirNames is current directory
     var parentDir = dirNames[(dirLength - 2)];
     var parentNode = $(treeID).tree('getNodeById', parentDir);
+    console.log("parent " + parentDir);
+    console.log("parent id " + parentNode);
+    console.log("childDir " + fileName);
 
-    //last is child directory name
-    var childDir = dirNames[(dirLength - 1)];
-
-    console.log("childDir " + childDir);
+    var name = fileName.replace("/", "");
 
     //add child to parent node
     $(treeID).tree('appendNode',
     {
-        name: childDir,
+        name: name,
         id: link, //full path
-        children: [""]
+        children: [{ name: "*" }]
     },
     parentNode
     );
@@ -71,15 +94,13 @@ function getChildrenFolders(path) {
         var table = document.getElementById("tbody");
         for (var i = 0, row; row = table.rows[i]; i++) {
             var fileName = row.cells[0].dataset.value;
-            var isFolder = false;
             var link = currentDirectory + fileName;
-            var size = row.cells[1].innerHTML;
-            var sizeRaw = row.cells[1].dataset.value;
-            var dateModified = row.cells[2].innerHTML;
-            var dateModifiedRaw = row.cells[2].dataset.value;
+
+            console.log("filename " + fileName);
+            console.log("link " + link);
 
             if (isDirectory(fileName)) {
-                currentDirectoryToJSONFormat(fileName, isFolder, link, size, sizeRaw, dateModified, dateModifiedRaw);
+                currentDirectoryToJSONFormat(fileName, link);
             }
            
         }
