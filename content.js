@@ -29,6 +29,20 @@ $(document).ready(function () {
 
   currentDirectory = config.default_path;
   loadPage(currentDirectory);
+
+  setUpTree();
+
+    //add first directory
+    $(treeID).tree('appendNode',
+       {
+           name: currentDirectory,//TODO change to currentDirectory name
+           id: currentDirectory,//full path
+           children: [""]
+       }
+ );
+
+  refreshTree();
+
 });
 
 function loadPage(path) {
@@ -65,6 +79,10 @@ function readFiles() {
     }
     createFolderViewElement(dirFile);
   }
+}
+
+function readAndCreateChildrenFolders() {
+
 }
 
 /* HTML component creation and manipulation */
