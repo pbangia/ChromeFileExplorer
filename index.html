@@ -39,18 +39,18 @@
             <i class="glyphicon glyphicon-sort" ></i>
             <i class="glyphicon glyphicon-option-vertical" ></i>
           </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-            <li><a href="#">Name <i class="glyphicon glyphicon-sort-by-alphabet"></i></a></li>
-            <li><a href="#">&zwnj;<i class="glyphicon glyphicon-sort-by-alphabet-alt"></i></a></li>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="dropdownSortMenu">
+            <li><a id='fileName_asc' href="#">Name <i class="glyphicon glyphicon-sort-by-alphabet"></i></a></li>
+            <li><a id='fileName_dsc' href="#">&zwnj;<i class="glyphicon glyphicon-sort-by-alphabet-alt"></i></a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="#">Date modified <i class="glyphicon glyphicon-sort-by-attributes"></i></a></li>
-            <li><a href="#">&zwnj;<i class="glyphicon glyphicon-sort-by-attributes-alt"></i></a></li>
+            <li><a id='dateModified_asc' href="#">Date modified <i class="glyphicon glyphicon-sort-by-attributes"></i></a></li>
+            <li><a id='dateModified_dsc' href="#">&zwnj;<i class="glyphicon glyphicon-sort-by-attributes-alt"></i></a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="#">Size <i class="glyphicon glyphicon-sort-by-attributes"></i></a></li>
-            <li><a href="#">&zwnj;<i class="glyphicon glyphicon-sort-by-attributes-alt"></i></a></li>
+            <li><a id='sizeRaw_asc' href="#">Size <i class="glyphicon glyphicon-sort-by-attributes"></i></a></li>
+            <li><a id='sizeRaw_dsc' href="#">&zwnj;<i class="glyphicon glyphicon-sort-by-attributes-alt"></i></a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="#">Type <i class="glyphicon glyphicon-sort-by-alphabet"></i></a></li>
-            <li><a href="#">&zwnj;<i class="glyphicon glyphicon-sort-by-alphabet-alt"></i></a></li>          
+            <li><a id='type_asc' href="#">Type <i class="glyphicon glyphicon-sort-by-alphabet"></i></a></li>
+            <li><a id='type_dsc' href="#">&zwnj;<i class="glyphicon glyphicon-sort-by-alphabet-alt"></i></a></li>
           </ul>
         </div>
         <!-- will delete buttons (keeping for now just in case)
@@ -132,7 +132,7 @@
         </div>
 
       </div>
-    </div>    
+    </div>
 
   </body>
   </html>
