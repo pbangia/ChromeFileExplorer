@@ -3,9 +3,21 @@ var currentFiles = [];
 var currentDirectory;
 var idgenerator = 0;
 
+var sortStringPrimer = function(a) {return a.toUpperCase();}
+var sortSizePrimer = null;
+var sortDateModifiedPrimer = null;
+var sortFileTypePrimer = sortStringPrimer;
+
+var sortDict = {
+  fileName: sortStringPrimer,
+  size: sortSizePrimer,
+  dateModified: sortDateModifiedPrimer,
+  fileType: sortFileTypePrimer
+}
+
 /* Classes */
 class DirectoryFile {
-  constructor(fileName, isFolder, link, size, sizeRaw, dateModified, dateModifiedRaw) {
+  constructor(fileName, isFolder, link, size, sizeRaw, dateModified, dateModifiedRaw, type) {
     this.fileName = fileName;
     this.isFolder = isFolder;
     this.link = link;
@@ -13,10 +25,7 @@ class DirectoryFile {
     this.sizeRaw = sizeRaw;
     this.dateModified = dateModified;
     this.dateModifiedRaw = dateModifiedRaw;
-  }
-
-  setIsFolder(isFolder) {
-    this.isFolder = isFolder;
+    this.type = type;
   }
 }
 
@@ -26,9 +35,37 @@ $(document).ready(function () {
   if (navigator.appVersion.indexOf("Mac")!=-1) config.default_path = config.mac_path;
   if (navigator.appVersion.indexOf("Linux")!=-1) config.default_path = config.linux_path;
 
+  // Add event listener for dropdownSortMenu
+  document.getElementById('dropdownSortMenu').addEventListener('click', function(ev){onSortClick(ev)}, false);
+
   currentDirectory = config.default_path;
   loadPage(currentDirectory);
+  console.log(currentFiles);
 });
+
+function onSortClick(ev) {
+  var field = ev.target.id.split('_')[0];
+  var asc = (ev.target.id.split('_')[1] === 'asc') ? true : false;
+  sortFiles(field, asc);
+}
+
+function sortFiles(field, reverse) {
+  var primer = sortDict[field];
+  currentFiles.sort(sort_by(field, reverse, primer));
+  $('#wrapper').find('div').slice(1).remove();
+  for (var i = 0; i < currentFiles.length; i++) {
+    createFolderViewElement(currentFiles[i]);
+  }
+  console.log(currentFiles);
+}
+
+var sort_by = function(field, reverse, primer){
+   var key = function (x) {return primer ? primer(x[field]) : x[field]};
+   return function (a,b) {
+	  var A = key(a), B = key(b);
+	  return ( (A < B) ? -1 : ((A > B) ? 1 : 0) ) * [-1,1][+!!reverse];
+   }
+}
 
 function loadPage(path) {
   setCurrentDirectory(path);
@@ -56,13 +93,16 @@ function readFiles() {
     var sizeRaw = row.cells[1].dataset.value;
     var dateModified = row.cells[2].innerHTML;
     var dateModifiedRaw = row.cells[2].dataset.value;
-
-    var dirFile = new DirectoryFile(fileName, isFolder, link, size, sizeRaw, dateModified, dateModifiedRaw);
+    var type = fileName.split(".")[1];
 
     if (isDirectory(fileName) || isParentDirectoryLink(fileName)) {
-      dirFile.setIsFolder(true);
+      isFolder = true;
+      type = '';
     }
+
+    var dirFile = new DirectoryFile(fileName, isFolder, link, size, sizeRaw, dateModified, dateModifiedRaw, type);
     createFolderViewElement(dirFile);
+    currentFiles.push(dirFile);
   }
 }
 
@@ -98,7 +138,6 @@ function createFolderViewElement(dirFile) {
   }
 
   contentList.appendChild(fvClone);
-  currentFiles.push(dirFile);
 }
 
 /* Breadcrumb manipulation*/
@@ -111,7 +150,7 @@ function updateBreadcrumbs() {
   }
   // Add new crumbs
   for (var i = 0; i < pathElements.length; i++) {
-  var pathToCurrentElement = getPathToCurrentElement(i, pathElements);
+    var pathToCurrentElement = getPathToCurrentElement(i, pathElements);
     var crumb = createBreadCrumb(pathElements[i], pathToCurrentElement);
     breadcrumbs.appendChild(crumb);
   }
@@ -129,7 +168,6 @@ function createBreadCrumb(pathElement, pathToCurrentElement) {
   a.addEventListener('click', function(ev){onCrumbClick(ev)}, false);
   crumb.class = 'breadcrumb-item'
   crumb.appendChild(a);
-  console.log(crumb);
   return crumb;
 }
 
@@ -188,8 +226,11 @@ chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     switch(request.message) {
       case "clicked_browser_action":
-        var url = config.extension_path;
-        chrome.runtime.sendMessage({"message": "open_new_tab", "url": url});
+        sortFiles('fileName', true);
+        console.log(currentFiles);
+        // sortFiles('sizeRaw', false);
+        // var url = config.extension_path;
+        // chrome.runtime.sendMessage({"message": "open_new_tab", "url": url});
         break;
       default:
         break;
