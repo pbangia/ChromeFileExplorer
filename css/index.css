@@ -80,6 +80,7 @@ color:#fff;
     border-left: 1px solid gray;
     padding: 1em;
     height: 100%;
+    width: 100%;
 }
 
 
@@ -103,22 +104,35 @@ color:#fff;
 }
 
 /* Folder item */
-.btn-radio {
-	width: 100%;
-}
 .img-radio {
 	margin: 5px;
 	max-width: 100px;
 	max-height: 100px;
 	cursor: pointer;
-
 }
-figcaption {
+.img-radio-list {
+    margin: 5px;
+    max-width: 100px;
+    max-height: 20px;
+    cursor: pointer;
+    display: inline-table;
+}
+
+.figcaption {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space:nowrap;
 	cursor: pointer;
 }
+
+.figcaption-list {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap;
+    cursor: pointer;
+    display: inline-table;
+}
+
 .folderItem {
 	background: #fff;
 	border-radius: 3px;
@@ -126,10 +140,26 @@ figcaption {
 	max-width: 100px;
 	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 	display: inline-table;
+    cursor: pointer;
+}
+
+.folderItem-list {
+    background: #fff;
+    border-radius: 2px;
+    max-height: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.23);
+    display: table;
+    width: 65%;
+    margin: 0.5rem auto;
+    cursor: pointer;
 }
 
 .folderItem:hover {
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.folderItem-list:hover {
+  box-shadow: 0 4px 7px rgba(0,0,0,0.25), 0 3px 3px rgba(0,0,0,0.22);
 }
 
 .pin {
