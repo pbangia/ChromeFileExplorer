@@ -103,7 +103,7 @@ function drop(ev) {
 
 	newDiv = document.getElementById(newDiv.id);
 
-	// TODO: this is duplicate code from content.js
+	// TODO: this is almost duplicate code from content.js and could be refactored.
 
 	// Add the event listeners from the original to the new folders
 	newDiv.addEventListener('dragstart', (function(e) {
@@ -115,11 +115,17 @@ function drop(ev) {
 	newDiv.addEventListener('drop', (function(e) {
 		return drop(e)
 	}), false);          				
-	// This can only be done on folders.
-	var param = draggedItem.getElementsByClassName('caption')[0].getAttribute('name');
+
+	var param = newDiv.getElementsByClassName('caption')[0].getAttribute('name');
 	if (param.endsWith("/")){
+		// If a folder, load the UI for that folder
 		newDiv.addEventListener('click', (function(e) {
     	    return reloadFolders(param);
+    	}), false);
+	}else {
+		// If a file, load the file into Chrome.
+		newDiv.addEventListener('click', (function(e) {
+    	    return changeDir(this);
     	}), false);
 	}
 }
