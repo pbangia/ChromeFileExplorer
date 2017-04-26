@@ -105,6 +105,10 @@ function createFolderViewElement(dirFile) {
     var extension = imgPath[imgPath.length-1] + '.png';
     if (!fileTypeIcons[extension]) extension = 'file.png';
     img.setAttribute("src", 'fileTypeIcons/'+extension);
+    // Event handler for clicking
+		fvClone.addEventListener('click', (function(e) {
+    	    return changeDir(this);
+    	}), false);
   }
 
   contentList.appendChild(fvClone);
