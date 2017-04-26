@@ -32,6 +32,7 @@ function setUpTree() {
             //remove the blank placeholder
             removeChildrenFromNode(node);
             getChildrenFolders(node.id);
+            refreshTree();
         }        
     }
 );
@@ -46,6 +47,7 @@ function refreshTree() {
 
 //Remove all children from node
 function removeChildrenFromNode(node) {
+    console.log("remove child from node " );
     console.log("node name " + node.name);
     console.log("node id " + node.id);
 
@@ -67,12 +69,18 @@ function currentDirectoryToJSONFormat(fileName, link) {
     var dirLength = dirNames.length;
 
     //second to last in dirNames is current directory
-    var parentDir = dirNames[(dirLength - 2)];
+
+
+    var parentDir = "";
+    for (var i = 0; i < dirLength - 2; i++) {
+        parentDir += (dirNames[i]+"/");
+    }
+
     var parentNode = $(treeID).tree('getNodeById', parentDir);
     console.log("parent " + parentDir);
     console.log("parent id " + parentNode);
     console.log("childDir " + fileName);
-
+    console.log("link id " + link);
     var name = fileName.replace("/", "");
 
     //add child to parent node
@@ -88,13 +96,13 @@ function currentDirectoryToJSONFormat(fileName, link) {
 }
 
 function getChildrenFolders(path) {
-
+    console.log("get children folders");
     $.get(constants.urlBase + path, function (data) {
 
         var table = document.getElementById("tbody");
         for (var i = 0, row; row = table.rows[i]; i++) {
             var fileName = row.cells[0].dataset.value;
-            var link = currentDirectory + fileName;
+            var link = currentDirectory +"/"+ fileName;
 
             console.log("filename " + fileName);
             console.log("link " + link);

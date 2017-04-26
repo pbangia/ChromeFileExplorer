@@ -36,13 +36,10 @@ $(document).ready(function () {
     $(treeID).tree('appendNode',
        {
            name: currentDirectory,//TODO change to currentDirectory name
-           id: currentDirectory,//full path
+           id: currentDirectory+"/",//full path
            children: [{name:"*"}]
        }
  );
-
-  //refreshTree();
-
 });
 
 function loadPage(path) {
@@ -79,10 +76,6 @@ function readFiles() {
     }
     createFolderViewElement(dirFile);
   }
-}
-
-function readAndCreateChildrenFolders() {
-
 }
 
 /* HTML component creation and manipulation */
