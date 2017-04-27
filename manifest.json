@@ -3,7 +3,8 @@
   "name": "Chrome File Explorer",
   "version": "0.1",
   "permissions": [
-    "file://*/*"
+    "file://*/*",
+    "storage"
   ],
   "content_scripts": [
     {
