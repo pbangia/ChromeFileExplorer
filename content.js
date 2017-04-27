@@ -42,10 +42,6 @@ function loadPage(path) {
 
 function reloadFolders(path){
     currentFiles = [];
-    if (path.endsWith("..")){
-      // If the path is the parent, trim the path
-      path = path.substring(0,path.lastIndexOf("/"));
-    }
     loadPage(path);
 }
 
@@ -63,6 +59,9 @@ function readFiles() {
 
     var dirFile = new DirectoryFile(fileName, isFolder, link, size, sizeRaw, dateModified, dateModifiedRaw);
 
+    if (dirFile.fileName === ".."){
+      continue;
+    }
     if (isDirectory(fileName) || isParentDirectoryLink(fileName)) {
       dirFile.setIsFolder(true);
     }
