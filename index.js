@@ -15,14 +15,14 @@ function toggleSideMenu() {
 }
 
 $(function () {
-    $('.btn-radio').click(function(e) {
-        $('.btn-radio').not(this).removeClass('active')
-    		.siblings('input').prop('checked',false)
-            .siblings('.img-radio').css('opacity','0.5');
-    	$(this).addClass('active')
-            .siblings('input').prop('checked',true)
-    		.siblings('.img-radio').css('opacity','1');
-    });
+	$('.btn-radio').click(function(e) {
+		$('.btn-radio').not(this).removeClass('active')
+		.siblings('input').prop('checked',false)
+		.siblings('.img-radio').css('opacity','0.5');
+		$(this).addClass('active')
+		.siblings('input').prop('checked',true)
+		.siblings('.img-radio').css('opacity','1');
+	});
 });
 
 /* called when folder item is clicked. */
@@ -64,12 +64,17 @@ function copy(event, item){
 	};
 	document.execCommand("Copy", false, null);
 
-	var notification = document.getElementById("snackbar")
-    notification.className = "show";
-    notification.innerHTML = 'Coppied to clipboard: ' + path;
-    setTimeout(function(){ notification.className = notification.className.replace("show", ""); }, 3000);
+	var message = 'Copied to clipboard: ' + path;
+	showNotification(message);
 	
 	console.log('Copying: ' + path);
+}
+
+function showNotification(message) {
+	var notification = document.getElementById("snackbar")
+	notification.className = "show";
+	notification.innerHTML = message;
+	setTimeout(function(){ notification.className = notification.className.replace("show", ""); }, 3000);	
 }
 
 function allowDrop(ev) {
@@ -129,4 +134,48 @@ function drop(ev) {
     	    return changeDir(this);
     	}), false);
 	}
+}
+
+/* Called from setting menu */
+//Toggle hidden files and folders from settings menu
+function toggleHiddenFiles(btn) {
+	var show = document.getElementById('show');
+	var hide = document.getElementById('hide');
+	$("#show").toggle();
+	$("#hide").toggle();
+}
+//Save new default folder path
+function saveDefaultDir(path) {
+	if (!path) {
+		var path = document.getElementById('defaultDir').value;
+	}
+	var message = 'Updated default directory: ' + path;
+	console.log(message);
+	showNotification(message);
+}
+
+/* Toggle files to list and icon views */
+function toggleFileView(button){
+	// toggle the button
+	var  toggleBtn = button.getElementsByTagName('i');
+	$(toggleBtn[0]).toggle();
+	$(toggleBtn[1]).toggle();
+
+	// toggle the necessary classess on file divs
+	$( ".figcaption, .figcaption-list" ).each(function() {
+		$(this).toggleClass('figcaption');
+		$(this).toggleClass('figcaption-list');
+	});
+
+	$( ".img-radio, .img-radio-list" ).each(function() {
+		$(this).toggleClass('img-radio');
+		$(this).toggleClass('img-radio-list');
+	});
+
+	$( ".folderItem, .folderItem-list" ).each(function() {
+		$(this).toggleClass('folderItem');
+		$(this).toggleClass('folderItem-list');
+	});	
+
+	console.log('Toggling icon/list view');
 }
