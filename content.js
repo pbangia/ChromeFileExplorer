@@ -116,6 +116,7 @@ function createFolderViewElement(dirFile) {
   fvClone.setAttribute('title', fileName);
   caption.innerHTML = fileName;
   var path = currentDirectory + '/' + fileName;
+  path += (dirFile.isFolder) ? '/' : '';
   caption.setAttribute('name', path);
   fvClone.addEventListener('dragstart', (function(e) {
       return drag(e);
