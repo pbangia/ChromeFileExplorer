@@ -161,6 +161,9 @@ function toggleFileView(button){
 	$(toggleBtn[0]).toggle();
 	$(toggleBtn[1]).toggle();
 
+	$(".list-attribute").each(function() {
+		$(this).toggleClass('hidden');
+	});
 	// toggle the necessary classess on file divs
 	$( ".figcaption, .figcaption-list" ).each(function() {
 		$(this).toggleClass('figcaption');
