@@ -37,7 +37,7 @@ $(document).ready(function () {
        {
            name: currentDirectory,//TODO change to currentDirectory name
            id: currentDirectory+"/",//full path
-           children: [{name:"*"}]
+           children: [{name:""}]
        }
  );
 });
