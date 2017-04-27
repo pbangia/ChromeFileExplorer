@@ -17,14 +17,20 @@
 <body>
 
   <!-- Navigation bar -->
-  <nav>
+  <nav class="navbar-fixed-top">
     <div class="container-fluid light-text">
 
       <div class="navbar-header">
 
-        <a class="navbar-brand light-text" href="#" >
+        <div class="navbar-brand light-text" href="#" style="padding-right:50px;" >
           <button class="hamburger" onclick="toggleSideMenu()">&#9776;</button>
-          Chrome File Explorer</a>
+          <button class="back-btn">
+            <i class="glyphicon glyphicon-menu-left" ></i>
+          </button>
+          <button class="forward-btn">
+            <i class="glyphicon glyphicon-menu-right" ></i>
+          </button>
+          Chrome File Explorer</div>
         </div>
         <div class="nav-section">
           <ul class="breadcrumb navbar-element" id="breadcrumbs">
@@ -39,20 +45,25 @@
             <i class="glyphicon glyphicon-sort" ></i>
             <i class="glyphicon glyphicon-option-vertical" ></i>
           </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-            <li><a href="#">Name <i class="glyphicon glyphicon-sort-by-alphabet"></i></a></li>
-            <li><a href="#">&zwnj;<i class="glyphicon glyphicon-sort-by-alphabet-alt"></i></a></li>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="dropdownSortMenu">
+            <li><a id='fileName_asc' href="#">Name <i class="glyphicon glyphicon-sort-by-alphabet"></i></a></li>
+            <li><a id='fileName_dsc' href="#">&zwnj;<i class="glyphicon glyphicon-sort-by-alphabet-alt"></i></a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="#">Date modified <i class="glyphicon glyphicon-sort-by-attributes"></i></a></li>
-            <li><a href="#">&zwnj;<i class="glyphicon glyphicon-sort-by-attributes-alt"></i></a></li>
+            <li><a id='dateModified_asc' href="#">Date modified <i class="glyphicon glyphicon-sort-by-attributes"></i></a></li>
+            <li><a id='dateModified_dsc' href="#">&zwnj;<i class="glyphicon glyphicon-sort-by-attributes-alt"></i></a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="#">Size <i class="glyphicon glyphicon-sort-by-attributes"></i></a></li>
-            <li><a href="#">&zwnj;<i class="glyphicon glyphicon-sort-by-attributes-alt"></i></a></li>
+            <li><a id='sizeRaw_asc' href="#">Size <i class="glyphicon glyphicon-sort-by-attributes"></i></a></li>
+            <li><a id='sizeRaw_dsc' href="#">&zwnj;<i class="glyphicon glyphicon-sort-by-attributes-alt"></i></a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="#">Type <i class="glyphicon glyphicon-sort-by-alphabet"></i></a></li>
-            <li><a href="#">&zwnj;<i class="glyphicon glyphicon-sort-by-alphabet-alt"></i></a></li>          
+            <li><a id='type_asc' href="#">Type <i class="glyphicon glyphicon-sort-by-alphabet"></i></a></li>
+            <li><a id='type_dsc' href="#">&zwnj;<i class="glyphicon glyphicon-sort-by-alphabet-alt"></i></a></li>
           </ul>
         </div>
+
+        <button class="btn btn-default" type="button" onclick="toggleFileView(this)">
+          <i class="glyphicon glyphicon glyphicon-th" ></i>
+          <i style="display:none;" class="glyphicon glyphicon glyphicon-th-list" ></i>
+        </button>
         <!-- will delete buttons (keeping for now just in case)
         <div class="nav-section" id="buttons">
           <button class="btn btn-default nav-btn " type="submit">COPY</button>
@@ -63,7 +74,7 @@
         </div> -->
         <form class="navbar-form navbar-right">
           <div class="input-group" >
-            <input type="text" class="form-control navbar-element" placeholder="Search">
+            <input type="text" class="form-control navbar-element" placeholder="Search" id='searchField'>
             <div class="input-group-btn">
               <button class="btn btn-default search-btn" type="submit">
                 <i class="glyphicon glyphicon-search" ></i>
@@ -82,16 +93,20 @@
     </div>
 
     <!-- Dummy div used to parse native explorer source code -->
-    <div class="result" style = "visibility: hidden; height:0; width:0;" id = 'result'></div>
+    <div class="result hidden" id = 'result'></div>
 
     <!-- Main file content -->
     <div class="main-content" id="wrapper">
 
-      <div class="folderItem" onclick="changeDir(this)" id = "f" ondragstart="drag(event)" ondragover="allowDrop(event)" ondrop="drop(event)" draggable="true">
+      <div class="folderItem hidden" id = "f" draggable="true">
         <img src="folderImage2.png" class="img-responsive img-radio" draggable="false">
         <i class="glyphicon glyphicon-pushpin pin" onclick="pin(event, this)" draggable="false"></i>
         <i class="glyphicon  glyphicon-paperclip pin" onclick="copy(event, this)" style="padding-right: 0;" draggable="false"></i>
-        <figcaption class="caption img-radio" draggable="false">...</figcaption>
+        <figcaption class="caption img-radio figcaption" draggable="false">...</figcaption>
+        <table style="float:right;"><tr>
+          <td class="list-attribute hidden">Date placeholder</td>
+          <td class="list-attribute hidden">Size placeholder</td>
+        </tr></table>
 
         <input type="checkbox" class="hidden" draggable="false">
       </div>
@@ -115,15 +130,15 @@
             <table style="width:100%;">
               <tr>
                 <td>Default folder</td>
-                <td><input type="text" class="form-control" id="defaultPath" ></td>
-                <td><button type="button" class="btn btn-primary" >Save</button></td>
+                <td><input type="text" class="form-control" id="defaultDir" ></td>
+                <td><button type="button" class="btn btn-primary" onclick="saveDefaultDir();" >Save</button></td>
               </tr>
               <tr>
-                <td>Hidden files:</td>
+                <td>Hidden files</td>
                 <td>
                   <button type="button" class="btn btn-primary" onclick="toggleHiddenFiles(this)">
-                    <i style="display:none;" class="glyphicon glyphicon glyphicon-eye-open"></i>
-                    <i class="glyphicon glyphicon-eye-close"></i>
+                    <i id="show" style="display:none;" class="glyphicon glyphicon glyphicon-eye-open"></i>
+                    <i id="hide" class="glyphicon glyphicon-eye-close"></i>
                   </button>
                 </td>
               </tr>
@@ -132,7 +147,7 @@
         </div>
 
       </div>
-    </div>    
+    </div>
 
   </body>
   </html>
