@@ -4,13 +4,13 @@ var currentDirectory;
 var idgenerator = 0;
 
 var sortStringPrimer = function(a) {return a.toUpperCase();}
-var sortSizePrimer = null;
+var sortSizePrimer = function(a) {return parseInt(a)};
 var sortDateModifiedPrimer = function(a) {return new Date(a)};
 var sortFileTypePrimer = sortStringPrimer;
 
 var sortDict = {
   fileName: sortStringPrimer,
-  size: sortSizePrimer,
+  sizeRaw: sortSizePrimer,
   dateModified: sortDateModifiedPrimer,
   fileType: sortFileTypePrimer
 }
@@ -51,6 +51,7 @@ function onSortClick(ev) {
 
 function sortFiles(field, reverse) {
   var primer = sortDict[field];
+  console.log(primer);
   currentFiles.sort(sort_by(field, reverse, primer));
   $('#wrapper').find('div').slice(1).remove();
   for (var i = 0; i < currentFiles.length; i++) {
@@ -226,11 +227,8 @@ chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     switch(request.message) {
       case "clicked_browser_action":
-        sortFiles('fileName', true);
-        console.log(currentFiles);
-        // sortFiles('sizeRaw', false);
-        // var url = config.extension_path;
-        // chrome.runtime.sendMessage({"message": "open_new_tab", "url": url});
+        var url = config.extension_path;
+        chrome.runtime.sendMessage({"message": "open_new_tab", "url": url});
         break;
       default:
         break;
