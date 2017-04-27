@@ -39,6 +39,7 @@ class DirectoryFile {
   }
 }
 
+
 $(document).ready(function () {
   config.extension_path = window.location.href;
   if (navigator.appVersion.indexOf("Win")!=-1) config.default_path = config.windows_path;
@@ -50,6 +51,17 @@ $(document).ready(function () {
   document.getElementById('searchField').oninput = filterFiles;
   currentDirectory = config.default_path;
   loadPage(currentDirectory);
+
+  setUpTree();
+
+    //add first directory
+    $(treeID).tree('appendNode',
+       {
+           name: currentDirectory,//TODO change to currentDirectory name
+           id: currentDirectory+"/",//full path
+           children: [{name:""}]
+       }
+ );
 });
 
 function loadPage(path) {
