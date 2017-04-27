@@ -122,7 +122,8 @@ function drop(ev) {
 		newDiv.addEventListener('click', (function(e) {
     	    return reloadFolders(param);
     	}), false);
-	}else {
+	}
+	else {
 		// If a file, load the file into Chrome.
 		newDiv.addEventListener('click', (function(e) {
     	    return changeDir(this);
