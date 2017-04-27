@@ -115,7 +115,14 @@ function createFolderViewElement(dirFile) {
 	}), false);
 	fvClone.addEventListener('drop', (function(e) {
 		return drop(e)
-	}), false);        
+	}), false); 
+
+  // Set file size and date to de displayed on list view
+  var attributes = fvClone.getElementsByClassName('list-attribute');
+  var sizeAttr = attributes[0];
+  var dateAttr = attributes[1];
+  sizeAttr.innerHTML = dirFile.size;
+  dateAttr.innerHTML = dirFile.dateModified;      
 
   //Set next folder click action to reload folders
   if (dirFile.isFolder){

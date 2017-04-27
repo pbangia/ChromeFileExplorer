@@ -168,6 +168,11 @@ color:#fff;
   box-shadow: 0 4px 7px rgba(0,0,0,0.25), 0 3px 3px rgba(0,0,0,0.22);
 }
 
+.list-attribute {
+    padding: 5px;
+    color: gray;
+}
+
 .pin {
 	color: #6da3f9; float: right; padding: 5px;
 }
