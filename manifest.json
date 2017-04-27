@@ -10,7 +10,7 @@
       "matches": [
         "<all_urls>"
       ],
-      "js": ["jquery.min.js", "content.js", "config.js", "resources.js"]
+      "js": ["jquery.min.js", "content.js", "config.js", "resources.js", "index.js"]
     }
   ],
   "browser_action": {

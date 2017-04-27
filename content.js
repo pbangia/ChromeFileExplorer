@@ -50,6 +50,10 @@ function readFiles() {
   var table = document.getElementById("tbody");
   for (var i = 0, row; row = table.rows[i]; i++) {
     var fileName = row.cells[0].dataset.value;
+    // If parent folder '..' skip
+    if (fileName === '..') {
+      continue;
+    }
     var isFolder = false;
     var link = currentDirectory + fileName;
     var size = row.cells[1].innerHTML;
@@ -72,14 +76,30 @@ function createFolderViewElement(dirFile) {
   //Make new folder view element for each file
   var folderView = document.getElementById("f");
   var fvClone = folderView.cloneNode(true);
-  fvClone.id = idgenerator;
+
+  // The default folder that we copy is hidden.
+  $(fvClone).removeClass('hidden'); 
+
+  // Give each clone a unique id
+  fvClone.id = "f"+idgenerator;
   idgenerator++;
+  
   var caption = fvClone.getElementsByClassName("caption")[0];
   var fileName = dirFile.fileName;
   fvClone.setAttribute('title', fileName);
   caption.innerHTML = fileName;
   var path = currentDirectory + '/' + fileName;
   caption.setAttribute('name', path);
+  fvClone.addEventListener('dragstart', (function(e) {
+      return drag(e);
+    }), false);          				
+	fvClone.addEventListener('dragover', (function(e) {
+		return allowDrop(e);
+	}), false);
+	fvClone.addEventListener('drop', (function(e) {
+		return drop(e)
+	}), false);        
+
   //Set next folder click action to reload folders
   if (dirFile.isFolder){
     fvClone.addEventListener('click', (function(e) {
@@ -95,6 +115,10 @@ function createFolderViewElement(dirFile) {
     var extension = imgPath[imgPath.length-1] + '.png';
     if (!fileTypeIcons[extension]) extension = 'file.png';
     img.setAttribute("src", 'fileTypeIcons/'+extension);
+    // Event handler for clicking
+		fvClone.addEventListener('click', (function(e) {
+    	    return changeDir(this);
+    	}), false);
   }
 
   contentList.appendChild(fvClone);
@@ -196,3 +220,5 @@ chrome.runtime.onMessage.addListener(
     }
   }
 );
+
+
