@@ -16,6 +16,15 @@ var sortDict = {
   fileType: sortFileTypePrimer
 }
 
+/* Search Filter */
+var filterFiles = function(ev) {
+  var filter = ev.target.value.toLowerCase();
+  var fileList = $('.folderItem').slice(1);
+  for (var i = 0; i < fileList.length; i++) {
+    fileList[i].style.display = (fileList[i].title.toLowerCase().indexOf(filter) > -1) ? "" : "none";
+  }
+}
+
 /* Classes */
 class DirectoryFile {
   constructor(fileName, isFolder, link, size, sizeRaw, dateModified, dateModifiedRaw, type) {
@@ -38,7 +47,7 @@ $(document).ready(function () {
 
   // Add event listener for dropdownSortMenu
   document.getElementById('dropdownSortMenu').addEventListener('click', function(ev){onSortClick(ev)}, false);
-
+  document.getElementById('searchField').oninput = filterFiles;
   currentDirectory = config.default_path;
   loadPage(currentDirectory);
 });
@@ -95,12 +104,12 @@ function createFolderViewElement(dirFile) {
   var fvClone = folderView.cloneNode(true);
 
   // The default folder that we copy is hidden.
-  $(fvClone).removeClass('hidden'); 
+  $(fvClone).removeClass('hidden');
 
   // Give each clone a unique id
   fvClone.id = "f"+idgenerator;
   idgenerator++;
-  
+
   var caption = fvClone.getElementsByClassName("caption")[0];
   var fileName = dirFile.fileName;
   fvClone.setAttribute('title', fileName);
@@ -109,13 +118,13 @@ function createFolderViewElement(dirFile) {
   caption.setAttribute('name', path);
   fvClone.addEventListener('dragstart', (function(e) {
       return drag(e);
-    }), false);          				
+    }), false);
 	fvClone.addEventListener('dragover', (function(e) {
 		return allowDrop(e);
 	}), false);
 	fvClone.addEventListener('drop', (function(e) {
 		return drop(e)
-	}), false);        
+	}), false);
 
   //Set next folder click action to reload folders
   if (dirFile.isFolder){
@@ -254,13 +263,12 @@ chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     switch(request.message) {
       case "clicked_browser_action":
-        var url = config.extension_path;
-        chrome.runtime.sendMessage({"message": "open_new_tab", "url": url});
+        console.log(document.getElementById('searchField'));
+        // var url = config.extension_path;
+        // chrome.runtime.sendMessage({"message": "open_new_tab", "url": url});
         break;
       default:
         break;
     }
   }
 );
-
-
