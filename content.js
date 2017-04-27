@@ -118,24 +118,20 @@ function createFolderViewElement(dirFile) {
   var path = currentDirectory + '/' + fileName;
   path += (dirFile.isFolder) ? '/' : '';
   caption.setAttribute('name', path);
-  fvClone.addEventListener('dragstart', (function(e) {
-      return drag(e);
-    }), false);
-	fvClone.addEventListener('dragover', (function(e) {
-		return allowDrop(e);
-	}), false);
-	fvClone.addEventListener('drop', (function(e) {
-		return drop(e)
-	}), false);
+  fvClone.addEventListener('dragstart', (function(e) {return drag(e);}), false);
+	fvClone.addEventListener('dragover', (function(e) {return allowDrop(e);}), false);
+	fvClone.addEventListener('drop', (function(e) {return drop(e)}), false);
+
+  // Set file size and date to de displayed on list view
+  var attributes = fvClone.getElementsByClassName('list-attribute');
+  var sizeAttr = attributes[0];
+  var dateAttr = attributes[1];
+  sizeAttr.innerHTML = dirFile.size;
+  dateAttr.innerHTML = dirFile.dateModified;
 
   //Set next folder click action to reload folders
   if (dirFile.isFolder){
-    fvClone.addEventListener('click', (function(e) {
-      var param = path;
-      return function(e) {
-        return reloadFolders(param);
-      }
-    })(), false);
+    fvClone.addEventListener('click', (function(e) {return reloadFolders(path);}), false);
   } else {
     //if file, set appropriate file icon
     var img = fvClone.getElementsByTagName('img')[0];
@@ -144,11 +140,8 @@ function createFolderViewElement(dirFile) {
     if (!fileTypeIcons[extension]) extension = 'file.png';
     img.setAttribute("src", 'fileTypeIcons/'+extension);
     // Event handler for clicking
-		fvClone.addEventListener('click', (function(e) {
-    	    return openFile(this);
-    	}), false);
+		fvClone.addEventListener('click', (function(e) {return openFile(this);}), false);
   }
-
   contentList.appendChild(fvClone);
 }
 
