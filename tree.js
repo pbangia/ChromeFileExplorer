@@ -26,7 +26,7 @@ function setUpTree() {
         console.log("length " + node.children.length);
         console.log("child \'" + node.children[0].name +"\'");
         //check if children do not exist (would only have 1 placeholder child whose value is "")
-        if (node.children.length == 0 || (node.children.length == 1 && node.children[0].name == "*")) {
+        if (node.children.length == 0 || (node.children.length == 1 && node.children[0].name == "")) {
             //remove the blank placeholder
             removeChildrenFromNode(node);
             getChildrenFolders(node.id);
@@ -86,7 +86,7 @@ function currentDirectoryToJSONFormat(fileName, link) {
     {
         name: name,
         id: link, //full path
-        children: [{ name: "*" }]
+        children: [{ name: "" }]
     },
     parentNode
     );
