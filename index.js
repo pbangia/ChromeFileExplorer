@@ -26,7 +26,7 @@ $(function () {
 });
 
 /* called when folder item is clicked. */
-function changeDir(folderItem) {
+function openFile(folderItem) {
 	var caption = folderItem.getElementsByClassName('caption')[0];
 	var path = 'file:///' + caption.getAttribute('name');
 	console.log('Clicked on folder/file with path: ' + path);

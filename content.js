@@ -111,7 +111,8 @@ function createFolderViewElement(dirFile) {
   idgenerator++;
 
   var caption = fvClone.getElementsByClassName("caption")[0];
-  var fileName = dirFile.fileName;
+  var f = dirFile.fileName;
+  var fileName = (f.slice(-1) === "/") ? f.substring(0, f.length - 1) : f;
   fvClone.setAttribute('title', fileName);
   caption.innerHTML = fileName;
   var path = currentDirectory + '/' + fileName;
@@ -143,7 +144,7 @@ function createFolderViewElement(dirFile) {
     img.setAttribute("src", 'fileTypeIcons/'+extension);
     // Event handler for clicking
 		fvClone.addEventListener('click', (function(e) {
-    	    return changeDir(this);
+    	    return openFile(this);
     	}), false);
   }
 
