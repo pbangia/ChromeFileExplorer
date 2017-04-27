@@ -77,6 +77,9 @@ function createFolderViewElement(dirFile) {
   var folderView = document.getElementById("f");
   var fvClone = folderView.cloneNode(true);
 
+  // The default folder that we copy is hidden.
+  $(fvClone).removeClass('hidden'); 
+
   // Give each clone a unique id
   fvClone.id = "f"+idgenerator;
   idgenerator++;
