@@ -96,6 +96,12 @@ color:#fff;
 	color:#23467f;
 }
 
+.hidden {
+    visibility: hidden;
+    height:0;
+    width:0;
+}
+
 .slot {
     float: left;
     width: 100px;

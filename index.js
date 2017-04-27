@@ -105,6 +105,35 @@ function drop(ev) {
 		// Note that if we put divs inside the divs with the class folderItem, this will stop working.
 		ev.target.parentNode.insertAdjacentHTML('afterend', newDiv.outerHTML);
 	}
+
+	newDiv = document.getElementById(newDiv.id);
+
+	// TODO: this is almost duplicate code from content.js and could be refactored.
+
+	// Add the event listeners from the original to the new folders
+	newDiv.addEventListener('dragstart', (function(e) {
+	  	return drag(e);
+    }), false);          				
+	newDiv.addEventListener('dragover', (function(e) {
+		return allowDrop(e);
+	}), false);
+	newDiv.addEventListener('drop', (function(e) {
+		return drop(e)
+	}), false);          				
+
+	var param = newDiv.getElementsByClassName('caption')[0].getAttribute('name');
+	if (param.endsWith("/")){
+		// If a folder, load the UI for that folder
+		newDiv.addEventListener('click', (function(e) {
+    	    return reloadFolders(param);
+    	}), false);
+	}
+	else {
+		// If a file, load the file into Chrome.
+		newDiv.addEventListener('click', (function(e) {
+    	    return changeDir(this);
+    	}), false);
+	}
 }
 
 /* Called from setting menu */
@@ -149,5 +178,4 @@ function toggleFileView(button){
 	});	
 
 	console.log('Toggling icon/list view');
-
 }
