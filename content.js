@@ -42,6 +42,10 @@ function loadPage(path) {
 
 function reloadFolders(path){
     currentFiles = [];
+    if (path.endsWith("..")){
+      // If the path is the parent, trim the path
+      path = path.substring(0,path.lastIndexOf("/"));
+    }
     loadPage(path);
 }
 
