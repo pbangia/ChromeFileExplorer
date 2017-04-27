@@ -249,6 +249,10 @@ function getPathToCurrentElement(index, pathElements) {
   return path;
 }
 
+function storeValue(identifier, value){
+  chrome.storage.local.set({identifier : value});
+}
+
 /* Listener for messages from background.js */
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
