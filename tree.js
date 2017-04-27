@@ -1,10 +1,9 @@
 //Tree Data
 var treeData = [];
 var treeID = '#fileTree';
+var folderPathway = "";
 
 function setUpTree() {
-    console.log("in here");
-
     refreshTree();
 
     // bind 'tree.click' event
@@ -22,17 +21,16 @@ function setUpTree() {
     $(treeID).bind(
     'tree.open',
     function (e) {
-        console.log("open node");
         var node = e.node;
-
+        console.log("open node " + node.id);
         console.log("length " + node.children.length);
         console.log("child \'" + node.children[0].name +"\'");
         //check if children do not exist (would only have 1 placeholder child whose value is "")
-        if (node.children.length == 1 && node.children[0].name == "*") {
+        if (node.children.length == 0 || (node.children.length == 1 && node.children[0].name == "*")) {
             //remove the blank placeholder
             removeChildrenFromNode(node);
             getChildrenFolders(node.id);
-            refreshTree();
+           // refreshTree();
         }        
     }
 );
@@ -78,7 +76,7 @@ function currentDirectoryToJSONFormat(fileName, link) {
 
     var parentNode = $(treeID).tree('getNodeById', parentDir);
     console.log("parent " + parentDir);
-    console.log("parent id " + parentNode);
+    console.log("parent id " + parentNode.id);
     console.log("childDir " + fileName);
     console.log("link id " + link);
     var name = fileName.replace("/", "");
@@ -97,12 +95,14 @@ function currentDirectoryToJSONFormat(fileName, link) {
 
 function getChildrenFolders(path) {
     console.log("get children folders");
-    $.get(constants.urlBase + path, function (data) {
-
+    console.log(constants.urlBase + path + "");
+    folderPathway = constants.urlBase + path;
+    $.get(folderPathway, function (data) {
+        $(".result").html(data);
         var table = document.getElementById("tbody");
         for (var i = 0, row; row = table.rows[i]; i++) {
             var fileName = row.cells[0].dataset.value;
-            var link = currentDirectory +"/"+ fileName;
+            var link = path  + fileName;
 
             console.log("filename " + fileName);
             console.log("link " + link);
@@ -115,3 +115,12 @@ function getChildrenFolders(path) {
     });
 }
 
+
+//$.ajax({
+//    async: false,
+//    type: 'GET',
+//    url: folderPathway,
+//    success: function (data) {
+//        //callback
+//    }
+//});
