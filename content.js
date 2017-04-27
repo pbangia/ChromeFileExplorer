@@ -50,6 +50,10 @@ function readFiles() {
   var table = document.getElementById("tbody");
   for (var i = 0, row; row = table.rows[i]; i++) {
     var fileName = row.cells[0].dataset.value;
+    // If parent folder '..' skip
+    if (fileName === '..') {
+      continue;
+    }
     var isFolder = false;
     var link = currentDirectory + fileName;
     var size = row.cells[1].innerHTML;
@@ -59,9 +63,6 @@ function readFiles() {
 
     var dirFile = new DirectoryFile(fileName, isFolder, link, size, sizeRaw, dateModified, dateModifiedRaw);
 
-    if (dirFile.fileName === ".."){
-      continue;
-    }
     if (isDirectory(fileName) || isParentDirectoryLink(fileName)) {
       dirFile.setIsFolder(true);
     }
@@ -75,8 +76,11 @@ function createFolderViewElement(dirFile) {
   //Make new folder view element for each file
   var folderView = document.getElementById("f");
   var fvClone = folderView.cloneNode(true);
+
+  // Give each clone a unique id
   fvClone.id = "f"+idgenerator;
   idgenerator++;
+  
   var caption = fvClone.getElementsByClassName("caption")[0];
   var fileName = dirFile.fileName;
   fvClone.setAttribute('title', fileName);
