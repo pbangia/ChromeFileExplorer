@@ -3,6 +3,7 @@ var currentFiles = [];
 var currentDirectory;
 var idgenerator = 0;
 
+/* Sort primers */
 var sortStringPrimer = function(a) {return a.toUpperCase();}
 var sortSizePrimer = function(a) {return parseInt(a)};
 var sortDateModifiedPrimer = function(a) {return new Date(a)};
@@ -40,33 +41,7 @@ $(document).ready(function () {
 
   currentDirectory = config.default_path;
   loadPage(currentDirectory);
-  console.log(currentFiles);
 });
-
-function onSortClick(ev) {
-  var field = ev.target.id.split('_')[0];
-  var asc = (ev.target.id.split('_')[1] === 'asc') ? true : false;
-  sortFiles(field, asc);
-}
-
-function sortFiles(field, reverse) {
-  var primer = sortDict[field];
-  console.log(primer);
-  currentFiles.sort(sort_by(field, reverse, primer));
-  $('#wrapper').find('div').slice(1).remove();
-  for (var i = 0; i < currentFiles.length; i++) {
-    createFolderViewElement(currentFiles[i]);
-  }
-  console.log(currentFiles);
-}
-
-var sort_by = function(field, reverse, primer){
-   var key = function (x) {return primer ? primer(x[field]) : x[field]};
-   return function (a,b) {
-	  var A = key(a), B = key(b);
-	  return ( (A < B) ? -1 : ((A > B) ? 1 : 0) ) * [-1,1][+!!reverse];
-   }
-}
 
 function loadPage(path) {
   setCurrentDirectory(path);
@@ -76,6 +51,7 @@ function loadPage(path) {
     $('#wrapper').find('div').slice(1).remove();
     readFiles();
   });
+  console.log(currentFiles);
 }
 
 function reloadFolders(path){
@@ -88,6 +64,10 @@ function readFiles() {
   var table = document.getElementById("tbody");
   for (var i = 0, row; row = table.rows[i]; i++) {
     var fileName = row.cells[0].dataset.value;
+    // If parent folder '..' skip
+    if (fileName === '..') {
+      continue;
+    }
     var isFolder = false;
     var link = currentDirectory + fileName;
     var size = row.cells[1].innerHTML;
@@ -175,7 +155,34 @@ function createBreadCrumb(pathElement, pathToCurrentElement) {
 function onCrumbClick(ev) {
   ev.preventDefault();
   var path = ev.target.getAttribute("path");
-  loadPage(path);
+  reloadFolders(path);
+}
+
+/* Sort methods */
+function onSortClick(ev) {
+  var field = ev.target.id.split('_')[0];
+  var asc = (ev.target.id.split('_')[1] === 'asc') ? true : false;
+  sortFiles(field, asc);
+}
+
+function sortFiles(field, reverse) {
+  var primer = sortDict[field];
+  console.log(primer);
+  currentFiles.sort(sort_by(field, reverse, primer));
+  $('#wrapper').find('div').slice(1).remove();
+  for (var i = 0; i < currentFiles.length; i++) {
+    var dirFile = currentFiles[i];
+    createFolderViewElement(dirFile);
+    console.log(dirFile[field]);
+  }
+}
+
+var sort_by = function(field, reverse, primer){
+   var key = function (x) {return primer ? primer(x[field]) : x[field]};
+   return function (a,b) {
+	  var A = key(a), B = key(b);
+    return ( (A < B) ? -1 : ((A > B) ? 1 : 0) ) * [-1,1][+!!reverse];
+   }
 }
 
 /* Getters, setters, and checks */
