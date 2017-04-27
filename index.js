@@ -12,6 +12,12 @@ $( document ).ready(function() {
 /* toggles side menu when hamburger clicked */
 function toggleSideMenu() {
 	$( ".side-menu" ).animate( {'width': 'toggle'});
+	if ($('.side-menu').width()>1) {
+		$( ".main-content" ).animate( {'margin-left': '0'});
+	}
+	else {
+		$( ".main-content" ).animate( {'margin-left': '100px'});
+	}
 }
 
 $(function () {
