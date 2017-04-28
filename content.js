@@ -21,7 +21,7 @@ var sortDict = {
 /* Search Filter */
 var filterFiles = function(ev) {
   var filter = ev.target.value.toLowerCase();
-  var fileList = $('.folderItem').slice(1);
+  var fileList = document.getElementById('wrapper').children;
   for (var i = 0; i < fileList.length; i++) {
     fileList[i].style.display = (fileList[i].title.toLowerCase().indexOf(filter) > -1) ? "" : "none";
   }
@@ -240,6 +240,7 @@ function sortFiles(field, reverse) {
   $('#wrapper').find('div').slice(1).remove();
   for (var i = 0; i < currentFiles.length; i++) {
     var dirFile = currentFiles[i];
+    console.log('date=' + dirFile.dateModified);
     createFolderViewElement(dirFile);
   }
 }
