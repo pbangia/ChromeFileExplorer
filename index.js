@@ -16,7 +16,7 @@ function toggleSideMenu() {
 		$( ".main-content" ).animate( {'margin-left': '0'});
 	}
 	else {
-		$( ".main-content" ).animate( {'margin-left': '100px'});
+		$( ".main-content" ).animate( {'margin-left': '200px'});
 	}
 }
 
