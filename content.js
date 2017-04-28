@@ -31,15 +31,22 @@ class DirectoryFile {
 }
 
 $(document).ready(function () {
-  config.extension_path = window.location.href;
-  if (navigator.appVersion.indexOf("Win")!=-1) config.default_path = config.windows_path;
-  if (navigator.appVersion.indexOf("Mac")!=-1) config.default_path = config.mac_path;
-  if (navigator.appVersion.indexOf("Linux")!=-1) config.default_path = config.linux_path;
+  var storedDir = localStorage.getItem('defaultDir');
+  if (storedDir === null){
+    config.extension_path = window.location.href;
+    if (navigator.appVersion.indexOf("Win")!=-1) config.default_path = config.windows_path;
+    if (navigator.appVersion.indexOf("Mac")!=-1) config.default_path = config.mac_path;
+    if (navigator.appVersion.indexOf("Linux")!=-1) config.default_path = config.linux_path;
+    currentDirectory = config.default_path;
+
+  }else {
+    // If the user has set a default directory, load that.
+    currentDirectory = storedDir.endsWith("/") ? storedDir : storedDir+"/";  // loadPage expects a trailing slash
+  }
 
   // Add event listener for dropdownSortMenu
   document.getElementById('dropdownSortMenu').addEventListener('click', function(ev){onSortClick(ev)}, false);
 
-  currentDirectory = config.default_path;
   loadPage(currentDirectory);
 });
 
@@ -247,10 +254,6 @@ function getPathToCurrentElement(index, pathElements) {
     path += pathElements[i] + '/';
   }
   return path;
-}
-
-function storeValue(identifier, value){
-  chrome.storage.local.set({identifier : value});
 }
 
 /* Listener for messages from background.js */
