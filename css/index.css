@@ -36,6 +36,7 @@ nav {
 	display:inline-block; margin: auto; padding-top:5px;
 }
 
+
 a {
 	color:white;
 }
@@ -71,19 +72,25 @@ color:#fff;
 /* Side menu */
 .side-menu {
     float: left;
-    max-width: 160px;
     padding: 1em;
     height: 100%;
-    width: 160px;
-    position: fixed;
+    width: 200px;
+    overflow: auto;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    white-space: nowrap;
+    background: #e0e0e0;
+
 }
 
 .main-content {
-
+    float: left;
+    position: fixed;
     padding: 1em;
-    margin-left: 100px;
+    margin-left: 200px;
     margin-right: 0;
+    padding-bottom: 45px;
     height: 100%;
+    overflow: auto;
 
 }
 
@@ -158,9 +165,10 @@ color:#fff;
     border-radius: 2px;
     max-height: 15px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.23);
-    display: table;
-    width: 65%;
-    margin: 0.5rem auto;
+    display: inline-table;
+    min-width: 75%;
+    margin: 0.2rem auto;
+    margin-bottom: 2px;
     cursor: pointer;
 }
 
