@@ -19,8 +19,12 @@ var sortDict = {
 }
 
 /* Search Filter */
-var filterFiles = function(ev) {
+var filterListener = function(ev) {
   var filter = ev.target.value.toLowerCase();
+  filterList(filter);
+}
+
+function filterList(filter) {
   var fileList = document.getElementById('wrapper').children;
   for (var i = 0; i < fileList.length; i++) {
     fileList[i].style.display = (fileList[i].title.toLowerCase().indexOf(filter) > -1) ? "" : "none";
@@ -67,7 +71,7 @@ function setDefaultPaths() {
 
 function setUpListeners() {
   document.getElementById('dropdownSortMenu').addEventListener('click', function(ev){onSortClick(ev)}, false);
-  document.getElementById('searchField').oninput = filterFiles;
+  document.getElementById('searchField').oninput = filterListener;
   document.getElementById('backBtn').addEventListener('click', function(ev){onBackBtnClick(ev)}, false);
   document.getElementById('forwardBtn').addEventListener('click', function(ev){onForwardBtnClick(ev)}, false);
 }
@@ -243,6 +247,8 @@ function sortFiles(field, reverse) {
     console.log('date=' + dirFile.dateModified);
     createFolderViewElement(dirFile);
   }
+  var filter = document.getElementById('searchField').value;
+  filterList(filter);
 }
 
 var sort_by = function(field, reverse, primer){
