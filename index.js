@@ -149,6 +149,9 @@ function saveDefaultDir(path) {
 	if (!path) {
 		var path = document.getElementById('defaultDir').value;
 	}
+	
+	localStorage.setItem('defaultDir', path);
+
 	var message = 'Updated default directory: ' + path;
 	console.log(message);
 	showNotification(message);
