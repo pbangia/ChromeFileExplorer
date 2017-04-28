@@ -2,6 +2,8 @@
 var currentFiles = [];
 var currentDirectory;
 var idgenerator = 0;
+var backStack = [];
+var forwardStack = [];
 
 /* Sort primers */
 var sortStringPrimer = function(a) {return a.toUpperCase();}
@@ -41,19 +43,11 @@ class DirectoryFile {
 
 
 $(document).ready(function () {
-  config.extension_path = window.location.href;
-  if (navigator.appVersion.indexOf("Win")!=-1) config.default_path = config.windows_path;
-  if (navigator.appVersion.indexOf("Mac")!=-1) config.default_path = config.mac_path;
-  if (navigator.appVersion.indexOf("Linux")!=-1) config.default_path = config.linux_path;
-
-  // Add event listener for dropdownSortMenu
-  document.getElementById('dropdownSortMenu').addEventListener('click', function(ev){onSortClick(ev)}, false);
-  document.getElementById('searchField').oninput = filterFiles;
+  setDefaultPaths();
   currentDirectory = config.default_path;
   loadPage(currentDirectory);
-
+  setUpListeners();
   setUpTree();
-
     //add first directory
     $(treeID).tree('appendNode',
        {
@@ -64,6 +58,36 @@ $(document).ready(function () {
  );
 });
 
+function setDefaultPaths() {
+    config.extension_path = window.location.href;
+    if (navigator.appVersion.indexOf("Win")!=-1) config.default_path = config.windows_path;
+    if (navigator.appVersion.indexOf("Mac")!=-1) config.default_path = config.mac_path;
+    if (navigator.appVersion.indexOf("Linux")!=-1) config.default_path = config.linux_path;
+}
+
+function setUpListeners() {
+  document.getElementById('dropdownSortMenu').addEventListener('click', function(ev){onSortClick(ev)}, false);
+  document.getElementById('searchField').oninput = filterFiles;
+  document.getElementById('backBtn').addEventListener('click', function(ev){onBackBtnClick(ev)}, false);
+  document.getElementById('forwardBtn').addEventListener('click', function(ev){onForwardBtnClick(ev)}, false);
+}
+
+function onBackBtnClick(ev) {
+  forwardStack.push(currentDirectory);
+  document.getElementById('forwardBtn').disabled = false;
+  var previousPage = backStack.pop();
+  document.getElementById('backBtn').disabled = (backStack.length === 0) ? true : false;
+  reloadFolders(previousPage);
+}
+
+function onForwardBtnClick(ev) {
+  backStack.push(currentDirectory);
+  document.getElementById('backBtn').disabled = false;
+  var nextPage = forwardStack.pop();
+  document.getElementById('forwardBtn').disabled = (forwardStack.length === 0) ? true : false;
+  reloadFolders(nextPage);
+}
+
 function loadPage(path) {
   setCurrentDirectory(path);
   updateBreadcrumbs();
@@ -71,11 +95,12 @@ function loadPage(path) {
     $( ".result" ).html( data );
     $('#wrapper').find('div').slice(1).remove();
     readFiles();
+    // console.log(currentFiles);
   });
-  console.log(currentFiles);
 }
 
 function reloadFolders(path){
+  console.log('reloadFolders path=' + path);
     currentFiles = [];
     loadPage(path);
 }
@@ -108,7 +133,7 @@ function readFiles() {
   }
 }
 
-/* HTML component creation and manipulation */
+/* Folder changing */
 function createFolderViewElement(dirFile) {
   var contentList = document.getElementById("wrapper");
   //Make new folder view element for each file
@@ -143,7 +168,7 @@ function createFolderViewElement(dirFile) {
 
   //Set next folder click action to reload folders
   if (dirFile.isFolder){
-    fvClone.addEventListener('click', (function(e) {return reloadFolders(path);}), false);
+    fvClone.addEventListener('click', (function(e) {changeDir(path);}), false);
   } else {
     //if file, set appropriate file icon
     var img = fvClone.getElementsByTagName('img')[0];
@@ -155,6 +180,14 @@ function createFolderViewElement(dirFile) {
 		fvClone.addEventListener('click', (function(e) {return openFile(this);}), false);
   }
   contentList.appendChild(fvClone);
+}
+
+function changeDir(path) {
+  backStack.push(currentDirectory);
+  document.getElementById('backBtn').disabled = false;
+  document.getElementById('forwardBtn').disabled = true;
+  forwardStack = [];
+  reloadFolders(path);
 }
 
 /* Breadcrumb manipulation*/
@@ -203,13 +236,11 @@ function onSortClick(ev) {
 
 function sortFiles(field, reverse) {
   var primer = sortDict[field];
-  console.log(primer);
   currentFiles.sort(sort_by(field, reverse, primer));
   $('#wrapper').find('div').slice(1).remove();
   for (var i = 0; i < currentFiles.length; i++) {
     var dirFile = currentFiles[i];
     createFolderViewElement(dirFile);
-    console.log(dirFile[field]);
   }
 }
 
@@ -227,10 +258,10 @@ function setCurrentDirectory(path) {
     var url = window.location.href;
     currentDirectory = url.substring(8 ,url.lastIndexOf('/')).replace('%20', ' ');
   } else {
-    url = path
-    currentDirectory = url.substring(0 ,url.lastIndexOf('/')).replace('%20', ' ');
+    url = path.replace('%20', ' ')
+    currentDirectory = (url.slice(-1) === '/') ? url.substring(0 ,url.lastIndexOf('/')) : url
   };
-  console.log("currentDirectory= " + currentDirectory);
+  console.log("currentDirectory set to= " + currentDirectory);
 }
 
 // Checks if file is a directory
@@ -270,9 +301,8 @@ chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     switch(request.message) {
       case "clicked_browser_action":
-        console.log(document.getElementById('searchField'));
-        // var url = config.extension_path;
-        // chrome.runtime.sendMessage({"message": "open_new_tab", "url": url});
+        var url = config.extension_path;
+        chrome.runtime.sendMessage({"message": "open_new_tab", "url": url});
         break;
       default:
         break;
