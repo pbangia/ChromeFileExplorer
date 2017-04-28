@@ -31,7 +31,7 @@ class DirectoryFile {
 }
 
 $(document).ready(function () {
-  var storedDir = localStorage.getItem('defaultDir');
+  var storedDir = localStorage.getItem('WoburyDefaultDir');
   if (storedDir === null){
     config.extension_path = window.location.href;
     if (navigator.appVersion.indexOf("Win")!=-1) config.default_path = config.windows_path;
@@ -261,7 +261,11 @@ chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     switch(request.message) {
       case "clicked_browser_action":
-        var url = config.extension_path;
+        var url = localStorage.getItem('WoburyIndexPath');
+        if (url === null){
+          url = window.URL;
+          alert("To launch Chrome File Explorer, navigate to it's index.html first, then try again.");
+        }
         chrome.runtime.sendMessage({"message": "open_new_tab", "url": url});
         break;
       default:
