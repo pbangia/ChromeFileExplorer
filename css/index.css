@@ -179,6 +179,13 @@ color:#fff;
     -o-transform: scale(1.05);
 }
 
+.folderItemPreview:hover {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+      -webkit-transform: scale(2);
+    -moz-transform: scale(2);
+    -o-transform: scale(2);
+}
+
 .folderItem-list:hover {
   box-shadow: 0 4px 7px rgba(0,0,0,0.25), 0 3px 3px rgba(0,0,0,0.22);
       -webkit-transform: scale(1.01);
