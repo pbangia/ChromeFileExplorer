@@ -198,18 +198,31 @@ function createFolderViewElement(dirFile) {
     $(fvClone).hover(
       function() {
         if (extension=="mp4.png" || extension=="pdf.png" || extension=="png.png" || extension=='txt.png' || extension=="js.png") {
-         $(fvClone).addClass('folderItemPreview');
-         preview.setAttribute('src', 'file:///'+path);
-         preview.setAttribute('height', '200px');
-         preview.setAttribute('width', '200px');
-         $(img).addClass('hidden');
-         $(preview).removeClass('hidden');
-       }
-     }, function() {
-      $(preview).addClass('hidden');
-      $(img).removeClass('hidden');
-    }
-    );
+          timeout = setTimeout(function() { 
+           preview.setAttribute('src', 'file:///'+path); 
+           $(this).addClass("doorstatic"); 
+        $(preview).removeClass('hidden'); //
+        $(img).addClass('hidden'); 
+        preview.setAttribute('height', '190px');
+        preview.setAttribute('width', '190px');
+        $(fvClone).css('max-height', '200px');
+        $(fvClone).css('height', '200px');
+        $(fvClone).css('max-width', '200px');
+        $(fvClone).css('width', '200px');
+        $(img).addClass('hidden');
+        $(preview).css('min-height', '190px');
+        $(preview).css('min-width', '190px');         
+        $(preview).removeClass('hidden');
+        }, 1500);
+        }
+      }, function() {
+        clearTimeout(timeout);
+        $(preview).addClass('hidden');
+        $(img).removeClass('hidden');
+        $(fvClone).css('max-height', '100px');
+        $(fvClone).css('max-width', '100px');   
+      }
+      );
     // Event handler for clicking*/
     fvClone.addEventListener('click', (function(e) {return openFile(this);}), false);
   }
