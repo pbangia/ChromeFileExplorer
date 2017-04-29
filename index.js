@@ -4,9 +4,11 @@ function disableButtons(boolean){
 }
 
 $( document ).ready(function() {
-    	//disable buttons on load
-    	disableButtons(true);
-
+    //disable buttons on load
+    disableButtons(true);
+ 	
+	// When index.html is loaded, save it's path to the local machine.
+	localStorage.setItem('WoburyIndexPath', window.location.href);
 });
 
 /* toggles side menu when hamburger clicked */
@@ -99,6 +101,12 @@ function drop(ev) {
 
 	// Clone the original div
 	var draggedItem = document.getElementById(ev.dataTransfer.getData("text"));
+
+	// If an item is dragged onto itself, take no action.
+	if (ev.target.id === draggedItem.id || ev.target.parentElement.id  === draggedItem.id){
+		return;
+	}
+
 	var newDiv = draggedItem.cloneNode(true);
 
 	// Delete the old div
@@ -155,6 +163,9 @@ function saveDefaultDir(path) {
 	if (!path) {
 		var path = document.getElementById('defaultDir').value;
 	}
+
+	localStorage.setItem('WoburyDefaultDir', path);
+
 	var message = 'Updated default directory: ' + path;
 	console.log(message);
 	showNotification(message);
