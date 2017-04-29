@@ -2,6 +2,8 @@
 var currentFiles = [];
 var currentDirectory;
 var idgenerator = 0;
+var backStack = [];
+var forwardStack = [];
 
 /* Sort primers */
 var sortStringPrimer = function(a) {return a.toUpperCase();}
@@ -14,6 +16,19 @@ var sortDict = {
   sizeRaw: sortSizePrimer,
   dateModified: sortDateModifiedPrimer,
   fileType: sortFileTypePrimer
+}
+
+/* Search Filter */
+var filterListener = function(ev) {
+  var filter = ev.target.value.toLowerCase();
+  filterList(filter);
+}
+
+function filterList(filter) {
+  var fileList = document.getElementById('wrapper').children;
+  for (var i = 0; i < fileList.length; i++) {
+    fileList[i].style.display = (fileList[i].title.toLowerCase().indexOf(filter) > -1) ? "" : "none";
+  }
 }
 
 /* Classes */
@@ -31,24 +46,69 @@ class DirectoryFile {
 }
 
 $(document).ready(function () {
+  var url = window.location.href;
+  if (url.endsWith('Wobury/index.html')) {
+    chrome.storage.local.get(["index_file_path"], function(result) {
+      if ((!result.index_file_path) || (result.index_file_path !== url)) {
+        var url = window.location.href;
+        chrome.storage.local.set({"index_file_path": url, function(){}});
+      }
+      start();
+    })
+  }
+});
+
+function start() {
   var storedDir = localStorage.getItem('WoburyDefaultDir');
   if (storedDir === null){
-    config.extension_path = window.location.href;
-    if (navigator.appVersion.indexOf("Win")!=-1) config.default_path = config.windows_path;
-    if (navigator.appVersion.indexOf("Mac")!=-1) config.default_path = config.mac_path;
-    if (navigator.appVersion.indexOf("Linux")!=-1) config.default_path = config.linux_path;
+    setDefaultPaths();
     currentDirectory = config.default_path;
-
   }else {
     // If the user has set a default directory, load that.
     currentDirectory = storedDir.endsWith("/") ? storedDir : storedDir+"/";  // loadPage expects a trailing slash
   }
-
-  // Add event listener for dropdownSortMenu
-  document.getElementById('dropdownSortMenu').addEventListener('click', function(ev){onSortClick(ev)}, false);
-
   loadPage(currentDirectory);
-});
+  setUpListeners();
+  setUpTree();
+    //add first directory
+    $(treeID).tree('appendNode',
+       {
+           name: currentDirectory,//TODO change to currentDirectory name
+           id: currentDirectory+"/",//full path
+           children: [{name:""}]
+       }
+ );
+}
+
+function setDefaultPaths() {
+    config.extension_path = window.location.href;
+    if (navigator.appVersion.indexOf("Win")!=-1) config.default_path = config.windows_path;
+    if (navigator.appVersion.indexOf("Mac")!=-1) config.default_path = config.mac_path;
+    if (navigator.appVersion.indexOf("Linux")!=-1) config.default_path = config.linux_path;
+}
+
+function setUpListeners() {
+  document.getElementById('dropdownSortMenu').addEventListener('click', function(ev){onSortClick(ev)}, false);
+  document.getElementById('searchField').oninput = filterListener;
+  document.getElementById('backBtn').addEventListener('click', function(ev){onBackBtnClick(ev)}, false);
+  document.getElementById('forwardBtn').addEventListener('click', function(ev){onForwardBtnClick(ev)}, false);
+}
+
+function onBackBtnClick(ev) {
+  forwardStack.push(currentDirectory);
+  document.getElementById('forwardBtn').disabled = false;
+  var previousPage = backStack.pop();
+  document.getElementById('backBtn').disabled = (backStack.length === 0) ? true : false;
+  reloadFolders(previousPage);
+}
+
+function onForwardBtnClick(ev) {
+  backStack.push(currentDirectory);
+  document.getElementById('backBtn').disabled = false;
+  var nextPage = forwardStack.pop();
+  document.getElementById('forwardBtn').disabled = (forwardStack.length === 0) ? true : false;
+  reloadFolders(nextPage);
+}
 
 function loadPage(path) {
   setCurrentDirectory(path);
@@ -57,11 +117,12 @@ function loadPage(path) {
     $( ".result" ).html( data );
     $('#wrapper').find('div').slice(1).remove();
     readFiles();
+    // console.log(currentFiles);
   });
-  console.log(currentFiles);
 }
 
 function reloadFolders(path){
+  console.log('reloadFolders path=' + path);
     currentFiles = [];
     loadPage(path);
 }
@@ -94,7 +155,7 @@ function readFiles() {
   }
 }
 
-/* HTML component creation and manipulation */
+/* Folder changing */
 function createFolderViewElement(dirFile) {
   var contentList = document.getElementById("wrapper");
   //Make new folder view element for each file
@@ -102,50 +163,70 @@ function createFolderViewElement(dirFile) {
   var fvClone = folderView.cloneNode(true);
 
   // The default folder that we copy is hidden.
-  $(fvClone).removeClass('hidden'); 
+  $(fvClone).removeClass('hidden');
 
   // Give each clone a unique id
   fvClone.id = "f"+idgenerator;
   idgenerator++;
-  
+
   var caption = fvClone.getElementsByClassName("caption")[0];
-  var fileName = dirFile.fileName;
+  var f = dirFile.fileName;
+  var fileName = (f.slice(-1) === "/") ? f.substring(0, f.length - 1) : f;
   fvClone.setAttribute('title', fileName);
   caption.innerHTML = fileName;
   var path = currentDirectory + '/' + fileName;
+  path += (dirFile.isFolder) ? '/' : '';
   caption.setAttribute('name', path);
-  fvClone.addEventListener('dragstart', (function(e) {
-      return drag(e);
-    }), false);          				
-	fvClone.addEventListener('dragover', (function(e) {
-		return allowDrop(e);
-	}), false);
-	fvClone.addEventListener('drop', (function(e) {
-		return drop(e)
-	}), false);        
+  fvClone.addEventListener('dragstart', (function(e) {return drag(e);}), false);
+	fvClone.addEventListener('dragover', (function(e) {return allowDrop(e);}), false);
+	fvClone.addEventListener('drop', (function(e) {return drop(e)}), false);
+
+  // Set file size and date to de displayed on list view
+  var attributes = fvClone.getElementsByClassName('list-attribute');
+  var sizeAttr = attributes[0];
+  var dateAttr = attributes[1];
+  sizeAttr.innerHTML = dirFile.size;
+  dateAttr.innerHTML = dirFile.dateModified;
 
   //Set next folder click action to reload folders
   if (dirFile.isFolder){
-    fvClone.addEventListener('click', (function(e) {
-      var param = path;
-      return function(e) {
-        return reloadFolders(param);
-      }
-    })(), false);
+    fvClone.addEventListener('click', (function(e) {changeDir(path);}), false);
   } else {
-    //if file, set appropriate file icon
     var img = fvClone.getElementsByTagName('img')[0];
     var imgPath = fileName.split(".");
     var extension = imgPath[imgPath.length-1] + '.png';
     if (!fileTypeIcons[extension]) extension = 'file.png';
     img.setAttribute("src", 'fileTypeIcons/'+extension);
-    // Event handler for clicking
-		fvClone.addEventListener('click', (function(e) {
-    	    return changeDir(this);
-    	}), false);
-  }
+    var preview = fvClone.getElementsByTagName('iframe')[0];
 
+    //if file, set appropriate file icon
+    $(fvClone).hover(
+      function() {
+        if (extension=="mp4.png" || extension=="pdf.png" || extension=="png.png" || extension=='txt.png' || extension=="js.png") {
+         $(fvClone).addClass('folderItemPreview');
+         preview.setAttribute('src', 'file:///'+path);
+         preview.setAttribute('height', '200px');
+         preview.setAttribute('width', '200px');
+         $(img).addClass('hidden');
+         $(preview).removeClass('hidden');
+       }
+     }, function() {
+      $(preview).addClass('hidden');
+      $(img).removeClass('hidden');
+    }
+    );
+    // Event handler for clicking*/
+    fvClone.addEventListener('click', (function(e) {return openFile(this);}), false);
+  }
   contentList.appendChild(fvClone);
+}
+
+function changeDir(path) {
+  backStack.push(currentDirectory);
+  document.getElementById('backBtn').disabled = false;
+  document.getElementById('forwardBtn').disabled = true;
+  forwardStack = [];
+  reloadFolders(path);
 }
 
 /* Breadcrumb manipulation*/
@@ -194,14 +275,15 @@ function onSortClick(ev) {
 
 function sortFiles(field, reverse) {
   var primer = sortDict[field];
-  console.log(primer);
   currentFiles.sort(sort_by(field, reverse, primer));
   $('#wrapper').find('div').slice(1).remove();
   for (var i = 0; i < currentFiles.length; i++) {
     var dirFile = currentFiles[i];
+    console.log('date=' + dirFile.dateModified);
     createFolderViewElement(dirFile);
-    console.log(dirFile[field]);
   }
+  var filter = document.getElementById('searchField').value;
+  filterList(filter);
 }
 
 var sort_by = function(field, reverse, primer){
@@ -218,10 +300,10 @@ function setCurrentDirectory(path) {
     var url = window.location.href;
     currentDirectory = url.substring(8 ,url.lastIndexOf('/')).replace('%20', ' ');
   } else {
-    url = path
-    currentDirectory = url.substring(0 ,url.lastIndexOf('/')).replace('%20', ' ');
+    url = path.replace('%20', ' ')
+    currentDirectory = (url.slice(-1) === '/') ? url.substring(0 ,url.lastIndexOf('/')) : url
   };
-  console.log("currentDirectory= " + currentDirectory);
+  console.log("currentDirectory set to= " + currentDirectory);
 }
 
 // Checks if file is a directory
@@ -273,5 +355,3 @@ chrome.runtime.onMessage.addListener(
     }
   }
 );
-
-
