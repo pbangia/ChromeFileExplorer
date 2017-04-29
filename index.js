@@ -7,13 +7,19 @@ $( document ).ready(function() {
     //disable buttons on load
     disableButtons(true);
  	
-	 // When index.html is loaded, save it's path to the local machine.
-	 localStorage.setItem('WoburyIndexPath', window.location.href);
+	// When index.html is loaded, save it's path to the local machine.
+	localStorage.setItem('WoburyIndexPath', window.location.href);
 });
 
 /* toggles side menu when hamburger clicked */
 function toggleSideMenu() {
 	$( ".side-menu" ).animate( {'width': 'toggle'});
+	if ($('.side-menu').width()>1) {
+		$( ".main-content" ).animate( {'margin-left': '0'});
+	}
+	else {
+		$( ".main-content" ).animate( {'margin-left': '200px'});
+	}
 }
 
 $(function () {
@@ -28,7 +34,7 @@ $(function () {
 });
 
 /* called when folder item is clicked. */
-function changeDir(folderItem) {
+function openFile(folderItem) {
 	var caption = folderItem.getElementsByClassName('caption')[0];
 	var path = 'file:///' + caption.getAttribute('name');
 	console.log('Clicked on folder/file with path: ' + path);
@@ -41,7 +47,7 @@ function changeDir(folderItem) {
 
 /* called when pin icon is clicked*/
 function pin(event, item){
-	// stop onclick propogating to parent folderItem onclick. 
+	// stop onclick propogating to parent folderItem onclick.
 	event.stopPropagation();
 	// get parent folderItem
 	var folderItem = item.parentElement;
@@ -53,22 +59,22 @@ function pin(event, item){
 
 /* called when clipboard copy icon is clicked */
 function copy(event, item){
-	// stop onclick propogating to parent folderItem onclick. 
+	// stop onclick propogating to parent folderItem onclick.
 	event.stopPropagation();
 	// get parent folderItem
 	var folderItem = item.parentElement;
 	var caption = folderItem.getElementsByClassName('caption')[0];
-	// set oncopy action then execute action 
+	// set oncopy action then execute action
 	var path = caption.getAttribute('name');
 	document.oncopy = function(event) {
 		event.clipboardData.setData('text/plain', path);
-		event.preventDefault();	
+		event.preventDefault();
 	};
 	document.execCommand("Copy", false, null);
 
 	var message = 'Copied to clipboard: ' + path;
 	showNotification(message);
-	
+
 	console.log('Copying: ' + path);
 }
 
@@ -76,7 +82,7 @@ function showNotification(message) {
 	var notification = document.getElementById("snackbar")
 	notification.className = "show";
 	notification.innerHTML = message;
-	setTimeout(function(){ notification.className = notification.className.replace("show", ""); }, 3000);	
+	setTimeout(function(){ notification.className = notification.className.replace("show", ""); }, 3000);
 }
 
 function allowDrop(ev) {
@@ -95,8 +101,14 @@ function drop(ev) {
 
 	// Clone the original div
 	var draggedItem = document.getElementById(ev.dataTransfer.getData("text"));
-	var newDiv = draggedItem.cloneNode(true);	
-	
+
+	// If an item is dragged onto itself, take no action.
+	if (ev.target.id === draggedItem.id || ev.target.parentElement.id  === draggedItem.id){
+		return;
+	}
+
+	var newDiv = draggedItem.cloneNode(true);
+
 	// Delete the old div
 	draggedItem.parentElement.removeChild(draggedItem);
 
@@ -115,13 +127,13 @@ function drop(ev) {
 	// Add the event listeners from the original to the new folders
 	newDiv.addEventListener('dragstart', (function(e) {
 	  	return drag(e);
-    }), false);          				
+    }), false);
 	newDiv.addEventListener('dragover', (function(e) {
 		return allowDrop(e);
 	}), false);
 	newDiv.addEventListener('drop', (function(e) {
 		return drop(e)
-	}), false);          				
+	}), false);
 
 	var param = newDiv.getElementsByClassName('caption')[0].getAttribute('name');
 	if (param.endsWith("/")){
@@ -166,6 +178,9 @@ function toggleFileView(button){
 	$(toggleBtn[0]).toggle();
 	$(toggleBtn[1]).toggle();
 
+	$(".list-attribute").each(function() {
+		$(this).toggleClass('hidden');
+	});
 	// toggle the necessary classess on file divs
 	$( ".figcaption, .figcaption-list" ).each(function() {
 		$(this).toggleClass('figcaption');
@@ -180,7 +195,7 @@ function toggleFileView(button){
 	$( ".folderItem, .folderItem-list" ).each(function() {
 		$(this).toggleClass('folderItem');
 		$(this).toggleClass('folderItem-list');
-	});	
+	});
 
 	console.log('Toggling icon/list view');
 }
