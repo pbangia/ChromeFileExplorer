@@ -50,7 +50,7 @@ $(document).ready(function () {
   var url = window.location.href;
   if (url.endsWith('Wobury/index.html')) {
     chrome.storage.local.get(["index_file_path"], function(result) {
-      if (!result.index_file_path) || result.index_file_path !== url) {
+      if ((!result.index_file_path) || (result.index_file_path !== url)) {
         var url = window.location.href;
         chrome.storage.local.set({"index_file_path": url, function(){}});
       }
