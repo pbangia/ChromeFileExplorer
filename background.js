@@ -14,7 +14,14 @@ chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     switch(request.message) {
       case "open_new_tab":
-        chrome.tabs.create({"url": request.url});
+      console.log('new tab');
+        chrome.storage.local.get(['index_file_path'], function(result) {
+          if (!result.index_file_path) {
+            alert("Index.html path not set.");
+          } else {
+            chrome.tabs.create({"url": result.index_file_path});
+          }
+        })
         break;
       default:
         break;

@@ -2268,7 +2268,7 @@ var ElementsRenderer = (function () {
         $element.empty();
         this.createDomElements($element[0], this.tree_widget.tree.children, true, 1);
     };
-    ElementsRenderer.prototype.renderFromNode = function (node) {
+    ElementsRenderer.prototype.renderFromNode = function (node) { //TODO find out where check if node has child
         // remember current li
         var $previous_li = $(node.element);
         // create element
