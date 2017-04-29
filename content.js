@@ -47,6 +47,16 @@ class DirectoryFile {
 
 
 $(document).ready(function () {
+  chrome.storage.local.get(["indexPath"], function(result) {
+    if (!result.indexPath) {
+      var url = window.location.href;
+      chrome.storage.local.set({"indexPath": url, function(){}});
+    }
+    start();
+  })
+});
+
+function start() {
   setDefaultPaths();
   currentDirectory = config.default_path;
   loadPage(currentDirectory);
@@ -60,7 +70,7 @@ $(document).ready(function () {
            children: [{name:""}]
        }
  );
-});
+}
 
 function setDefaultPaths() {
     config.extension_path = window.location.href;
