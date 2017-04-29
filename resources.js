@@ -13,6 +13,7 @@ var fileTypeIcons = {
     'csv.png':true,
     'dbf.png':true,
     'doc.png':true,
+    'docx.png':true,
     'dreamweaver.png':true,
     'dwg.png':true,
     'exe.png':true,
