@@ -99,6 +99,12 @@ function drop(ev) {
 
 	// Clone the original div
 	var draggedItem = document.getElementById(ev.dataTransfer.getData("text"));
+
+	// If an item is dragged onto itself, take no action.
+	if (ev.target.id === draggedItem.id || ev.target.parentElement.id  === draggedItem.id){
+		return;
+	}
+
 	var newDiv = draggedItem.cloneNode(true);
 
 	// Delete the old div
