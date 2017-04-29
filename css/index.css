@@ -1,5 +1,6 @@
 body {
 	background: #f2f2f2;
+    padding-top: 45px; 
 }
 
 html, body {
@@ -34,6 +35,7 @@ nav {
 .nav-section {
 	display:inline-block; margin: auto; padding-top:5px;
 }
+
 
 a {
 	color:white;
@@ -70,21 +72,29 @@ color:#fff;
 /* Side menu */
 .side-menu {
     float: left;
-    max-width: 160px;
-    margin: 0;
     padding: 1em;
     height: 100%;
+    width: 200px;
+    overflow: auto;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    white-space: nowrap;
+    background: #e0e0e0;
+
 }
 
 .main-content {
-    border-left: 1px solid gray;
+    float: left;
+    position: fixed;
     padding: 1em;
+    margin-left: 200px;
+    margin-right: 0;
+    padding-bottom: 45px;
     height: 100%;
-    width: 100%;
+    overflow: auto;
+
 }
 
-
-.hamburger{
+.hamburger, .back-btn, .forward-btn{
   background:none;
   color:#6da3f9;
   border:0;
@@ -92,7 +102,8 @@ color:#fff;
   z-index:10000000000000;
 }
 
-.hamburger:hover {
+
+.hamburger:hover, .back-btn:hover, .forward-btn:hover {
 	color:#23467f;
 }
 
@@ -154,18 +165,44 @@ color:#fff;
     border-radius: 2px;
     max-height: 15px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.23);
-    display: table;
-    width: 65%;
-    margin: 0.5rem auto;
+    display: inline-table;
+    min-width: 75%;
+    margin: 0.2rem auto;
+    margin-bottom: 2px;
     cursor: pointer;
 }
 
 .folderItem:hover {
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+      -webkit-transform: scale(1.05);
+    -moz-transform: scale(1.05);
+    -o-transform: scale(1.05);
+}
+
+.folderItemPreview:hover {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+      -webkit-transform: scale(2);
+    -moz-transform: scale(2);
+    -o-transform: scale(2);
 }
 
 .folderItem-list:hover {
   box-shadow: 0 4px 7px rgba(0,0,0,0.25), 0 3px 3px rgba(0,0,0,0.22);
+      -webkit-transform: scale(1.01);
+    -moz-transform: scale(1.01);
+    -o-transform: scale(1.01);
+}
+
+.folderItem, .folderItem-list, .figcaption-list, .figcaption, .img-radio-list, .img-radio, .hidden {
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.list-attribute {
+    padding: 5px;
+    color: gray;
 }
 
 .pin {

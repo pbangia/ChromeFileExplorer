@@ -3,14 +3,15 @@
   "name": "Chrome File Explorer",
   "version": "0.1",
   "permissions": [
-    "file://*/*"
+    "file://*/*",
+    "storage"
   ],
   "content_scripts": [
     {
       "matches": [
         "<all_urls>"
       ],
-      "js": ["jquery.min.js", "content.js", "config.js", "resources.js", "index.js"]
+      "js": ["jquery.min.js", "content.js", "config.js", "resources.js","tree.js","jquery.min.js","tree.jquery.js","index.js"]
     }
   ],
   "browser_action": {
