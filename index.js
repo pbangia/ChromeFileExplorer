@@ -184,6 +184,10 @@ function toggleFileView(button){
 	$( ".folderItem, .folderItem-list" ).each(function() {
 		$(this).toggleClass('folderItem');
 		$(this).toggleClass('folderItem-list');
+		// reset height from icon view preview
+		if (this.className=='folderItem-list'){
+			$(this).css('max-height', '15px');
+		}
 	});
 
 	console.log('Toggling icon/list view');
