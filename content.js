@@ -47,13 +47,16 @@ class DirectoryFile {
 
 
 $(document).ready(function () {
-  chrome.storage.local.get(["indexPath"], function(result) {
-    if (!result.indexPath) {
-      var url = window.location.href;
-      chrome.storage.local.set({"indexPath": url, function(){}});
-    }
-    start();
-  })
+  var url = window.location.href;
+  if (url.endsWith('Wobury/index.html')) {
+    chrome.storage.local.get(["index_file_path"], function(result) {
+      if (!result.index_file_path) {
+        var url = window.location.href;
+        chrome.storage.local.set({"index_file_path": url, function(){}});
+      }
+      start();
+    })
+  }
 });
 
 function start() {
