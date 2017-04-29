@@ -45,3 +45,21 @@ var fileTypeIcons = {
     'xml.png':true,
     'zip.png':true
 }
+
+/* Files abled to be previewed */
+var availablePreview = {
+    'avi.png':true,
+    'css.png':true,
+    'doc.png':true,
+    'docx.png':true,
+    'html.png':true,
+    'jpg.png':true,
+    'js.png':true,
+    'json.png':true,
+    'mp3.png':true,
+    'mp4.png':true,
+    'pdf.png':true,
+    'png.png':true,
+    'txt.png':true,
+    'xml.png':true
+}
