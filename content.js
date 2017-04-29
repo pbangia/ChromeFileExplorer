@@ -187,42 +187,49 @@ function createFolderViewElement(dirFile) {
   if (dirFile.isFolder){
     fvClone.addEventListener('click', (function(e) {changeDir(path);}), false);
   } else {
+    //if file, set appropriate file icon
     var img = fvClone.getElementsByTagName('img')[0];
     var imgPath = fileName.split(".");
     var extension = imgPath[imgPath.length-1] + '.png';
     if (!fileTypeIcons[extension]) extension = 'file.png';
     img.setAttribute("src", 'fileTypeIcons/'+extension);
-    var preview = fvClone.getElementsByTagName('iframe')[0];
 
-    //if file, set appropriate file icon
-    $(fvClone).hover(
-      function() {
-        if (extension=="mp4.png" || extension=="pdf.png" || extension=="png.png" || extension=='txt.png' || extension=="js.png") {
+    // if preview available, set preview settings
+    var preview = fvClone.getElementsByTagName('iframe')[0];
+    if (availablePreview[extension]) {
+  
+      $(fvClone).hover(
+        function() {
+
           timeout = setTimeout(function() { 
-           preview.setAttribute('src', 'file:///'+path); 
-           $(this).addClass("doorstatic"); 
-        $(preview).removeClass('hidden'); //
-        $(img).addClass('hidden'); 
-        preview.setAttribute('height', '190px');
-        preview.setAttribute('width', '190px');
-        $(fvClone).css('max-height', '200px');
-        $(fvClone).css('height', '200px');
-        $(fvClone).css('max-width', '200px');
-        $(fvClone).css('width', '200px');
-        $(img).addClass('hidden');
-        $(preview).css('min-height', '190px');
-        $(preview).css('min-width', '190px');         
-        $(preview).removeClass('hidden');
-        }, 1500);
+            preview.setAttribute('src', 'file:///'+path); 
+            $(preview).removeClass('hidden'); //
+            $(img).addClass('hidden'); 
+            $(preview).addClass('iframePreview');
+            $(fvClone).css('max-height', '250px');
+            $(fvClone).css('height', '250px');
+            if (!$(fvClone).hasClass('folderItem-list')){
+              $(fvClone).css('max-width','250px');
+              $(fvClone).css('width', '250px');
+            }
+            $(img).addClass('hidden');        
+            $(preview).removeClass('hidden');
+          }, 1500);
+
         }
-      }, function() {
-        clearTimeout(timeout);
-        $(preview).addClass('hidden');
-        $(img).removeClass('hidden');
-        $(fvClone).css('max-height', '100px');
-        $(fvClone).css('max-width', '100px');   
-      }
+        , function() {
+            clearTimeout(timeout);
+            $(preview).addClass('hidden');
+            $(img).removeClass('hidden');
+            if (!$(fvClone).hasClass('folderItem-list')){
+              $(fvClone).css('max-height', '100px');
+              $(fvClone).css('max-width', '100px'); 
+            } else $(fvClone).css('max-height', '15px');       
+            $(preview).removeClass('iframePreview');
+            preview.setAttribute('src', '');  
+          }
       );
+    }
     // Event handler for clicking*/
     fvClone.addEventListener('click', (function(e) {return openFile(this);}), false);
   }
