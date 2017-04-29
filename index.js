@@ -4,9 +4,11 @@ function disableButtons(boolean){
 }
 
 $( document ).ready(function() {
-    	//disable buttons on load
-    	disableButtons(true);
-
+    //disable buttons on load
+    disableButtons(true);
+ 	
+	// When index.html is loaded, save it's path to the local machine.
+	localStorage.setItem('WoburyIndexPath', window.location.href);
 });
 
 /* toggles side menu when hamburger clicked */
@@ -161,6 +163,9 @@ function saveDefaultDir(path) {
 	if (!path) {
 		var path = document.getElementById('defaultDir').value;
 	}
+
+	localStorage.setItem('WoburyDefaultDir', path);
+
 	var message = 'Updated default directory: ' + path;
 	console.log(message);
 	showNotification(message);

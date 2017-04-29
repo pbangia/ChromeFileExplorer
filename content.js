@@ -45,7 +45,6 @@ class DirectoryFile {
   }
 }
 
-
 $(document).ready(function () {
   var url = window.location.href;
   if (url.endsWith('Wobury/index.html')) {
@@ -60,8 +59,14 @@ $(document).ready(function () {
 });
 
 function start() {
-  setDefaultPaths();
-  currentDirectory = config.default_path;
+  var storedDir = localStorage.getItem('WoburyDefaultDir');
+  if (storedDir === null){
+    setDefaultPaths();
+    currentDirectory = config.default_path;
+  }else {
+    // If the user has set a default directory, load that.
+    currentDirectory = storedDir.endsWith("/") ? storedDir : storedDir+"/";  // loadPage expects a trailing slash
+  }
   loadPage(currentDirectory);
   setUpListeners();
   setUpTree();
@@ -338,7 +343,11 @@ chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     switch(request.message) {
       case "clicked_browser_action":
-        var url = config.extension_path;
+        var url = localStorage.getItem('WoburyIndexPath');
+        if (url === null){
+          url = window.URL;
+          alert("To launch Chrome File Explorer, navigate to it's index.html first, then try again.");
+        }
         chrome.runtime.sendMessage({"message": "open_new_tab", "url": url});
         break;
       default:
