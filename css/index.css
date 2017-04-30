@@ -214,7 +214,7 @@ color:#fff;
 	color: #6da3f9; float: right; padding: 5px;
 }
 
-.pin:hover {
+.pin:hover, .pinnedIcon {
 	color: #23467f;
 }
 
