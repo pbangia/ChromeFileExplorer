@@ -133,8 +133,9 @@
             <table style="width:100%;">
               <tr>
                 <td>Default folder</td>
-                <td><input type="text" class="form-control" id="defaultDir" ></td>
-                <td><button type="button" class="btn btn-primary" onclick="saveDefaultDir();" >Save</button></td>
+                <td><input type="text" class="form-control" id="defaultDir" onkeyup = "if (event.keyCode == 13)
+                        document.getElementById('defaultPathSaveBtn').click()"/></td>
+                <td><button type="button" class="btn btn-primary" onclick="saveDefaultDir();" id="defaultPathSaveBtn">Save</button></td>
               </tr>
               <tr>
                 <td>Hidden files</td>
