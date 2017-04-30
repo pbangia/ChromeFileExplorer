@@ -6,7 +6,7 @@ function disableButtons(boolean){
 $( document ).ready(function() {
     //disable buttons on load
     disableButtons(true);
- 	
+
 	// When index.html is loaded, save it's path to the local machine.
 	localStorage.setItem('WoburyIndexPath', window.location.href);
 });
@@ -156,12 +156,25 @@ function saveDefaultDir(path) {
 	if (!path) {
 		var path = document.getElementById('defaultDir').value;
 	}
+	var pathChars = Array.from(path);
 
+	for (var i = 0; i < pathChars.length; i++) {
+		if (pathChars[i] === "\\") {
+			console.log("fuck");
+			pathChars[i] = '/';
+		}
+	}
+	path = pathChars.join("");
 	localStorage.setItem('WoburyDefaultDir', path);
 
 	var message = 'Updated default directory: ' + path;
 	console.log(message);
 	showNotification(message);
+}
+
+function onSettingsBtnClicked() {
+	var defaultPath = localStorage.getItem('WoburyDefaultDir');
+	document.getElementById('defaultDir').value = (defaultPath) ? defaultPath : config.default_path;
 }
 
 /* Toggle files to list and icon views */
