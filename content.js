@@ -202,14 +202,14 @@ function createFolderViewElement(dirFile) {
     // if preview available, set preview settings
     var preview = fvClone.getElementsByTagName('iframe')[0];
     if (availablePreview[extension]) {
-  
+
       $(fvClone).hover(
         function() {
 
-          timeout = setTimeout(function() { 
-            preview.setAttribute('src', 'file:///'+path); 
+          timeout = setTimeout(function() {
+            preview.setAttribute('src', 'file:///'+path);
             $(preview).removeClass('hidden'); //
-            $(img).addClass('hidden'); 
+            $(img).addClass('hidden');
             $(preview).addClass('iframePreview');
             $(fvClone).css('max-height', '250px');
             $(fvClone).css('height', '250px');
@@ -217,7 +217,7 @@ function createFolderViewElement(dirFile) {
               $(fvClone).css('max-width','250px');
               $(fvClone).css('width', '250px');
             }
-            $(img).addClass('hidden');        
+            $(img).addClass('hidden');
             $(preview).removeClass('hidden');
           }, 1500);
 
@@ -228,10 +228,10 @@ function createFolderViewElement(dirFile) {
             $(img).removeClass('hidden');
             if (!$(fvClone).hasClass('folderItem-list')){
               $(fvClone).css('max-height', '100px');
-              $(fvClone).css('max-width', '100px'); 
-            } else $(fvClone).css('max-height', '15px');       
+              $(fvClone).css('max-width', '100px');
+            } else $(fvClone).css('max-height', '15px');
             $(preview).removeClass('iframePreview');
-            preview.setAttribute('src', '');  
+            preview.setAttribute('src', '');
           }
       );
     }
@@ -283,7 +283,7 @@ function createBreadCrumb(pathElement, pathToCurrentElement) {
 function onCrumbClick(ev) {
   ev.preventDefault();
   var path = ev.target.getAttribute("path");
-  reloadFolders(path);
+  changeDir(path);
 }
 
 /* Sort methods */
