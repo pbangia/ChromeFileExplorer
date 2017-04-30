@@ -94,6 +94,18 @@ function setUpListeners() {
   document.getElementById('forwardBtn').addEventListener('click', function(ev){onForwardBtnClick(ev)}, false);
 }
 
+function copyToPinned(item, path) {
+
+  var itemToCopy = item.cloneNode(true);
+  if (path.endsWith('/')){
+    itemToCopy.addEventListener('click', (function(e) { changeDir(path);}), false);
+  } else {
+    itemToCopy.addEventListener('click', (function(e) { return openFile(this);}), false);
+  }
+  item.setAttribute('pinned', 'true');  
+  $('#pinned').append(itemToCopy);     
+}
+
 function onBackBtnClick(ev) {
   forwardStack.push(currentDirectory);
   document.getElementById('forwardBtn').disabled = false;
@@ -199,11 +211,25 @@ function createFolderViewElement(dirFile) {
     if (!fileTypeIcons[extension]) extension = 'file.png';
     img.setAttribute("src", 'fileTypeIcons/'+extension);
 
+    //add preview 
+    addPreviewListener(fvClone, path, extension, img);
+
+    // Event handler for clicking*/
+    fvClone.addEventListener('click', (function(e) {return openFile(this);}), false);
+  }
+  // Event handler for pinning
+  var pin = fvClone.getElementsByClassName('glyphicon-pushpin')[0];
+  $(pin).on('click', function() { copyToPinned(fvClone, path); });  
+  contentList.appendChild(fvClone);
+}
+
+function addPreviewListener(file, path, extension, img){
+    var img = file.getElementsByTagName('img')[0];
     // if preview available, set preview settings
-    var preview = fvClone.getElementsByTagName('iframe')[0];
+    var preview = file.getElementsByTagName('iframe')[0];
     if (availablePreview[extension]) {
   
-      $(fvClone).hover(
+      $(file).hover(
         function() {
 
           timeout = setTimeout(function() { 
@@ -211,11 +237,11 @@ function createFolderViewElement(dirFile) {
             $(preview).removeClass('hidden'); //
             $(img).addClass('hidden'); 
             $(preview).addClass('iframePreview');
-            $(fvClone).css('max-height', '250px');
-            $(fvClone).css('height', '250px');
-            if (!$(fvClone).hasClass('folderItem-list')){
-              $(fvClone).css('max-width','250px');
-              $(fvClone).css('width', '250px');
+            $(file).css('max-height', '250px');
+            $(file).css('height', '250px');
+            if (!$(file).hasClass('folderItem-list')){
+              $(file).css('max-width','250px');
+              $(file).css('width', '250px');
             }
             $(img).addClass('hidden');        
             $(preview).removeClass('hidden');
@@ -226,19 +252,15 @@ function createFolderViewElement(dirFile) {
             clearTimeout(timeout);
             $(preview).addClass('hidden');
             $(img).removeClass('hidden');
-            if (!$(fvClone).hasClass('folderItem-list')){
-              $(fvClone).css('max-height', '100px');
-              $(fvClone).css('max-width', '100px'); 
-            } else $(fvClone).css('max-height', '15px');       
+            if (!$(file).hasClass('folderItem-list')){
+              $(file).css('max-height', '100px');
+              $(file).css('max-width', '100px'); 
+            } else $(file).css('max-height', '15px');       
             $(preview).removeClass('iframePreview');
             preview.setAttribute('src', '');  
           }
       );
-    }
-    // Event handler for clicking*/
-    fvClone.addEventListener('click', (function(e) {return openFile(this);}), false);
-  }
-  contentList.appendChild(fvClone);
+    } 
 }
 
 function changeDir(path) {

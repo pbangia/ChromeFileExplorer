@@ -55,6 +55,8 @@ function pin(event, item){
 	// path of folder to pin
 	var path = caption.getAttribute('name');
 	console.log('Pinning: ' + path);
+
+
 }
 
 /* called when clipboard copy icon is clicked */
@@ -206,8 +208,10 @@ function toggleFileView(button){
 
 /* expand/collapse pinned area */
 function togglePinned(){
-
+	$('#pinned').children().slice(1).toggleClass('hidden');
 	$('#pinned').toggleClass('togglePinned');
 	$('#arrowDown').toggleClass('hidden');
 	$('#arrowUp').toggleClass('hidden');
 }
+
+
