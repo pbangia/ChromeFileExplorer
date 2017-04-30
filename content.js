@@ -4,6 +4,8 @@ var currentDirectory;
 var idgenerator = 0;
 var backStack = [];
 var forwardStack = [];
+var pinnedFiles = {};
+var pinnedIDgenerator = 0;
 
 /* Sort primers */
 var sortStringPrimer = function(a) {return a.toUpperCase();}
@@ -96,14 +98,38 @@ function setUpListeners() {
 
 function copyToPinned(item, path) {
 
+  // do nothing if it is currently pinned
+  if (pinnedFiles[path]) { 
+    unpin(path);
+    return;
+  }
+  // make pinned copy
   var itemToCopy = item.cloneNode(true);
+  pinnedIDgenerator++;
+  itemToCopy.id = pinnedIDgenerator;
   if (path.endsWith('/')){
     itemToCopy.addEventListener('click', (function(e) { changeDir(path);}), false);
   } else {
     itemToCopy.addEventListener('click', (function(e) { return openFile(this);}), false);
   }
-  item.setAttribute('pinned', 'true');  
-  $('#pinned').append(itemToCopy);     
+
+  // set pinned copy to unpin itself on click
+  var pinIcon = itemToCopy.getElementsByClassName('pin')[0]
+  $(pinIcon).toggleClass('pinnedIcon');
+  pinIcon.addEventListener('click', (function(e) { return unpin(path); }), false);
+
+  // make entry for pinned item, associate pinned item's id. 
+  pinnedFiles[path]=pinnedIDgenerator;
+  $('#pinned').append(itemToCopy); 
+  console.log('pinned '+itemToCopy.id);   
+}
+
+/* unpin an item given its path */
+function unpin(path){
+  var id = "#" + pinnedFiles[path];
+  console.log('removing '+id);
+  $(id).remove();
+  delete pinnedFiles[path];
 }
 
 function onBackBtnClick(ev) {
