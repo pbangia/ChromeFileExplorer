@@ -203,3 +203,11 @@ function toggleFileView(button){
 
 	console.log('Toggling icon/list view');
 }
+
+/* expand/collapse pinned area */
+function togglePinned(){
+
+	$('#pinned').toggleClass('togglePinned');
+	$('#arrowDown').toggleClass('hidden');
+	$('#arrowUp').toggleClass('hidden');
+}
