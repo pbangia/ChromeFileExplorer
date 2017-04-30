@@ -187,7 +187,7 @@ color:#fff;
     -o-transform: scale(1.01);
 }
 
-.folderItem, .folderItem-list, .figcaption-list, .figcaption, .img-radio-list, .img-radio, .hidden, .pinned, #pinnedHeader {
+.folderItem, .folderItem-list, .figcaption-list, .figcaption, .img-radio-list, .img-radio, .hidden, .pinned, .togglePinned, #pinnedHeader {
     -webkit-transition: all 0.3s ease;
     -moz-transition: all 0.3s ease;
     -o-transition: all 0.3s ease;
@@ -285,11 +285,14 @@ td {
 
 /* Pinned items section */
 .pinned {
-    height: 160px;
+    height: 180px;
     border: 1px solid rgba(0,0,0,0.1);
     border-radius: 3px;
     margin-left: 2px;
     margin-bottom: 10px;
+    position: relative;
+    max-height: 180px;
+    overflow: auto; 
 
 }
 
@@ -307,7 +310,6 @@ td {
 }
 
 .togglePinned {
-    height: 14px;
+    height: 30px;
     border: 0;
-    
 }
