@@ -98,8 +98,18 @@
     <div class="result hidden" id = 'result'></div>
 
     <!-- Main file content -->
-    <div class="main-content" id="wrapper">
+    <div class="main-content">
+      
+      <!-- Pinned area -->
+      <div class="pinned" id="pinned">
+        <div id="pinnedHeader" onclick="togglePinned()" >Pinned items
+          <i id='arrowDown' class="glyphicon glyphicon-menu-up"></i>
+          <i id='arrowUp' class="glyphicon glyphicon-menu-down hidden"></i>        
+        </div>
+      </div>
 
+      <!-- Directory content -->
+      <div id="wrapper">
       <div class="folderItem hidden" id = "f" draggable="true">
         <iframe class="hidden img-responsive img-radio" src=""></iframe>
         <img src="folderImage2.png" class="img-responsive img-radio" draggable="false">
@@ -114,7 +124,7 @@
         <input type="checkbox" class="hidden" draggable="false">
       </div>
       <!--Javascript will add fields here-->
-    </div>
+    </div></div>
 
     <!-- Show snackbar notification for copy to clipboard -->
     <div id="snackbar">Copied to clipboard.</div>

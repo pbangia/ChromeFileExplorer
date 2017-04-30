@@ -50,8 +50,6 @@ var fileTypeIcons = {
 var availablePreview = {
     'avi.png':true,
     'css.png':true,
-    'doc.png':true,
-    'docx.png':true,
     'html.png':true,
     'jpg.png':true,
     'js.png':true,
