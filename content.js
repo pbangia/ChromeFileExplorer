@@ -117,7 +117,7 @@ function loadPage(path) {
     $( ".result" ).html( data );
     $('#wrapper').find('div').slice(1).remove();
     readFiles();
-    // console.log(currentFiles);
+    toggleHiddenFiles();
   });
 }
 
@@ -304,6 +304,7 @@ function sortFiles(field, reverse) {
   }
   var filter = document.getElementById('searchField').value;
   filterList(filter);
+  toggleHiddenFiles();
 }
 
 var sort_by = function(field, reverse, primer){
