@@ -269,7 +269,7 @@ function addPreviewListener(file, path, extension, img){
               $(file).css('max-width','250px');
               $(file).css('width', '250px');
             }
-            $(img).addClass('hidden');        
+            $(img).addClass('hidden');
             $(preview).removeClass('hidden');
           }, 1500);
 
@@ -283,7 +283,7 @@ function addPreviewListener(file, path, extension, img){
               $(file).css('max-width', '100px'); 
             } else $(file).css('max-height', '15px');       
             $(preview).removeClass('iframePreview');
-            preview.setAttribute('src', '');  
+            preview.setAttribute('src', '');
           }
       );
     } 
@@ -331,7 +331,7 @@ function createBreadCrumb(pathElement, pathToCurrentElement) {
 function onCrumbClick(ev) {
   ev.preventDefault();
   var path = ev.target.getAttribute("path");
-  reloadFolders(path);
+  changeDir(path);
 }
 
 /* Sort methods */
