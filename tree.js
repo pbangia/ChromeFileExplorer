@@ -2,6 +2,7 @@
 var treeData = [];
 var treeID = '#fileTree';
 var folderPathway = "";
+var treeList = [];
 
 function setUpTree() {
     refreshTree();
@@ -45,6 +46,15 @@ function setUpTree() {
             //remove the blank placeholder
             removeChildrenFromNode(node);
             getChildrenFolders(node.id);
+
+            //not working as async and run this code before get finishes
+            console.log("h");
+            for (var i = 0; i < treeList.length; i++) {
+                if (!hasChildren(treeList[i])) {
+                    var thisNode = $(treeID).tree('getNodeById', treeList[i]);
+                    removeChildrenFromNode(thisNode);
+                }
+            }
         }        
     }
 );
@@ -75,25 +85,18 @@ function removeChildrenFromNode(node) {
 }
 
 //takes single DirectoryFile object and name of current directory
-function currentDirectoryToJSONFormat(fileName, link) {
+function currentDirectoryToJSONFormat(fileName, link, path) {
   
     var dirNames = link.split("/"); //TODO change this so that windows and linux can use
     var dirLength = dirNames.length;
-
-    //second to last in dirNames is current directory
-
-
-    var parentDir = "";
-    for (var i = 0; i < dirLength - 2; i++) {
-        parentDir += (dirNames[i]+"/");
-    }
-
-    var parentNode = $(treeID).tree('getNodeById', parentDir);
-    console.log("parent " + parentDir);
+    
+    var parentNode = $(treeID).tree('getNodeById', path);
+    console.log("parent " + path);
     console.log("parent id " + parentNode.id);
     console.log("childDir " + fileName);
     console.log("link id " + link);
     var name = fileName.replace("/", "");
+
 
     //add child to parent node
     $(treeID).tree('appendNode',
@@ -108,6 +111,9 @@ function currentDirectoryToJSONFormat(fileName, link) {
 }
 
 function getChildrenFolders(path) {
+
+    treeList = [];
+
     folderPathway = constants.urlBase + path;
     $.get(folderPathway, function (data) {
         $(".result").html(data);
@@ -120,10 +126,39 @@ function getChildrenFolders(path) {
             console.log("link " + link);
 
             if (isDirectory(fileName)) {
-                currentDirectoryToJSONFormat(fileName, link);
+                currentDirectoryToJSONFormat(fileName, link, path);
+                treeList.push(link);
             }
            
         }
     });
+
 }
 
+function hasChildren(path) {
+
+
+    console.log("check if have children " + path);
+
+    var hasChild = false;
+    var done = false;
+
+    folderPathway = constants.urlBase + path;
+    $.get(folderPathway, function (d) {
+        $(".result").html(d);
+        var table = document.getElementById("tbody");
+        for (var i = 0, row; row = table.rows[i]; i++) {
+            var fileName = row.cells[0].dataset.value;
+            if (isDirectory(fileName)) {
+                console.log("have child directory " + fileName);
+                hasChild = true;
+                break;
+            }
+        }
+        done = true;
+    });
+
+    console.log("returning " + hasChild);
+   
+    return hasChild;
+}

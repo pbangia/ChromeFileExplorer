@@ -166,6 +166,8 @@ function onForwardBtnClick(ev) {
 function loadPage(path) {
   setCurrentDirectory(path);
   updateBreadcrumbs();
+
+    //if the current directory not match the currently selected node, then deselect node
   if (selectedNode !=null && selectedNode.id != path) {
       $(treeID).tree('selectNode', null);
   }
