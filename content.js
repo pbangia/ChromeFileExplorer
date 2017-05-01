@@ -33,10 +33,13 @@ var filterListener = function(ev) {
   filterList(filter);
 }
 
-function searchIconOnClick(ev) {
+function searchIconOnClick(ev) {   
     if (document.getElementById('searchBarIcon').className == "glyphicon glyphicon-remove") {
         //clear the text box
         ev.target.value = '';
+
+        //var filter = ev.target.value.toLowerCase();
+        ///filterList(filter);
     }
 }
 
