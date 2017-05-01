@@ -6,6 +6,19 @@ var folderPathway = "";
 function setUpTree() {
     refreshTree();
 
+    //add first directory
+    $(treeID).tree('appendNode',
+       {
+           name: currentDirectory,//TODO change to currentDirectory name
+           id: currentDirectory + "/",//full path
+           children: [{ name: "" }]
+       }
+ );
+    var n = $(treeID).tree('getNodeById', currentDirectory + "/");
+    console.log("select node for first " + n.id);
+    $(treeID).tree('addToSelection', n);
+
+
     // bind 'tree.click' event
     //when click on name
     $(treeID).bind(
@@ -30,7 +43,6 @@ function setUpTree() {
             //remove the blank placeholder
             removeChildrenFromNode(node);
             getChildrenFolders(node.id);
-           // refreshTree();
         }        
     }
 );
