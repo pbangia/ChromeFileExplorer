@@ -34,9 +34,10 @@ var filterListener = function(ev) {
 }
 
 function searchIconOnClick(ev) {   
-    if (document.getElementById('searchBarIcon').className == "glyphicon glyphicon-remove") {
-        //clear the text box
-        ev.target.value = '';
+    if ($('#searchBarIcon').hasClass("glyphicon glyphicon-remove")) {
+        document.getElementById('searchField').value = '';
+        var event = new Event('input');
+        document.getElementById('searchField').dispatchEvent(event);
     }
 }
 
@@ -89,7 +90,6 @@ function start() {
     
   $("#formArea").submit(function (e) {
       e.preventDefault();
-
       searchIconOnClick(e)
   });
 
