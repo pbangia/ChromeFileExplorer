@@ -288,7 +288,7 @@ td {
     height: 180px;
     border: 1px solid rgba(0,0,0,0.1);
     border-radius: 3px;
-    margin-left: 2px;
+    margin-left: 1px;
     margin-bottom: 10px;
     position: relative;
     max-height: 180px;
@@ -297,19 +297,23 @@ td {
 }
 
 #pinnedHeader {
-    background-color: rgba(0,0,0,0.1);
-    font-size: 14px;
+    background-color: white;
+    box-shadow: 0 2px 2px rgba(0,0,0,0.16), 0 2px 2px rgba(0,0,0,0.23);
+    font-size: 12px;
     padding: 2px;
+    margin: 2px;
     border-radius: 3px;
     color: rgba(0,0,0,0.6);
     cursor: pointer;
 }
 
 #pinnedHeader:hover {
-    border: 1px solid rgba(0,0,0,0.2);
+
+    box-shadow: 0 4px 7px rgba(0,0,0,0.25), 0 3px 3px rgba(0,0,0,0.22);
 }
 
 .togglePinned {
     height: 30px;
+    width: 110px;
     border: 0;
 }
