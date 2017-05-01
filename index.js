@@ -45,16 +45,9 @@ function openFile(folderItem) {
 	$(folderItem).addClass('selected');
 }
 
-/* called when pin icon is clicked*/
-function pin(event, item){
-	// stop onclick propogating to parent folderItem onclick.
+/* (pin logic moved to content.js). called when pin icon is clicked*/
+function pin(event, icon){
 	event.stopPropagation();
-	// get parent folderItem
-	var folderItem = item.parentElement;
-	var caption = folderItem.getElementsByClassName('caption')[0];
-	// path of folder to pin
-	var path = caption.getAttribute('name');
-	console.log('Pinning: ' + path);
 }
 
 /* called when clipboard copy icon is clicked */
@@ -223,3 +216,13 @@ function toggleFileView(button){
 
 	console.log('Toggling icon/list view');
 }
+
+/* expand/collapse pinned area */
+function togglePinnedList(){
+	$('#pinned').children().slice(1).toggleClass('hidden');
+	$('#pinned').toggleClass('togglePinned');
+	$('#arrowDown').toggleClass('hidden');
+	$('#arrowUp').toggleClass('hidden');
+}
+
+
