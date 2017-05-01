@@ -145,19 +145,25 @@ function drop(ev) {
 
 /* Called from setting menu */
 //Toggle hidden files and folders from settings menu
-function toggleHiddenFiles(btn) {
+function toggleHiddenFilesBtnClick(btn) {
 	var show = document.getElementById('show');
 	var hide = document.getElementById('hide');
 	$("#show").toggle();
 	$("#hide").toggle();
+	toggleHiddenFiles();
+}
+
+function toggleHiddenFiles() {
+	var show = document.getElementById('show');
 	var toggle = (show.style.display === 'none') ? "none" : "";
 	var fileList = document.getElementById('wrapper').children;
-  for (var i = 0; i < fileList.length; i++) {
+	for (var i = 0; i < fileList.length; i++) {
 		if (fileList[i].title.charAt(0) === ".") {
 			fileList[i].style.display = toggle;
 		}
-  }
+	}
 }
+
 //Save new default folder path
 function saveDefaultDir(path) {
 	if (!path) {
@@ -224,5 +230,3 @@ function togglePinnedList(){
 	$('#arrowDown').toggleClass('hidden');
 	$('#arrowUp').toggleClass('hidden');
 }
-
-

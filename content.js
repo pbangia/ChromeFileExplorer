@@ -69,6 +69,7 @@ function start() {
     // If the user has set a default directory, load that.
     currentDirectory = storedDir.endsWith("/") ? storedDir : storedDir+"/";  // loadPage expects a trailing slash
   }
+  document.getElementById('show').style.display = "none";
   loadPage(currentDirectory);
   setUpListeners();
   setUpTree();
@@ -99,7 +100,7 @@ function setUpListeners() {
 function copyToPinned(item, path) {
 
   // do nothing if it is currently pinned
-  if (pinnedFiles[path]) { 
+  if (pinnedFiles[path]) {
     unpin(path);
     return;
   }
@@ -118,10 +119,10 @@ function copyToPinned(item, path) {
   $(pinIcon).toggleClass('pinnedIcon');
   pinIcon.addEventListener('click', (function(e) { return unpin(path); }), false);
 
-  // make entry for pinned item, associate pinned item's id. 
+  // make entry for pinned item, associate pinned item's id.
   pinnedFiles[path]=pinnedIDgenerator;
-  $('#pinned').append(itemToCopy); 
-  console.log('pinned '+itemToCopy.id);   
+  $('#pinned').append(itemToCopy);
+  console.log('pinned '+itemToCopy.id);
 }
 
 /* unpin an item given its path */
@@ -237,7 +238,7 @@ function createFolderViewElement(dirFile) {
     if (!fileTypeIcons[extension]) extension = 'file.png';
     img.setAttribute("src", 'fileTypeIcons/'+extension);
 
-    //add preview 
+    //add preview
     addPreviewListener(fvClone, path, extension, img);
 
     // Event handler for clicking*/
@@ -245,7 +246,7 @@ function createFolderViewElement(dirFile) {
   }
   // Event handler for pinning
   var pin = fvClone.getElementsByClassName('glyphicon-pushpin')[0];
-  $(pin).on('click', function() { copyToPinned(fvClone, path); });  
+  $(pin).on('click', function() { copyToPinned(fvClone, path); });
   contentList.appendChild(fvClone);
 }
 
@@ -254,14 +255,14 @@ function addPreviewListener(file, path, extension, img){
     // if preview available, set preview settings
     var preview = file.getElementsByTagName('iframe')[0];
     if (availablePreview[extension]) {
-  
+
       $(file).hover(
         function() {
 
-          timeout = setTimeout(function() { 
-            preview.setAttribute('src', 'file:///'+path); 
+          timeout = setTimeout(function() {
+            preview.setAttribute('src', 'file:///'+path);
             $(preview).removeClass('hidden'); //
-            $(img).addClass('hidden'); 
+            $(img).addClass('hidden');
             $(preview).addClass('iframePreview');
             $(file).css('max-height', '250px');
             $(file).css('height', '250px');
@@ -280,13 +281,13 @@ function addPreviewListener(file, path, extension, img){
             $(img).removeClass('hidden');
             if (!$(file).hasClass('folderItem-list')){
               $(file).css('max-height', '100px');
-              $(file).css('max-width', '100px'); 
-            } else $(file).css('max-height', '15px');       
+              $(file).css('max-width', '100px');
+            } else $(file).css('max-height', '15px');
             $(preview).removeClass('iframePreview');
             preview.setAttribute('src', '');
           }
       );
-    } 
+    }
 }
 
 function changeDir(path) {
