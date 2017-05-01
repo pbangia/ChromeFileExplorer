@@ -17,6 +17,7 @@ function setUpTree() {
     var n = $(treeID).tree('getNodeById', currentDirectory + "/");
     console.log("select node for first " + n.id);
     $(treeID).tree('addToSelection', n);
+    selectedNode = n;
 
 
     // bind 'tree.click' event
@@ -26,6 +27,7 @@ function setUpTree() {
         function (event) {
             // The clicked node is 'event.node'            
             console.log("click node name");
+            selectedNode = event.node;
             loadPage(event.node.id);
         }
     );
@@ -106,8 +108,6 @@ function currentDirectoryToJSONFormat(fileName, link) {
 }
 
 function getChildrenFolders(path) {
-    console.log("get children folders");
-    console.log(constants.urlBase + path + "");
     folderPathway = constants.urlBase + path;
     $.get(folderPathway, function (data) {
         $(".result").html(data);
@@ -127,12 +127,3 @@ function getChildrenFolders(path) {
     });
 }
 
-
-//$.ajax({
-//    async: false,
-//    type: 'GET',
-//    url: folderPathway,
-//    success: function (data) {
-//        //callback
-//    }
-//});
