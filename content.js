@@ -37,9 +37,6 @@ function searchIconOnClick(ev) {
     if (document.getElementById('searchBarIcon').className == "glyphicon glyphicon-remove") {
         //clear the text box
         ev.target.value = '';
-
-        //var filter = ev.target.value.toLowerCase();
-        ///filterList(filter);
     }
 }
 
@@ -90,6 +87,11 @@ function start() {
   setUpListeners();
   setUpTree();
     
+  $("#formArea").submit(function (e) {
+      e.preventDefault();
+
+      searchIconOnClick(e)
+  });
 
 }
 
