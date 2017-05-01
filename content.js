@@ -22,8 +22,22 @@ var sortDict = {
 
 /* Search Filter */
 var filterListener = function(ev) {
-  var filter = ev.target.value.toLowerCase();
+    var filter = ev.target.value.toLowerCase();
+    if (ev.target.value.length != 0) {
+        document.getElementById('searchBarIcon').className = "glyphicon glyphicon-remove";
+    }
+    else {
+        document.getElementById('searchBarIcon').className = "glyphicon glyphicon-search";
+    }    
+
   filterList(filter);
+}
+
+function searchIconOnClick(ev) {
+    if (document.getElementById('searchBarIcon').className == "glyphicon glyphicon-remove") {
+        //clear the text box
+        ev.target.value = '';
+    }
 }
 
 function filterList(filter) {
@@ -71,7 +85,8 @@ function start() {
   }
   loadPage(currentDirectory);
   setUpListeners();
-  setUpTree();   
+  setUpTree();
+    
 
 }
 
@@ -86,7 +101,8 @@ function setUpListeners() {
   document.getElementById('dropdownSortMenu').addEventListener('click', function(ev){onSortClick(ev)}, false);
   document.getElementById('searchField').oninput = filterListener;
   document.getElementById('backBtn').addEventListener('click', function(ev){onBackBtnClick(ev)}, false);
-  document.getElementById('forwardBtn').addEventListener('click', function(ev){onForwardBtnClick(ev)}, false);
+  document.getElementById('forwardBtn').addEventListener('click', function (ev) { onForwardBtnClick(ev) }, false);
+  document.getElementById('searchBarIcon').addEventListener('click', function (ev) { searchIconOnClick(ev) }, false);
 }
 
 function copyToPinned(item, path) {
