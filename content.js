@@ -6,6 +6,7 @@ var backStack = [];
 var forwardStack = [];
 var pinnedFiles = {};
 var pinnedIDgenerator = 0;
+var selectedNode;
 
 /* Sort primers */
 var sortStringPrimer = function(a) {return a.toUpperCase();}
@@ -165,11 +166,14 @@ function onForwardBtnClick(ev) {
 function loadPage(path) {
   setCurrentDirectory(path);
   updateBreadcrumbs();
+  if (selectedNode !=null && selectedNode.id != path) {
+      $(treeID).tree('selectNode', null);
+  }
+
   $.get( constants.urlBase + path, function( data ) {
     $( ".result" ).html( data );
     $('#wrapper').find('div').slice(1).remove();
-    readFiles();
-    // console.log(currentFiles);
+    readFiles();    
   });
 }
 
