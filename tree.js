@@ -3,6 +3,7 @@ var treeData = [];
 var treeID = '#fileTree';
 var folderPathway = "";
 var treeList = [];
+var rootFolder;
 
 function setUpTree() {
     refreshTree();
@@ -10,12 +11,12 @@ function setUpTree() {
     //add first directory
     $(treeID).tree('appendNode',
        {
-           name: currentDirectory,//TODO change to currentDirectory name
-           id: currentDirectory + "/",//full path
+           name: rootFolder,
+           id: rootFolder,//full path
            children: [{ name: "" }]
        }
  );
-    var n = $(treeID).tree('getNodeById', currentDirectory + "/");
+    var n = $(treeID).tree('getNodeById', rootFolder);
     console.log("select node for first " + n.id);
     $(treeID).tree('addToSelection', n);
     selectedNode = n;
@@ -26,14 +27,16 @@ function setUpTree() {
     $(treeID).bind(
         'tree.click',
         function (event) {
-            // The clicked node is 'event.node'            
-            console.log("click node name");
-            selectedNode = event.node;
-            if (!hasChildren(selectedNode)) {
+            // The clicked node is 'event.node'   
+            selectedNode = event.node;         
+            console.log("click node name " + selectedNode.id);
+            if (!hasChildren(selectedNode.id)) {
+                console.log("no children");
                 removeChildrenFromNode(selectedNode);
                 alert("This Folder Has No Folders");
             }
             else {
+                console.log("has children");
                 loadPage(selectedNode.id);
             }
         }
@@ -146,13 +149,13 @@ function hasChildren(path) {
         var table = document.getElementById("tbody");
         for (var i = 0, row; row = table.rows[i]; i++) {
             var fileName = row.cells[0].dataset.value;
-            hasChild = true;
-            break;
-            //if (isDirectory(fileName)) {
-            //    console.log("have child directory " + fileName);
-            //    hasChild = true;
-            //    break;
-            //}
+            //hasChild = true;
+            //break;
+            if (isDirectory(fileName)) {
+                console.log("have child directory " + fileName);
+                hasChild = true;
+                break;
+            }
         }
         done = true;
     });
