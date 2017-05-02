@@ -29,7 +29,13 @@ function setUpTree() {
             // The clicked node is 'event.node'            
             console.log("click node name");
             selectedNode = event.node;
-            loadPage(event.node.id);
+            if (!hasChildren(selectedNode)) {
+                removeChildrenFromNode(selectedNode);
+                alert("This Folder Has No Folders");
+            }
+            else {
+                loadPage(selectedNode.id);
+            }
         }
     );
 
@@ -46,15 +52,6 @@ function setUpTree() {
             //remove the blank placeholder
             removeChildrenFromNode(node);
             getChildrenFolders(node.id);
-
-            //not working as async and run this code before get finishes
-            console.log("h");
-            for (var i = 0; i < treeList.length; i++) {
-                if (!hasChildren(treeList[i])) {
-                    var thisNode = $(treeID).tree('getNodeById', treeList[i]);
-                    removeChildrenFromNode(thisNode);
-                }
-            }
         }        
     }
 );
@@ -149,11 +146,13 @@ function hasChildren(path) {
         var table = document.getElementById("tbody");
         for (var i = 0, row; row = table.rows[i]; i++) {
             var fileName = row.cells[0].dataset.value;
-            if (isDirectory(fileName)) {
-                console.log("have child directory " + fileName);
-                hasChild = true;
-                break;
-            }
+            hasChild = true;
+            break;
+            //if (isDirectory(fileName)) {
+            //    console.log("have child directory " + fileName);
+            //    hasChild = true;
+            //    break;
+            //}
         }
         done = true;
     });
