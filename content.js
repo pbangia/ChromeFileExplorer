@@ -87,6 +87,7 @@ function start() {
   }
   loadPage(currentDirectory);
   setUpListeners();
+  setTreeRootPath();
   setUpTree();
     
   $("#formArea").submit(function (e) {
@@ -94,6 +95,13 @@ function start() {
       searchIconOnClick(e)
   });
 
+}
+
+function setTreeRootPath() {
+    config.extension_path = window.location.href;
+    if (navigator.appVersion.indexOf("Win") != -1) rootFolder = config.windows_path;
+    if (navigator.appVersion.indexOf("Mac") != -1) rootFolder = config.mac_path;
+    if (navigator.appVersion.indexOf("Linux") != -1) rootFolder = config.linux_path;
 }
 
 function setDefaultPaths() {
