@@ -151,31 +151,6 @@ function toggleHiddenFiles(btn) {
 	$("#show").toggle();
 	$("#hide").toggle();
 }
-//Save new default folder path
-// function saveDefaultDir(path) {
-// 	if (!path) {
-// 		var path = document.getElementById('defaultDir').value;
-// 	}
-// 	checkDivIsValid(path, function( data, status ) {	
-// 		// If the path is a valid one
-//     	if ((status !== "error") && (status !== "timeout") && (status !== "parsererror")){
-// 			var pathChars = Array.from(path);
-
-// 			for (var i = 0; i < pathChars.length; i++) {
-// 				if (pathChars[i] === "\\") {
-// 					console.log("fudge");
-// 					pathChars[i] = '/';
-// 				}
-// 			}
-// 			path = pathChars.join("");
-// 			localStorage.setItem('WoburyDefaultDir', path);
-
-// 			var message = 'Updated default directory: ' + path;
-// 			console.log(message);
-// 			showNotification(message);
-// 		}
-//   	});
-// }
 
 function onSettingsBtnClicked() {
 	var defaultPath = localStorage.getItem('WoburyDefaultDir');
