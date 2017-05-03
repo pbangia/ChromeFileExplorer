@@ -17,7 +17,7 @@
 <body>
 
   <!-- Navigation bar -->
-  <nav class="navbar-fixed-top">
+  <nav class="navbar-fixed-top" id="nav">
     <div class="container-fluid light-text">
 
       <div class="navbar-header">
@@ -40,128 +40,122 @@
           </ul>
         </div>
 
-        <div class="dropdown">
-          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            <i class="glyphicon glyphicon-sort" ></i>
-            <i class="glyphicon glyphicon-option-vertical" ></i>
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="dropdownSortMenu">
-            <li><a id='fileName_asc' href="#">Name <i class="glyphicon glyphicon-sort-by-alphabet"></i></a></li>
-            <li><a id='fileName_dsc' href="#">&zwnj;<i class="glyphicon glyphicon-sort-by-alphabet-alt"></i></a></li>
-            <li role="separator" class="divider"></li>
-            <li><a id='dateModified_asc' href="#">Date modified <i class="glyphicon glyphicon-sort-by-attributes"></i></a></li>
-            <li><a id='dateModified_dsc' href="#">&zwnj;<i class="glyphicon glyphicon-sort-by-attributes-alt"></i></a></li>
-            <li role="separator" class="divider"></li>
-            <li><a id='sizeRaw_asc' href="#">Size <i class="glyphicon glyphicon-sort-by-attributes"></i></a></li>
-            <li><a id='sizeRaw_dsc' href="#">&zwnj;<i class="glyphicon glyphicon-sort-by-attributes-alt"></i></a></li>
-            <li role="separator" class="divider"></li>
-            <li><a id='type_asc' href="#">Type <i class="glyphicon glyphicon-sort-by-alphabet"></i></a></li>
-            <li><a id='type_dsc' href="#">&zwnj;<i class="glyphicon glyphicon-sort-by-alphabet-alt"></i></a></li>
-          </ul>
+        <!-- Right side -->
+        <form method="post"  class="navbar-form navbar-right" id="formArea" >
+          <div class="input-group" >
+            <div class="input-group-btn">
+              <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="border-top-right-radius:0px; border-bottom-right-radius:0px;">
+                  <i class="glyphicon glyphicon-sort" ></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="dropdownSortMenu">
+                  <li><a id='fileName_asc'>Name <i class="glyphicon glyphicon-sort-by-alphabet"></i></a></li>
+                  <li><a id='fileName_dsc'>&zwnj;<i class="glyphicon glyphicon-sort-by-alphabet-alt"></i></a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a id='dateModified_asc'>Date modified <i class="glyphicon glyphicon-sort-by-attributes"></i></a></li>
+                  <li><a id='dateModified_dsc'>&zwnj;<i class="glyphicon glyphicon-sort-by-attributes-alt"></i></a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a id='sizeRaw_asc'>Size <i class="glyphicon glyphicon-sort-by-attributes"></i></a></li>
+                  <li><a id='sizeRaw_dsc'>&zwnj;<i class="glyphicon glyphicon-sort-by-attributes-alt"></i></a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a id='type_asc'>Type <i class="glyphicon glyphicon-sort-by-alphabet"></i></a></li>
+                  <li><a id='type_dsc'>&zwnj;<i class="glyphicon glyphicon-sort-by-alphabet-alt"></i></a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="input-group-btn">
+              <button class="btn btn-default" type="button" onclick="toggleFileView(this)" style="border-radius:0; border-right: 1px solid #91b5f2;">
+                <i class="glyphicon glyphicon glyphicon-th" ></i>
+                <i style="display:none;" class="glyphicon glyphicon glyphicon-th-list" ></i>
+              </button></div>
+              <input type="text" class="form-control navbar-element" placeholder="Search" id='searchField'>
+              <div class="input-group-btn">
+                <button class="btn btn-default search-btn" type="submit" id="searchBarButton" >
+                  <i class="glyphicon glyphicon-search" id="searchBarIcon" ></i>
+                </button>
+                <button class="btn btn-default settings" type="button" data-toggle="modal" data-target="#settingsPopup" onClick="onSettingsBtnClicked()">
+                  <i class="glyphicon glyphicon-cog"></i>
+                </button>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </nav>
+
+      <!-- Side menu -->
+
+      <div class="side-menu light-text navbar-fixed-left" id="fileTree">
+      </div>
+
+
+      <!-- Dummy div used to parse native explorer source code -->
+      <div class="result hidden" id = 'result'></div>
+
+      <!-- Main file content -->
+      <div class="main-content">
+        <!-- Pinned area -->
+        <div class="pinned" id="pinned">
+          <div id="pinnedHeader" onclick="togglePinnedList()" >Pinned items
+            <i id='arrowDown' class="glyphicon glyphicon-menu-up"></i>
+            <i id='arrowUp' class="glyphicon glyphicon-menu-down hidden"></i>        
+          </div>
         </div>
 
-        <button class="btn btn-default" type="button" onclick="toggleFileView(this)">
-          <i class="glyphicon glyphicon glyphicon-th" ></i>
-          <i style="display:none;" class="glyphicon glyphicon glyphicon-th-list" ></i>
-        </button>
-        <!-- will delete buttons (keeping for now just in case)
-        <div class="nav-section" id="buttons">
-          <button class="btn btn-default nav-btn " type="submit">COPY</button>
-          <button class="btn btn-default nav-btn " type="submit">PASTE</button>
-          <button class="btn btn-default nav-btn " type="submit">CUT</button>
-          <button class="btn btn-default nav-btn " type="submit">DELETE</button>
-          <button class="btn btn-default nav-btn " type="submit">NEW FOLDER</button>
-        </div> -->
-        <form class="navbar-form navbar-right">
-          <div class="input-group" >
-            <input type="text" class="form-control navbar-element" placeholder="Search" id='searchField'>
-            <div class="input-group-btn">
-              <button class="btn btn-default search-btn" type="submit">
-                <i class="glyphicon glyphicon-search" ></i>
-              </button>
+        <!-- Directory content -->
+        <div id="wrapper">
+          <div class="folderItem hidden" id = "f" draggable="true">
+            <iframe class="hidden img-responsive img-radio" src=""></iframe>
+            <img src="folderImage2.png" class="img-responsive img-radio" draggable="false">
+            <i class="glyphicon glyphicon-pushpin pin" onclick="pin(event, this)" draggable="false"></i>
+            <i class="glyphicon  glyphicon-paperclip pin" onclick="copy(event, this)" style="padding-right: 0;" draggable="false"></i>
+            <figcaption class="caption img-radio figcaption" draggable="false">...</figcaption>
+            <table style="float:right;"><tr>
+              <td class="list-attribute hidden">Date placeholder</td>
+              <td class="list-attribute hidden">Size placeholder</td>
+            </tr></table>
+
+            <input type="checkbox" class="hidden" draggable="false">
+          </div>
+          <!--Javascript will add fields here-->
+        </div></div>
+
+        <!-- Show snackbar notification for copy to clipboard -->
+        <div id="snackbar">Copied to clipboard.</div>
+
+        <!-- Settings modal popup -->
+        <div class="modal fade" id="settingsPopup" role="dialog">
+          <div class="modal-dialog">
+
+            <!-- Settings content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Settings</h4>
+              </div>
+              <div class="modal-body">
+                <table style="width:100%;">
+                  <tr>
+                    <td>Default folder</td>
+                    <td><input type="text" class="form-control" id="defaultDir" onkeyup = "if (event.keyCode == 13)
+                      document.getElementById('defaultPathSaveBtn').click()"/></td>
+                      <td><button type="button" class="btn btn-primary" onclick="saveDefaultDir();" id="defaultPathSaveBtn">Save</button></td>
+                    </tr>
+                    <tr>
+                      <td>Hidden files</td>
+                      <td>
+                        <button type="button" class="btn btn-primary" onclick="toggleHiddenFiles(this)">
+                          <i id="show" style="display:none;" class="glyphicon glyphicon glyphicon-eye-open"></i>
+                          <i id="hide" class="glyphicon glyphicon-eye-close"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+
             </div>
           </div>
-          <button class="btn btn-default settings" type="button" data-toggle="modal" data-target="#settingsPopup" onClick="onSettingsBtnClicked()">
-            <i class="glyphicon glyphicon-cog"></i>
-          </button>
-        </form>
-      </div>
-    </nav>
 
-    <!-- Side menu -->
-
-    <div class="side-menu light-text navbar-fixed-left" id="fileTree">
-    </div>
-
-
-    <!-- Dummy div used to parse native explorer source code -->
-    <div class="result hidden" id = 'result'></div>
-
-    <!-- Main file content -->
-    <div class="main-content">
-      
-      <!-- Pinned area -->
-      <div class="pinned" id="pinned">
-        <div id="pinnedHeader" onclick="togglePinnedList()" >Pinned items
-          <i id='arrowDown' class="glyphicon glyphicon-menu-up"></i>
-          <i id='arrowUp' class="glyphicon glyphicon-menu-down hidden"></i>        
-        </div>
-      </div>
-
-      <!-- Directory content -->
-      <div id="wrapper">
-      <div class="folderItem hidden" id = "f" draggable="true">
-        <iframe class="hidden img-responsive img-radio" src=""></iframe>
-        <img src="folderImage2.png" class="img-responsive img-radio" draggable="false">
-        <i class="glyphicon glyphicon-pushpin pin" onclick="pin(event, this)" draggable="false"></i>
-        <i class="glyphicon  glyphicon-paperclip pin" onclick="copy(event, this)" style="padding-right: 0;" draggable="false"></i>
-        <figcaption class="caption img-radio figcaption" draggable="false">...</figcaption>
-        <table style="float:right;"><tr>
-          <td class="list-attribute hidden">Date placeholder</td>
-          <td class="list-attribute hidden">Size placeholder</td>
-        </tr></table>
-
-        <input type="checkbox" class="hidden" draggable="false">
-      </div>
-      <!--Javascript will add fields here-->
-    </div></div>
-
-    <!-- Show snackbar notification for copy to clipboard -->
-    <div id="snackbar">Copied to clipboard.</div>
-
-    <!-- Settings modal popup -->
-    <div class="modal fade" id="settingsPopup" role="dialog">
-      <div class="modal-dialog">
-
-        <!-- Settings content-->
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Settings</h4>
-          </div>
-          <div class="modal-body">
-            <table style="width:100%;">
-              <tr>
-                <td>Default folder</td>
-                <td><input type="text" class="form-control" id="defaultDir" onkeyup = "if (event.keyCode == 13)
-                        document.getElementById('defaultPathSaveBtn').click()"/></td>
-                <td><button type="button" class="btn btn-primary" id="defaultPathSaveBtn">Save</button></td>
-              </tr>
-              <tr>
-                <td>Hidden files</td>
-                <td>
-                  <button type="button" class="btn btn-primary" onclick="toggleHiddenFiles(this)">
-                    <i id="show" style="display:none;" class="glyphicon glyphicon glyphicon-eye-open"></i>
-                    <i id="hide" class="glyphicon glyphicon-eye-close"></i>
-                  </button>
-                </td>
-              </tr>
-            </table>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-  </body>
-  </html>
+        </body>
+        </html>
