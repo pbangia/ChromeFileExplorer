@@ -86,6 +86,18 @@ function start() {
     currentDirectory = storedDir.endsWith("/") ? storedDir : storedDir+"/";  // loadPage expects a trailing slash
   }
   loadPage(currentDirectory);
+
+  var oldPinnedFiles = JSON.parse(localStorage.getItem('WoburyPinnedFiles'));
+  if (oldPinnedFiles !== null){
+    var keys = Object.keys(oldPinnedFiles);
+  
+    for (var i=0; i<keys.length; i++){
+      if (!(oldPinnedFiles[keys[i]]==null)){
+        copyToPinned(oldPinnedFiles[keys[i]], keys[i]);
+      }
+    }
+  }
+
   setUpListeners();
   setTreeRootPath();
   setUpTree();
@@ -126,8 +138,18 @@ function copyToPinned(item, path) {
     unpin(path);
     return;
   }
+
+  var itemToCopy
+  // If the item is a loaded pin, and isn't on the page, then the item's HTML is passed in.
+  if (document.getElementById(item.id)===null){
+    document.getElementsByClassName('pinned')[0].innerHTML += item;
+    itemToCopy = document.getElementsByClassName('pinned')[0].getElementsByClassName('folderItem')[0];
+    //$('#pinned').remove(newDiv);
+  }else{
+    itemToCopy = item.cloneNode(true);
+  }
+
   // make pinned copy
-  var itemToCopy = item.cloneNode(true);
   pinnedIDgenerator++;
   itemToCopy.id = pinnedIDgenerator;
   if (path.endsWith('/')){
@@ -142,17 +164,27 @@ function copyToPinned(item, path) {
   pinIcon.addEventListener('click', (function(e) { return unpin(path); }), false);
 
   // make entry for pinned item, associate pinned item's id. 
-  pinnedFiles[path]=pinnedIDgenerator;
+  pinnedFiles[path]=itemToCopy.outerHTML;
+
+  localStorage.setItem('WoburyPinnedFiles', JSON.stringify(pinnedFiles));
+
   $('#pinned').append(itemToCopy); 
   console.log('pinned '+itemToCopy.id);   
 }
 
 /* unpin an item given its path */
 function unpin(path){
-  var id = "#" + pinnedFiles[path];
+  // Get the id field from the html string.
+  var pathID = pinnedFiles[path].substring(pinnedFiles[path].indexOf("id=\"")+4,pinnedFiles[path].length)
+  pathID = pathID.substring(0, pathID.indexOf("\""));
+  var id = "#" + pathID;
+  
   console.log('removing '+id);
   $(id).remove();
   delete pinnedFiles[path];
+
+  // Rather than pinnedFiles holding an id, use localstorage and a stringified list of divs.
+  localStorage.setItem('WoburyPinnedFiles', JSON.stringify(pinnedFiles));
 }
 
 function onBackBtnClick(ev) {
