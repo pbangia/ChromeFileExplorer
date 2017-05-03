@@ -202,9 +202,11 @@ function saveDefaultDir(path) {
 	if (!path) {
 		var path = document.getElementById('defaultDir').value;
 	}
-	checkDivIsValid(path, function( data, status ) {	
-		// If the path is a valid one
-    	if ((status !== "error") && (status !== "timeout") && (status !== "parsererror")){
+
+  $.ajax({
+    url: "file://" + path,
+    type: 'GET',
+    success: function(data) {	
 			var pathChars = Array.from(path);
 
 			for (var i = 0; i < pathChars.length; i++) {
@@ -219,13 +221,30 @@ function saveDefaultDir(path) {
 			var message = 'Updated default directory: ' + path;
 			console.log(message);
 			showNotification(message);
-		}
-  	});
+		},
+    error: function(data) {
+        alert('That file path is invalid. Plese try again.');
+    }
+  });
+
+	// $.get( "file://" + path, function( data, status ) {	
+	// 		var pathChars = Array.from(path);
+
+	// 		for (var i = 0; i < pathChars.length; i++) {
+	// 			if (pathChars[i] === "\\") {
+	// 				console.log("fudge");
+	// 				pathChars[i] = '/';
+	// 			}
+	// 		}
+	// 		path = pathChars.join("");
+	// 		localStorage.setItem('WoburyDefaultDir', path);
+
+	// 		var message = 'Updated default directory: ' + path;
+	// 		console.log(message);
+	// 		showNotification(message);
+	// 	});
 }
 
-function checkDivIsValid(path, callback){
-  $.get( "file://" + path, callback);
-}
 
 // Reads the files from the current directory and stores them in currentFiles
 function readFiles() {
