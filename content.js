@@ -106,6 +106,7 @@ function setUpListeners() {
   document.getElementById('searchField').oninput = filterListener;
   document.getElementById('backBtn').addEventListener('click', function(ev){onBackBtnClick(ev)}, false);
   document.getElementById('forwardBtn').addEventListener('click', function(ev){onForwardBtnClick(ev)}, false);
+  document.getElementById('defaultPathSaveBtn').addEventListener('click', function(ev){saveDefaultDir(document.getElementById('defaultPathSaveBtn').value)}, false);
 }
 
 function copyToPinned(item, path) {
@@ -195,6 +196,35 @@ function reloadFolders(path){
   console.log('reloadFolders path=' + path);
     currentFiles = [];
     loadPage(path);
+}
+//Save new default folder path
+function saveDefaultDir(path) {
+	if (!path) {
+		var path = document.getElementById('defaultDir').value;
+	}
+	checkDivIsValid(path, function( data, status ) {	
+		// If the path is a valid one
+    	if ((status !== "error") && (status !== "timeout") && (status !== "parsererror")){
+			var pathChars = Array.from(path);
+
+			for (var i = 0; i < pathChars.length; i++) {
+				if (pathChars[i] === "\\") {
+					console.log("fudge");
+					pathChars[i] = '/';
+				}
+			}
+			path = pathChars.join("");
+			localStorage.setItem('WoburyDefaultDir', path);
+
+			var message = 'Updated default directory: ' + path;
+			console.log(message);
+			showNotification(message);
+		}
+  	});
+}
+
+function checkDivIsValid(path, callback){
+  $.get( "file://" + path, callback);
 }
 
 // Reads the files from the current directory and stores them in currentFiles
