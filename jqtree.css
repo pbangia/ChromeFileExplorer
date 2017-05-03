@@ -21,7 +21,7 @@ ul.jqtree-tree {
     text-decoration: none;
     vertical-align: middle; }
     ul.jqtree-tree .jqtree-toggler:hover {
-      color: #000;
+      color: #4285f4 ; /*#4285f4   */
       text-decoration: none; }
     ul.jqtree-tree .jqtree-toggler.jqtree-closed {
       background-position: 0 0; }
@@ -83,11 +83,11 @@ ul.jqtree-tree {
     box-sizing: content-box; }
   ul.jqtree-tree li.jqtree-selected > .jqtree-element,
   ul.jqtree-tree li.jqtree-selected > .jqtree-element:hover {
-    background-color: #97BDD6;
-    background: -webkit-gradient(linear, left top, left bottom, from(#BEE0F5), to(#89AFCA));
-    background: -moz-linear-gradient(top, #BEE0F5, #89AFCA);
-    background: -ms-linear-gradient(top, #BEE0F5, #89AFCA);
-    background: -o-linear-gradient(top, #BEE0F5, #89AFCA);
+    background-color: #97BDD6; /*#4285f4 Red #E9495A*/
+    background: -webkit-gradient(linear, left top, left bottom, from(#BEE0F5), to(#6ea3f7));
+    background: -moz-linear-gradient(top, #BEE0F5, #6ea3f7);
+    background: -ms-linear-gradient(top, #BEE0F5, #6ea3f7);
+    background: -o-linear-gradient(top, #BEE0F5, #6ea3f7);
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7); }
   ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
     outline: dashed 1px #0000ff; }
