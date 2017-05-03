@@ -4,6 +4,8 @@ var currentDirectory;
 var idgenerator = 0;
 var backStack = [];
 var forwardStack = [];
+var pinnedFiles = {};
+var pinnedIDgenerator = 0;
 
 /* Sort primers */
 var sortStringPrimer = function(a) {return a.toUpperCase();}
@@ -113,6 +115,7 @@ function copyToPinned(item, path) {
     unpin(path);
     return;
   }
+
   var itemToCopy
   // If the item is a loaded pin, and isn't on the page, then the item's HTML is passed in.
   if (document.getElementById(item.id)===null){
@@ -259,33 +262,63 @@ function createFolderViewElement(dirFile) {
   if (dirFile.isFolder){
     fvClone.addEventListener('click', (function(e) {changeDir(path);}), false);
   } else {
+    //if file, set appropriate file icon
     var img = fvClone.getElementsByTagName('img')[0];
     var imgPath = fileName.split(".");
     var extension = imgPath[imgPath.length-1] + '.png';
     if (!fileTypeIcons[extension]) extension = 'file.png';
     img.setAttribute("src", 'fileTypeIcons/'+extension);
-    var preview = fvClone.getElementsByTagName('iframe')[0];
 
-    //if file, set appropriate file icon
-    $(fvClone).hover(
-      function() {
-        if (extension=="mp4.png" || extension=="pdf.png" || extension=="png.png" || extension=='txt.png' || extension=="js.png") {
-         $(fvClone).addClass('folderItemPreview');
-         preview.setAttribute('src', 'file:///'+path);
-         preview.setAttribute('height', '200px');
-         preview.setAttribute('width', '200px');
-         $(img).addClass('hidden');
-         $(preview).removeClass('hidden');
-       }
-     }, function() {
-      $(preview).addClass('hidden');
-      $(img).removeClass('hidden');
-    }
-    );
+    //add preview 
+    addPreviewListener(fvClone, path, extension, img);
+
     // Event handler for clicking*/
     fvClone.addEventListener('click', (function(e) {return openFile(this);}), false);
   }
+  // Event handler for pinning
+  var pin = fvClone.getElementsByClassName('glyphicon-pushpin')[0];
+  $(pin).on('click', function() { copyToPinned(fvClone, path); });  
   contentList.appendChild(fvClone);
+}
+
+function addPreviewListener(file, path, extension, img){
+    var img = file.getElementsByTagName('img')[0];
+    // if preview available, set preview settings
+    var preview = file.getElementsByTagName('iframe')[0];
+    if (availablePreview[extension]) {
+  
+      $(file).hover(
+        function() {
+
+          timeout = setTimeout(function() { 
+            preview.setAttribute('src', 'file:///'+path); 
+            $(preview).removeClass('hidden'); //
+            $(img).addClass('hidden'); 
+            $(preview).addClass('iframePreview');
+            $(file).css('max-height', '250px');
+            $(file).css('height', '250px');
+            if (!$(file).hasClass('folderItem-list')){
+              $(file).css('max-width','250px');
+              $(file).css('width', '250px');
+            }
+            $(img).addClass('hidden');
+            $(preview).removeClass('hidden');
+          }, 1500);
+
+        }
+        , function() {
+            clearTimeout(timeout);
+            $(preview).addClass('hidden');
+            $(img).removeClass('hidden');
+            if (!$(file).hasClass('folderItem-list')){
+              $(file).css('max-height', '100px');
+              $(file).css('max-width', '100px'); 
+            } else $(file).css('max-height', '15px');       
+            $(preview).removeClass('iframePreview');
+            preview.setAttribute('src', '');
+          }
+      );
+    } 
 }
 
 function changeDir(path) {
@@ -330,7 +363,7 @@ function createBreadCrumb(pathElement, pathToCurrentElement) {
 function onCrumbClick(ev) {
   ev.preventDefault();
   var path = ev.target.getAttribute("path");
-  reloadFolders(path);
+  changeDir(path);
 }
 
 /* Sort methods */
