@@ -30,15 +30,27 @@ function setUpTree() {
             // The clicked node is 'event.node'   
             selectedNode = event.node;         
             console.log("click node name " + selectedNode.id);
-            if (!hasChildren(selectedNode.id)) {
-                console.log("no children");
+
+            //check if children do not exist (would only have 1 placeholder child whose value is "")
+            if ((selectedNode.children.length == 1 && selectedNode.children[0].name == "")) {
+                //remove the blank placeholder
                 removeChildrenFromNode(selectedNode);
-                alert("This Folder Has No Folders");
+                getChildrenFolders(selectedNode.id);
             }
-            else {
-                console.log("has children");
-                loadPage(selectedNode.id);
-            }
+            
+            loadPage(selectedNode.id);
+
+            //hasChildren(selectedNode.id, selectedNode);
+
+            //if (!hasChild) {
+            //    console.log("no children");
+            //    removeChildrenFromNode(selectedNode);
+            //    alert("This Folder Has No Folders");
+            //}
+            //else {
+            //    console.log("has children");
+            //    loadPage(selectedNode.id);
+            //}
         }
     );
 
@@ -140,27 +152,33 @@ function hasChildren(path) {
 
     console.log("check if have children " + path);
 
-    var hasChild = false;
-    var done = false;
-
     folderPathway = constants.urlBase + path;
     $.get(folderPathway, function (d) {
         $(".result").html(d);
         var table = document.getElementById("tbody");
+
+        var hasChild = false;
+
         for (var i = 0, row; row = table.rows[i]; i++) {
             var fileName = row.cells[0].dataset.value;
-            //hasChild = true;
-            //break;
-            if (isDirectory(fileName)) {
-                console.log("have child directory " + fileName);
-                hasChild = true;
-                break;
-            }
+            hasChild = true;
+            return hasChild;
+            //if (isDirectory(fileName)) {
+            //    console.log("have child directory " + fileName);
+            //    hasChild = true;
+            //    break;
+            //}
         }
-        done = true;
+        return false;
+            console.log("returning " + hasChild);
+        //    if (!hasChild) {
+        //        console.log("no children");
+        //    removeChildrenFromNode(selectedNode);
+        //    alert("This Folder Has No Folders");
+        //}
+        //else {
+        //    console.log("has children");
+        //    loadPage(selectedNode.id);
+        //}
     });
-
-    console.log("returning " + hasChild);
-   
-    return hasChild;
 }
