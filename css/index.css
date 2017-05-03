@@ -82,6 +82,19 @@ color:#fff;
 
 }
 
+.hamburger, .back-btn, .forward-btn{
+  background:none;
+  color:#6da3f9;
+  border:0;
+  outline:none;
+  z-index:10000000000000;
+}
+
+.hamburger:hover, .back-btn:hover, .forward-btn:hover {
+    color:#23467f;
+}
+
+/* Folder and file container */
 .main-content {
     float: left;
     position: fixed;
@@ -92,19 +105,6 @@ color:#fff;
     height: 100%;
     overflow: auto;
 
-}
-
-.hamburger, .back-btn, .forward-btn{
-  background:none;
-  color:#6da3f9;
-  border:0;
-  outline:none;
-  z-index:10000000000000;
-}
-
-
-.hamburger:hover, .back-btn:hover, .forward-btn:hover {
-	color:#23467f;
 }
 
 .hidden {
@@ -158,6 +158,7 @@ color:#fff;
 	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 	display: inline-table;
     cursor: pointer;
+    vertical-align: top;
 }
 
 .folderItem-list {
@@ -174,16 +175,9 @@ color:#fff;
 
 .folderItem:hover {
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-      -webkit-transform: scale(1.05);
+   -webkit-transform: scale(1.05);
     -moz-transform: scale(1.05);
     -o-transform: scale(1.05);
-}
-
-.folderItemPreview:hover {
-  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-      -webkit-transform: scale(2);
-    -moz-transform: scale(2);
-    -o-transform: scale(2);
 }
 
 .folderItem-list:hover {
@@ -193,11 +187,22 @@ color:#fff;
     -o-transform: scale(1.01);
 }
 
-.folderItem, .folderItem-list, .figcaption-list, .figcaption, .img-radio-list, .img-radio, .hidden {
+.folderItem, .folderItem-list, .figcaption-list, .figcaption, .img-radio-list, .img-radio, .hidden, .pinned, .togglePinned, #pinnedHeader {
     -webkit-transition: all 0.3s ease;
     -moz-transition: all 0.3s ease;
     -o-transition: all 0.3s ease;
     transition: all 0.3s ease;
+}
+
+.figcaption-list, .list-attribute {
+    vertical-align: top;
+}
+
+.iframePreview {
+    height: 240px;
+    min-height: 240px;    
+    width: 240px;    
+    min-width: 240px;
 }
 
 .list-attribute {
@@ -209,7 +214,7 @@ color:#fff;
 	color: #6da3f9; float: right; padding: 5px;
 }
 
-.pin:hover {
+.pin:hover, .pinnedIcon {
 	color: #23467f;
 }
 
@@ -276,4 +281,39 @@ color:#fff;
 /* Settings popup */
 td {
     padding: 2px;
+}
+
+/* Pinned items section */
+.pinned {
+    height: 180px;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 3px;
+    margin-left: 1px;
+    margin-bottom: 10px;
+    position: relative;
+    max-height: 180px;
+    overflow: auto; 
+
+}
+
+#pinnedHeader {
+    background-color: white;
+    box-shadow: 0 2px 2px rgba(0,0,0,0.16), 0 2px 2px rgba(0,0,0,0.23);
+    font-size: 12px;
+    padding: 2px;
+    margin: 2px;
+    border-radius: 3px;
+    color: rgba(0,0,0,0.6);
+    cursor: pointer;
+}
+
+#pinnedHeader:hover {
+
+    box-shadow: 0 4px 7px rgba(0,0,0,0.25), 0 3px 3px rgba(0,0,0,0.22);
+}
+
+.togglePinned {
+    height: 30px;
+    width: 110px;
+    border: 0;
 }
