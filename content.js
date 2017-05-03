@@ -6,6 +6,7 @@ var backStack = [];
 var forwardStack = [];
 var pinnedFiles = {};
 var pinnedIDgenerator = 0;
+var selectedNode;
 
 /* Sort primers */
 var sortStringPrimer = function(a) {return a.toUpperCase();}
@@ -22,8 +23,23 @@ var sortDict = {
 
 /* Search Filter */
 var filterListener = function(ev) {
-  var filter = ev.target.value.toLowerCase();
+    var filter = ev.target.value.toLowerCase();
+    if (ev.target.value.length != 0) {
+        document.getElementById('searchBarIcon').className = "glyphicon glyphicon-remove";
+    }
+    else {
+        document.getElementById('searchBarIcon').className = "glyphicon glyphicon-search";
+    }    
+
   filterList(filter);
+}
+
+function searchIconOnClick(ev) {   
+    if ($('#searchBarIcon').hasClass("glyphicon glyphicon-remove")) {
+        document.getElementById('searchField').value = '';
+        var event = new Event('input');
+        document.getElementById('searchField').dispatchEvent(event);
+    }
 }
 
 function filterList(filter) {
@@ -83,15 +99,21 @@ function start() {
   }
 
   setUpListeners();
+  setTreeRootPath();
   setUpTree();
-    //add first directory
-    $(treeID).tree('appendNode',
-       {
-           name: currentDirectory,//TODO change to currentDirectory name
-           id: currentDirectory+"/",//full path
-           children: [{name:""}]
-       }
- );
+    
+  $("#formArea").submit(function (e) {
+      e.preventDefault();
+      searchIconOnClick(e)
+  });
+
+}
+
+function setTreeRootPath() {
+    config.extension_path = window.location.href;
+    if (navigator.appVersion.indexOf("Win") != -1) rootFolder = config.windows_path;
+    if (navigator.appVersion.indexOf("Mac") != -1) rootFolder = config.mac_path;
+    if (navigator.appVersion.indexOf("Linux") != -1) rootFolder = config.linux_path;
 }
 
 function setDefaultPaths() {
@@ -107,6 +129,7 @@ function setUpListeners() {
   document.getElementById('backBtn').addEventListener('click', function(ev){onBackBtnClick(ev)}, false);
   document.getElementById('forwardBtn').addEventListener('click', function(ev){onForwardBtnClick(ev)}, false);
   document.getElementById('defaultPathSaveBtn').addEventListener('click', function(ev){saveDefaultDir(document.getElementById('defaultPathSaveBtn').value)}, false);
+  document.getElementById('searchBarIcon').addEventListener('click', function (ev) { searchIconOnClick(ev) }, false);
 }
 
 function copyToPinned(item, path) {
@@ -184,11 +207,16 @@ function onForwardBtnClick(ev) {
 function loadPage(path) {
   setCurrentDirectory(path);
   updateBreadcrumbs();
+
+    //if the current directory not match the currently selected node, then deselect node
+  if (selectedNode !=null && selectedNode.id != path) {
+      $(treeID).tree('selectNode', null);
+  }
+
   $.get( constants.urlBase + path, function( data ) {
     $( ".result" ).html( data );
     $('#wrapper').find('div').slice(1).remove();
-    readFiles();
-    // console.log(currentFiles);
+    readFiles();    
   });
 }
 
