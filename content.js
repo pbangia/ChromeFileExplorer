@@ -203,6 +203,7 @@ function saveDefaultDir(path) {
 		var path = document.getElementById('defaultDir').value;
 	}
 
+  // Send a get request for the file the user has specified. If it returns an error, the file is invalid.
   $.ajax({
     url: "file://" + path,
     type: 'GET',
@@ -226,23 +227,6 @@ function saveDefaultDir(path) {
         alert('That file path is invalid. Plese try again.');
     }
   });
-
-	// $.get( "file://" + path, function( data, status ) {	
-	// 		var pathChars = Array.from(path);
-
-	// 		for (var i = 0; i < pathChars.length; i++) {
-	// 			if (pathChars[i] === "\\") {
-	// 				console.log("fudge");
-	// 				pathChars[i] = '/';
-	// 			}
-	// 		}
-	// 		path = pathChars.join("");
-	// 		localStorage.setItem('WoburyDefaultDir', path);
-
-	// 		var message = 'Updated default directory: ' + path;
-	// 		console.log(message);
-	// 		showNotification(message);
-	// 	});
 }
 
 
