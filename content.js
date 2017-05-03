@@ -68,6 +68,18 @@ function start() {
     currentDirectory = storedDir.endsWith("/") ? storedDir : storedDir+"/";  // loadPage expects a trailing slash
   }
   loadPage(currentDirectory);
+
+  var oldPinnedFiles = JSON.parse(localStorage.getItem('WoburyPinnedFiles'));
+  if (oldPinnedFiles !== null){
+    var keys = Object.keys(oldPinnedFiles);
+  
+    for (var i=0; i<keys.length; i++){
+      if (!(oldPinnedFiles[keys[i]]==null)){
+        copyToPinned(oldPinnedFiles[keys[i]], keys[i]);
+      }
+    }
+  }
+
   setUpListeners();
   setUpTree();
     //add first directory
@@ -92,6 +104,61 @@ function setUpListeners() {
   document.getElementById('searchField').oninput = filterListener;
   document.getElementById('backBtn').addEventListener('click', function(ev){onBackBtnClick(ev)}, false);
   document.getElementById('forwardBtn').addEventListener('click', function(ev){onForwardBtnClick(ev)}, false);
+}
+
+function copyToPinned(item, path) {
+
+  // do nothing if it is currently pinned
+  if (pinnedFiles[path]) { 
+    unpin(path);
+    return;
+  }
+  var itemToCopy
+  // If the item is a loaded pin, and isn't on the page, then the item's HTML is passed in.
+  if (document.getElementById(item.id)===null){
+    document.getElementsByClassName('pinned')[0].innerHTML += item;
+    itemToCopy = document.getElementsByClassName('pinned')[0].getElementsByClassName('folderItem')[0];
+    //$('#pinned').remove(newDiv);
+  }else{
+    itemToCopy = item.cloneNode(true);
+  }
+
+  // make pinned copy
+  pinnedIDgenerator++;
+  itemToCopy.id = pinnedIDgenerator;
+  if (path.endsWith('/')){
+    itemToCopy.addEventListener('click', (function(e) { changeDir(path);}), false);
+  } else {
+    itemToCopy.addEventListener('click', (function(e) { return openFile(this);}), false);
+  }
+
+  // set pinned copy to unpin itself on click
+  var pinIcon = itemToCopy.getElementsByClassName('pin')[0]
+  $(pinIcon).toggleClass('pinnedIcon');
+  pinIcon.addEventListener('click', (function(e) { return unpin(path); }), false);
+
+  // make entry for pinned item, associate pinned item's id. 
+  pinnedFiles[path]=itemToCopy.outerHTML;
+
+  localStorage.setItem('WoburyPinnedFiles', JSON.stringify(pinnedFiles));
+
+  $('#pinned').append(itemToCopy); 
+  console.log('pinned '+itemToCopy.id);   
+}
+
+/* unpin an item given its path */
+function unpin(path){
+  // Get the id field from the html string.
+  var pathID = pinnedFiles[path].substring(pinnedFiles[path].indexOf("id=\"")+4,pinnedFiles[path].length)
+  pathID = pathID.substring(0, pathID.indexOf("\""));
+  var id = "#" + pathID;
+  
+  console.log('removing '+id);
+  $(id).remove();
+  delete pinnedFiles[path];
+
+  // Rather than pinnedFiles holding an id, use localstorage and a stringified list of divs.
+  localStorage.setItem('WoburyPinnedFiles', JSON.stringify(pinnedFiles));
 }
 
 function onBackBtnClick(ev) {
