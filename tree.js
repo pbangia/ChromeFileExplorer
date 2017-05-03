@@ -2,18 +2,55 @@
 var treeData = [];
 var treeID = '#fileTree';
 var folderPathway = "";
+var treeList = [];
+var rootFolder;
 
 function setUpTree() {
     refreshTree();
+
+    //add first directory
+    $(treeID).tree('appendNode',
+       {
+           name: rootFolder,
+           id: rootFolder,//full path
+           children: [{ name: "" }]
+       }
+ );
+    var n = $(treeID).tree('getNodeById', rootFolder);
+    console.log("select node for first " + n.id);
+    $(treeID).tree('addToSelection', n);
+    selectedNode = n;
+
 
     // bind 'tree.click' event
     //when click on name
     $(treeID).bind(
         'tree.click',
         function (event) {
-            // The clicked node is 'event.node'            
-            console.log("click node name");
-            loadPage(event.node.id);
+            // The clicked node is 'event.node'   
+            selectedNode = event.node;         
+            console.log("click node name " + selectedNode.id);
+
+            //check if children do not exist (would only have 1 placeholder child whose value is "")
+            if ((selectedNode.children.length == 1 && selectedNode.children[0].name == "")) {
+                //remove the blank placeholder
+                removeChildrenFromNode(selectedNode);
+                getChildrenFolders(selectedNode.id);
+            }
+            
+            loadPage(selectedNode.id);
+
+            //hasChildren(selectedNode.id, selectedNode);
+
+            //if (!hasChild) {
+            //    console.log("no children");
+            //    removeChildrenFromNode(selectedNode);
+            //    alert("This Folder Has No Folders");
+            //}
+            //else {
+            //    console.log("has children");
+            //    loadPage(selectedNode.id);
+            //}
         }
     );
 
@@ -30,7 +67,6 @@ function setUpTree() {
             //remove the blank placeholder
             removeChildrenFromNode(node);
             getChildrenFolders(node.id);
-           // refreshTree();
         }        
     }
 );
@@ -61,25 +97,18 @@ function removeChildrenFromNode(node) {
 }
 
 //takes single DirectoryFile object and name of current directory
-function currentDirectoryToJSONFormat(fileName, link) {
+function currentDirectoryToJSONFormat(fileName, link, path) {
   
     var dirNames = link.split("/"); //TODO change this so that windows and linux can use
     var dirLength = dirNames.length;
-
-    //second to last in dirNames is current directory
-
-
-    var parentDir = "";
-    for (var i = 0; i < dirLength - 2; i++) {
-        parentDir += (dirNames[i]+"/");
-    }
-
-    var parentNode = $(treeID).tree('getNodeById', parentDir);
-    console.log("parent " + parentDir);
+    
+    var parentNode = $(treeID).tree('getNodeById', path);
+    console.log("parent " + path);
     console.log("parent id " + parentNode.id);
     console.log("childDir " + fileName);
     console.log("link id " + link);
     var name = fileName.replace("/", "");
+
 
     //add child to parent node
     $(treeID).tree('appendNode',
@@ -94,8 +123,9 @@ function currentDirectoryToJSONFormat(fileName, link) {
 }
 
 function getChildrenFolders(path) {
-    console.log("get children folders");
-    console.log(constants.urlBase + path + "");
+
+    treeList = [];
+
     folderPathway = constants.urlBase + path;
     $.get(folderPathway, function (data) {
         $(".result").html(data);
@@ -108,19 +138,47 @@ function getChildrenFolders(path) {
             console.log("link " + link);
 
             if (isDirectory(fileName)) {
-                currentDirectoryToJSONFormat(fileName, link);
+                currentDirectoryToJSONFormat(fileName, link, path);
+                treeList.push(link);
             }
            
         }
     });
+
 }
 
+function hasChildren(path) {
 
-//$.ajax({
-//    async: false,
-//    type: 'GET',
-//    url: folderPathway,
-//    success: function (data) {
-//        //callback
-//    }
-//});
+
+    console.log("check if have children " + path);
+
+    folderPathway = constants.urlBase + path;
+    $.get(folderPathway, function (d) {
+        $(".result").html(d);
+        var table = document.getElementById("tbody");
+
+        var hasChild = false;
+
+        for (var i = 0, row; row = table.rows[i]; i++) {
+            var fileName = row.cells[0].dataset.value;
+            hasChild = true;
+            return hasChild;
+            //if (isDirectory(fileName)) {
+            //    console.log("have child directory " + fileName);
+            //    hasChild = true;
+            //    break;
+            //}
+        }
+        return false;
+            console.log("returning " + hasChild);
+        //    if (!hasChild) {
+        //        console.log("no children");
+        //    removeChildrenFromNode(selectedNode);
+        //    alert("This Folder Has No Folders");
+        //}
+        //else {
+        //    console.log("has children");
+        //    loadPage(selectedNode.id);
+        //}
+    });
+}
