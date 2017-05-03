@@ -19,12 +19,16 @@ nav {
 
 .navbar-element {
 	background-color:#6da3f9; border: 0;  box-shadow: none; color: white; margin: auto;
+    display:inline-table;
+
 }
 
 .nav-btn {
 	background-color:#6da3f9; border-color:#6da3f9; color: white;
 	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   	font-weight: lighter;
+    padding: 1px;
+
 }
 
 .search-btn {
@@ -33,7 +37,13 @@ nav {
 
 
 .nav-section {
-	display:inline-block; margin: auto; padding-top:5px;
+	display:inline-block; margin: auto; padding-top:8px;
+
+}
+
+.navbar-form {
+
+    float: right;
 }
 
 
