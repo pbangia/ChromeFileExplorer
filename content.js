@@ -241,7 +241,7 @@ function saveDefaultDir(path) {
 
   // Send a get request for the file the user has specified. If it returns an error, the file is invalid.
   $.ajax({
-    url: "file://" + path,
+    url: "file:///" + path,
     type: 'GET',
     success: function(data) {	
 			var pathChars = Array.from(path);
