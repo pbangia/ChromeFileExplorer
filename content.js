@@ -29,12 +29,12 @@ var filterListener = function(ev) {
     }
     else {
         document.getElementById('searchBarIcon').className = "glyphicon glyphicon-search";
-    }    
+    }
 
   filterList(filter);
 }
 
-function searchIconOnClick(ev) {   
+function searchIconOnClick(ev) {
     if ($('#searchBarIcon').hasClass("glyphicon glyphicon-remove")) {
         document.getElementById('searchField').value = '';
         var event = new Event('input');
@@ -85,12 +85,13 @@ function start() {
     // If the user has set a default directory, load that.
     currentDirectory = storedDir.endsWith("/") ? storedDir : storedDir+"/";  // loadPage expects a trailing slash
   }
+  document.getElementById('show').style.display = "none";
   loadPage(currentDirectory);
 
   var oldPinnedFiles = JSON.parse(localStorage.getItem('WoburyPinnedFiles'));
   if (oldPinnedFiles !== null){
     var keys = Object.keys(oldPinnedFiles);
-  
+
     for (var i=0; i<keys.length; i++){
       if (!(oldPinnedFiles[keys[i]]==null)){
         copyToPinned(oldPinnedFiles[keys[i]], keys[i]);
@@ -101,7 +102,7 @@ function start() {
   setUpListeners();
   setTreeRootPath();
   setUpTree();
-    
+
   $("#formArea").submit(function (e) {
       e.preventDefault();
       searchIconOnClick(e)
@@ -135,7 +136,7 @@ function setUpListeners() {
 function copyToPinned(item, path) {
 
   // do nothing if it is currently pinned
-  if (pinnedFiles[path]) { 
+  if (pinnedFiles[path]) {
     unpin(path);
     return;
   }
@@ -173,14 +174,14 @@ function copyToPinned(item, path) {
   $(pinIcon).toggleClass('pinnedIcon');
   pinIcon.addEventListener('click', (function(e) { return unpin(path); }), false);
 
-  // make entry for pinned item, associate pinned item's id. 
+  // make entry for pinned item, associate pinned item's id.
   pinnedFiles[path]=itemToCopy.outerHTML;
 
   localStorage.setItem('WoburyPinnedFiles', JSON.stringify(pinnedFiles));
 
-  
-  $('#pinned').append(itemToCopy); 
-  console.log('pinned '+itemToCopy.id);   
+
+  $('#pinned').append(itemToCopy);
+  console.log('pinned '+itemToCopy.id);
 }
 
 // Gets the id attribute of an html tag passed as a string.
@@ -195,7 +196,7 @@ function unpin(path){
   // Get the id field from the html string.
   var pathID = idFromHTML(pinnedFiles[path])
   var id = "#" + pathID;
-  
+
   console.log('removing '+id);
   $(id).remove();
   delete pinnedFiles[path];
@@ -232,7 +233,8 @@ function loadPage(path) {
   $.get( constants.urlBase + path, function( data ) {
     $( ".result" ).html( data );
     $('#wrapper').find('div').slice(1).remove();
-    readFiles();    
+    readFiles();
+    toggleHiddenFiles();
   });
 }
 
@@ -251,7 +253,7 @@ function saveDefaultDir(path) {
   $.ajax({
     url: "file:///" + path,
     type: 'GET',
-    success: function(data) {	
+    success: function(data) {
 			var pathChars = Array.from(path);
 
 			for (var i = 0; i < pathChars.length; i++) {
@@ -346,7 +348,7 @@ function createFolderViewElement(dirFile) {
     if (!fileTypeIcons[extension]) extension = 'file.png';
     img.setAttribute("src", 'fileTypeIcons/'+extension);
 
-    //add preview 
+    //add preview
     addPreviewListener(fvClone, path, extension, img);
 
     // Event handler for clicking*/
@@ -354,7 +356,7 @@ function createFolderViewElement(dirFile) {
   }
   // Event handler for pinning
   var pin = fvClone.getElementsByClassName('glyphicon-pushpin')[0];
-  $(pin).on('click', function() { copyToPinned(fvClone, path); });  
+  $(pin).on('click', function() { copyToPinned(fvClone, path); });
   contentList.appendChild(fvClone);
 }
 
@@ -363,14 +365,14 @@ function addPreviewListener(file, path, extension, img){
     // if preview available, set preview settings
     var preview = file.getElementsByTagName('iframe')[0];
     if (availablePreview[extension]) {
-  
+
       $(file).hover(
         function() {
 
-          timeout = setTimeout(function() { 
-            preview.setAttribute('src', 'file:///'+path); 
+          timeout = setTimeout(function() {
+            preview.setAttribute('src', 'file:///'+path);
             $(preview).removeClass('hidden'); //
-            $(img).addClass('hidden'); 
+            $(img).addClass('hidden');
             $(preview).addClass('iframePreview');
             $(file).css('max-height', '250px');
             $(file).css('height', '250px');
@@ -389,13 +391,13 @@ function addPreviewListener(file, path, extension, img){
             $(img).removeClass('hidden');
             if (!$(file).hasClass('folderItem-list')){
               $(file).css('max-height', '100px');
-              $(file).css('max-width', '100px'); 
-            } else $(file).css('max-height', '15px');       
+              $(file).css('max-width', '100px');
+            } else $(file).css('max-height', '15px');
             $(preview).removeClass('iframePreview');
             preview.setAttribute('src', '');
           }
       );
-    } 
+    }
 }
 
 function changeDir(path) {
@@ -461,6 +463,7 @@ function sortFiles(field, reverse) {
   }
   var filter = document.getElementById('searchField').value;
   filterList(filter);
+  toggleHiddenFiles();
 }
 
 var sort_by = function(field, reverse, primer){
