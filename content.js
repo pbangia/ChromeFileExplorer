@@ -140,19 +140,20 @@ function copyToPinned(item, path) {
     return;
   }
 
-  var itemToCopy
+  var itemToCopy = null;
   // If the item is a loaded pin, and isn't on the page, then the item's HTML is passed in.
   if (document.getElementById(item.id)===null){
-    document.getElementsByClassName('pinned')[0].innerHTML += item;
-    itemToCopy = document.getElementsByClassName('pinned')[0].getElementsByClassName('folderItem')[0];
-    //$('#pinned').remove(newDiv);
+    document.getElementsByClassName('pinned')[0].insertAdjacentHTML('beforeend', item);
+    itemToCopy = document.getElementById(idFromHTML(item));
+    // This is toggled later, and comes in with the wrong value.
+    $(itemToCopy.getElementsByClassName('pin')[0]).toggleClass('pinnedIcon');
   }else{
     itemToCopy = item.cloneNode(true);
   }
 
   // make pinned copy
   pinnedIDgenerator++;
-  itemToCopy.id = pinnedIDgenerator;
+  itemToCopy.id = "pin"+pinnedIDgenerator;
   if (path.endsWith('/')){
     itemToCopy.addEventListener('click', (function(e) { changeDir(path);}), false);
   } else {
@@ -160,7 +161,7 @@ function copyToPinned(item, path) {
   }
 
   // set pinned copy to unpin itself on click
-  var pinIcon = itemToCopy.getElementsByClassName('pin')[0]
+  var pinIcon = itemToCopy.getElementsByClassName('pin')[0];
   $(pinIcon).toggleClass('pinnedIcon');
   pinIcon.addEventListener('click', (function(e) { return unpin(path); }), false);
 
@@ -169,15 +170,22 @@ function copyToPinned(item, path) {
 
   localStorage.setItem('WoburyPinnedFiles', JSON.stringify(pinnedFiles));
 
+  
   $('#pinned').append(itemToCopy); 
   console.log('pinned '+itemToCopy.id);   
+}
+
+// Gets the id attribute of an html tag passed as a string.
+function idFromHTML(targetHTML){
+  var pathID = targetHTML.substring(targetHTML.indexOf("id=\"")+4,targetHTML.length);
+  pathID = pathID.substring(0, pathID.indexOf("\""));
+  return pathID;
 }
 
 /* unpin an item given its path */
 function unpin(path){
   // Get the id field from the html string.
-  var pathID = pinnedFiles[path].substring(pinnedFiles[path].indexOf("id=\"")+4,pinnedFiles[path].length)
-  pathID = pathID.substring(0, pathID.indexOf("\""));
+  var pathID = idFromHTML(pinnedFiles[path])
   var id = "#" + pathID;
   
   console.log('removing '+id);
