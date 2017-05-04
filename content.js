@@ -140,6 +140,14 @@ function copyToPinned(item, path) {
     return;
   }
 
+  // If the pin menu is collapsed when something is pinned, expland it.
+  if (document.getElementsByClassName('togglePinned').length){
+    $('#pinned').children().slice(1).toggleClass('hidden');
+	  $('#pinned').toggleClass('togglePinned');
+	  $('#arrowDown').toggleClass('hidden');
+	  $('#arrowUp').toggleClass('hidden');
+  }
+
   var itemToCopy = null;
   // If the item is a loaded pin, and isn't on the page, then the item's HTML is passed in.
   if (document.getElementById(item.id)===null){
