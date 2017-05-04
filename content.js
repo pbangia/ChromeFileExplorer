@@ -24,14 +24,8 @@ var sortDict = {
 /* Search Filter */
 var filterListener = function(ev) {
     var filter = ev.target.value.toLowerCase();
-    if (ev.target.value.length != 0) {
-        document.getElementById('searchBarIcon').className = "glyphicon glyphicon-remove";
-    }
-    else {
-        document.getElementById('searchBarIcon').className = "glyphicon glyphicon-search";
-    }
-
-  filterList(filter);
+    document.getElementById('searchBarIcon').className = (ev.target.value.length != 0) ? "glyphicon glyphicon-remove" : "glyphicon glyphicon-search";
+    filterList(filter);
 }
 
 function searchIconOnClick(ev) {
