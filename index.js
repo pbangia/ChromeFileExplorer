@@ -12,7 +12,7 @@ $( document ).ready(function() {
     var nav = $("#nav");
 	// When index.html is loaded, save it's path to the local machine.
 	localStorage.setItem('WoburyIndexPath', window.location.href);
-	
+
 	// set body height on navbar overlap
 	$( window ).resize(function() {
 		if ($(nav).height() > h || $(nav).height() < h - 20) {
@@ -20,7 +20,7 @@ $( document ).ready(function() {
 			$('body').animate({ paddingTop: h-5 });
 			$('#wrapper').animate({ paddingBottom: h-45+5 });
 		}
-	});	
+	});
 
 });
 
@@ -159,11 +159,23 @@ function drop(ev) {
 
 /* Called from setting menu */
 //Toggle hidden files and folders from settings menu
-function toggleHiddenFiles(btn) {
+function toggleHiddenFilesBtnClick(btn) {
 	var show = document.getElementById('show');
 	var hide = document.getElementById('hide');
 	$("#show").toggle();
 	$("#hide").toggle();
+	toggleHiddenFiles();
+}
+
+function toggleHiddenFiles() {
+	var show = document.getElementById('show');
+	var toggle = (show.style.display === 'none') ? "none" : "";
+	var fileList = document.getElementById('wrapper').children;
+	for (var i = 0; i < fileList.length; i++) {
+		if (fileList[i].title.charAt(0) === ".") {
+			fileList[i].style.display = toggle;
+		}
+	}
 }
 
 function onSettingsBtnClicked() {
@@ -211,5 +223,3 @@ function togglePinnedList(){
 	$('#arrowDown').toggleClass('hidden');
 	$('#arrowUp').toggleClass('hidden');
 }
-
-
