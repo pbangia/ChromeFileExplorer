@@ -26,7 +26,7 @@ File preview mode - View an expanded preview of a file inside the file list itse
 
 Pin a file or folder - Click the pin icon on a file/folder item in the current directory to 'pin' the item to the pinned area. This will keep the item there when you navigate away or come back to reload the file explorer again. Useful for quick reference to frequent files or folders that a opened. Previews can also be pinned if you want to leave a file in preview mode after hovering away. The pin section can be hidden when not in use.
 
-File tree - Can be shown/hidden by clicking the icon above it in the navigation bar. Shows the folder structure from the user's Users directory for quick decentralised folder browsing. 
+File tree - Can be shown/hidden by clicking the icon above it in the navigation bar. Shows the folder structure from the user's Users directory for quick decentralised folder browsing. Clicking on the arrows will load the folder within the selected directory. Clicking a directory name will load the directory onto the page
 
 Copying a folder path - click the clip icon on files and folders to copy their local path's to your clipboard. 
 
