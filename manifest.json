@@ -11,13 +11,13 @@
       "matches": [
         "<all_urls>"
       ],
-      "js": ["jquery.min.js", "content.js", "config.js", "resources.js","tree.js","jquery.min.js","tree.jquery.js","index.js"]
+      "js": ["js/jquery.min.js", "js/content.js", "js/config.js", "js/resources.js","tree/tree.js","tree/tree.jquery.js","js/index.js"]
     }
   ],
   "browser_action": {
-     "default_icon": "file_icon.png"
+     "default_icon": "resources/file_icon.png"
   },
   "background": {
-     "scripts": ["background.js"]
+     "scripts": ["js/background.js"]
   }
 }

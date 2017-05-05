@@ -26,6 +26,7 @@ var filterListener = function(ev) {
     var filter = ev.target.value.toLowerCase();
     document.getElementById('searchBarIcon').className = (ev.target.value.length != 0) ? "glyphicon glyphicon-remove" : "glyphicon glyphicon-search";
     filterList(filter);
+    toggleHiddenFiles();
 }
 
 function searchIconOnClick(ev) {
@@ -342,7 +343,7 @@ function createFolderViewElement(dirFile) {
     var imgPath = fileName.split(".");
     var extension = imgPath[imgPath.length-1] + '.png';
     if (!fileTypeIcons[extension]) extension = 'file.png';
-    img.setAttribute("src", 'fileTypeIcons/'+extension);
+    img.setAttribute("src", 'resources/fileTypeIcons/'+extension);
 
     //add preview
     addPreviewListener(fvClone, path, extension, img);
