@@ -340,7 +340,7 @@ function createFolderViewElement(dirFile) {
     var imgPath = fileName.split(".");
     var extension = imgPath[imgPath.length-1] + '.png';
     if (!fileTypeIcons[extension]) extension = 'file.png';
-    img.setAttribute("src", 'fileTypeIcons/'+extension);
+    img.setAttribute("src", 'resources/fileTypeIcons/'+extension);
 
     //add preview
     addPreviewListener(fvClone, path, extension, img);

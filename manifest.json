@@ -15,7 +15,7 @@
     }
   ],
   "browser_action": {
-     "default_icon": "file_icon.png"
+     "default_icon": "resources/file_icon.png"
   },
   "background": {
      "scripts": ["background.js"]
