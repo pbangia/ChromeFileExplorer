@@ -147,10 +147,12 @@ function copyToPinned(item, path) {
   var itemToCopy = null;
   // If the item is a loaded pin, and isn't on the page, then the item's HTML is passed in.
   if (document.getElementById(item.id)===null){
+
     document.getElementsByClassName('pinned')[0].insertAdjacentHTML('beforeend', item);
     itemToCopy = document.getElementById(idFromHTML(item));
     // This is toggled later, and comes in with the wrong value.
     $(itemToCopy.getElementsByClassName('pin')[0]).toggleClass('pinnedIcon');
+
   }else{
     itemToCopy = item.cloneNode(true);
   }
@@ -169,8 +171,8 @@ function copyToPinned(item, path) {
   $(pinIcon).toggleClass('pinnedIcon');
   pinIcon.addEventListener('click', (function(e) { return unpin(path); }), false);
 
-  // make entry for pinned item, associate pinned item's id.
-  pinnedFiles[path]=itemToCopy.outerHTML;
+  // make entry for pinned item, associate pinned item's id, and remove the list view classes.
+  pinnedFiles[path]=itemToCopy.outerHTML.split("-list").join("").split("list-attribute").join("list-attribute hidden");
 
   localStorage.setItem('WoburyPinnedFiles', JSON.stringify(pinnedFiles));
 
