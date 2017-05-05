@@ -11,7 +11,7 @@
       "matches": [
         "<all_urls>"
       ],
-      "js": ["jquery.min.js", "content.js", "config.js", "resources.js","tree.js","jquery.min.js","tree.jquery.js","index.js"]
+      "js": ["jquery.min.js", "content.js", "config.js", "resources.js","tree/tree.js","tree/tree.jquery.js","index.js"]
     }
   ],
   "browser_action": {
