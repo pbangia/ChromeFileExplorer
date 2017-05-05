@@ -26,6 +26,7 @@ var filterListener = function(ev) {
     var filter = ev.target.value.toLowerCase();
     document.getElementById('searchBarIcon').className = (ev.target.value.length != 0) ? "glyphicon glyphicon-remove" : "glyphicon glyphicon-search";
     filterList(filter);
+    toggleHiddenFiles();
 }
 
 function searchIconOnClick(ev) {
