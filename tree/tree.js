@@ -43,7 +43,7 @@ function treeClick() {
     $(treeID).bind(
         'tree.click',
         function (event) {
-            // The clicked node is 'event.node'   
+            // The clicked node is 'event.node'
             selectedNode = event.node;
 
             //check if children do not exist (would only have 1 placeholder child whose value is "")
@@ -52,7 +52,7 @@ function treeClick() {
                 removeChildrenFromNode(selectedNode);
                 getChildrenFolders(selectedNode.id);
             }
-            loadPage(selectedNode.id);
+            changeDir(selectedNode.id);
         }
     );
 }
