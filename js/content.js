@@ -60,7 +60,7 @@ class DirectoryFile {
 
 $(document).ready(function () {
   var url = window.location.href;
-  if (url.endsWith('Wobury/index.html')) {
+  if (url.endsWith('/index.html')) {
     chrome.storage.local.get(["index_file_path"], function(result) {
       if ((!result.index_file_path) || (result.index_file_path !== url)) {
         var url = window.location.href;
