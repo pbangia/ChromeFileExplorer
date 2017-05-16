@@ -11,14 +11,14 @@ var selectedNode;
 /* Sort primers */
 var sortStringPrimer = function(a) {return a.toUpperCase();}
 var sortSizePrimer = function(a) {return parseInt(a)};
-var sortDateModifiedPrimer = function(a) {return new Date(a)};
+var sortDateModifiedPrimer = function(a) {return parseInt(a)};
 var sortFileTypePrimer = sortStringPrimer;
 
 var sortDict = {
   fileName: sortStringPrimer,
   sizeRaw: sortSizePrimer,
-  dateModified: sortDateModifiedPrimer,
-  fileType: sortFileTypePrimer
+  dateModifiedRaw: sortDateModifiedPrimer,
+  type: sortFileTypePrimer
 }
 
 /* Search Filter */
@@ -444,8 +444,10 @@ function onCrumbClick(ev) {
 
 /* Sort methods */
 function onSortClick(ev) {
-  var field = ev.target.id.split('_')[0];
-  var asc = (ev.target.id.split('_')[1] === 'asc') ? true : false;
+  var sort = (ev.target.name) ? ev.target.name : ev.target.id;
+  console.log("sort= " + sort);
+  var field = sort.split('_')[0];
+  var asc = (sort.split('_')[1] === 'asc') ? true : false;
   sortFiles(field, asc);
 }
 
@@ -455,12 +457,12 @@ function sortFiles(field, reverse) {
   $('#wrapper').find('div').slice(1).remove();
   for (var i = 0; i < currentFiles.length; i++) {
     var dirFile = currentFiles[i];
-    console.log('date=' + dirFile.dateModified);
     createFolderViewElement(dirFile);
   }
   var filter = document.getElementById('searchField').value;
   filterList(filter);
   toggleHiddenFiles();
+  console.log(currentFiles);
 }
 
 var sort_by = function(field, reverse, primer){
