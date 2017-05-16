@@ -446,6 +446,8 @@ function onCrumbClick(ev) {
 function onSortClick(ev) {
   var sort = (ev.target.name) ? ev.target.name : ev.target.id;
   console.log("sort= " + sort);
+  $('#dropdownSortMenu li a').removeClass('selectedSort');
+  $('a[name='+sort+']').addClass('selectedSort');
   var field = sort.split('_')[0];
   var asc = (sort.split('_')[1] === 'asc') ? true : false;
   sortFiles(field, asc);

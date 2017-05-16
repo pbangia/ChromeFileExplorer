@@ -1,6 +1,6 @@
 body {
 	background: #f2f2f2;
-    padding-top: 45px; 
+    padding-top: 45px;
 }
 
 html, body {
@@ -70,11 +70,11 @@ color:#fff;
 .form-control:-moz-placeholder {
 color:#fff;
 }
- 
+
 .form-control::-moz-placeholder {
 color:#fff;
 }
- 
+
 .form-control:-ms-input-placeholder {
 color:#fff;
 }
@@ -210,8 +210,8 @@ color:#fff;
 
 .iframePreview {
     height: 240px;
-    min-height: 240px;    
-    width: 240px;    
+    min-height: 240px;
+    width: 240px;
     min-width: 240px;
 }
 
@@ -239,7 +239,7 @@ color:#fff;
     position: fixed;
     bottom: 30px;
     font-size: 17px;
-    color: white; 
+    color: white;
     z-index: 1000000;
 
 }
@@ -251,7 +251,7 @@ color:#fff;
 }
 
 @-webkit-keyframes fadein {
-    from {bottom: 0; opacity: 0;} 
+    from {bottom: 0; opacity: 0;}
     to {bottom: 30px; opacity: 1;}
 }
 
@@ -261,7 +261,7 @@ color:#fff;
 }
 
 @-webkit-keyframes fadeout {
-    from {bottom: 30px; opacity: 1;} 
+    from {bottom: 30px; opacity: 1;}
     to {bottom: 0; opacity: 0;}
 }
 
@@ -272,11 +272,11 @@ color:#fff;
 
 /* Drop down menus */
 .dropdown {
-    display: inline;  
+    display: inline;
 }
 
 .btn, .btn:focus, .btn.active:focus, .btn.active {
-    background-color:#6da3f9; border-color:#6da3f9; color: white; 
+    background-color:#6da3f9; border-color:#6da3f9; color: white;
 }
 
 .dropdown-menu .glyphicon {
@@ -286,6 +286,10 @@ color:#fff;
 
 .dropdown-menu li{
     color: blue;
+}
+
+.selectedSort {
+	background-color: #f5f5f5;
 }
 
 /* Settings popup */
@@ -302,7 +306,7 @@ td {
     margin-bottom: 10px;
     position: relative;
     max-height: 180px;
-    overflow: auto; 
+    overflow: auto;
 
 }
 
