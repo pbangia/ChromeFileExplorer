@@ -240,7 +240,7 @@ function loadPage(path) {
     $('#wrapper').find('div').slice(1).remove();
     readFiles();
     toggleHiddenFiles();
-    if (!sortType) {sortFiles(sortType[0], sortType[1]);}
+    if (sortType) {sortFiles(sortType[0], sortType[1]);}
   });
 }
 
