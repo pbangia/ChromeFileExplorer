@@ -295,7 +295,7 @@ function readFiles() {
     var sizeRaw = row.cells[1].dataset.value;
     var dateModified = row.cells[2].innerHTML;
     var dateModifiedRaw = row.cells[2].dataset.value;
-    var type = fileName.split(".")[1];
+    var type = (fileName.split(".")[1]) ? fileName.split(".")[1] : '一';
 
     if (isDirectory(fileName) || isParentDirectoryLink(fileName)) {
       isFolder = true;
