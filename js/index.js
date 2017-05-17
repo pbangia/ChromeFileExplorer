@@ -216,6 +216,10 @@ function toggleFileView(button){
 		if (thumbnailSrc){
 			$(fileIcon).toggleClass('hidden');
 			$(thumbnail).toggleClass('hidden');
+			var imgH = thumbnail.height;
+			var padding = 100 - imgH;
+			$(thumbnail).css("padding-top",padding/2);
+			$(thumbnail).css("padding-bottom",padding/2);
 		}
 
 		// reset height from icon view preview
