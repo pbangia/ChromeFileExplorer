@@ -7,6 +7,7 @@ var forwardStack = [];
 var pinnedFiles = {};
 var pinnedIDgenerator = 0;
 var selectedNode;
+var sortType = null;
 
 /* Sort primers */
 var sortStringPrimer = function(a) {return a.toUpperCase();}
@@ -239,6 +240,7 @@ function loadPage(path) {
     $('#wrapper').find('div').slice(1).remove();
     readFiles();
     toggleHiddenFiles();
+    if (!sortType) {sortFiles(sortType[0], sortType[1]);}
   });
 }
 
@@ -479,6 +481,7 @@ function onSortClick(ev) {
   $('a[name='+sort+']').addClass('selectedSort');
   var field = sort.split('_')[0];
   var asc = (sort.split('_')[1] === 'asc') ? true : false;
+  sortType = [field, asc];
   sortFiles(field, asc);
 }
 
