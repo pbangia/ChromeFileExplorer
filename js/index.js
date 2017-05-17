@@ -205,14 +205,24 @@ function toggleFileView(button){
 	});
 
 	$( ".folderItem, .folderItem-list" ).each(function() {
+
 		$(this).toggleClass('folderItem');
 		$(this).toggleClass('folderItem-list');
+
+		// swap between thumbnail and icon if the thumbnail is set
+		var fileIcon = this.getElementsByTagName('img')[0];
+		var thumbnail = this.getElementsByTagName('img')[1];
+		var thumbnailSrc = thumbnail.getAttribute('src');
+		if (thumbnailSrc){
+			$(fileIcon).toggleClass('hidden');
+			$(thumbnail).toggleClass('hidden');
+		}
+
 		// reset height from icon view preview
 		if (this.className=='folderItem-list'){
 			$(this).css('max-height', '15px');
 		}
 	});
-
 	console.log('Toggling icon/list view');
 }
 

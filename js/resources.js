@@ -61,3 +61,9 @@ var availablePreview = {
     'txt.png':true,
     'xml.png':true
 }
+
+/* Image files to display as icons */
+var imageFiles = {
+    'jpg.png':true,
+    'png.png':true
+}
