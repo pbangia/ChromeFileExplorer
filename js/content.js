@@ -371,6 +371,11 @@ function createFolderViewElement(dirFile) {
 
 function setImgThumbnail(fvClone, fileIcon, path){
   var imgFileIcon = fvClone.getElementsByTagName('img')[1];
+  if (!$(fvClone).hasClass('folderItem-list')){
+    $(imgFileIcon).removeClass('hidden');
+    $(fileIcon).addClass('hidden');
+  }
+
   imgFileIcon.onload = function(){
     var imgH = imgFileIcon.height;
     var padding = 100 - imgH;
@@ -378,8 +383,7 @@ function setImgThumbnail(fvClone, fileIcon, path){
     $(imgFileIcon).css("padding-top",padding/2);
     $(imgFileIcon).css("padding-bottom",padding/2);
   }
-  $(imgFileIcon).removeClass('hidden');
-  $(fileIcon).addClass('hidden');
+
   imgFileIcon.setAttribute("src", 'file:///'+path);
 }
 
@@ -411,9 +415,9 @@ function addPreviewListener(file, path, extension, img, isImageFile){
 
         }
         , function() {
-            clearTimeout(timeout);
-            //do nothing if in gallery view preview is already set on image files
-            if (isImageFile && !$(file).hasClass('folderItem-list')) return;
+          //do nothing if in gallery view preview is already set on image files
+          if (isImageFile && !$(file).hasClass('folderItem-list')) return;
+          clearTimeout(timeout);
 
             $(preview).addClass('hidden');
             $(img).removeClass('hidden');
