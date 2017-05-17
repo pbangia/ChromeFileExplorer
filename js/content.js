@@ -176,6 +176,13 @@ function copyToPinned(item, path) {
 
   localStorage.setItem('WoburyPinnedFiles', JSON.stringify(pinnedFiles));
 
+  //Show thumbnail if it is an image file
+  var icon = itemToCopy.getElementsByTagName('img')[0];
+  var thumbnail = itemToCopy.getElementsByTagName('img')[1];
+  if (thumbnail.getAttribute('src') && !$(itemToCopy).hasClass('folderItem-list')){
+    $(icon).addClass('hidden');
+    $(thumbnail).removeClass('hidden');
+  }
 
   $('#pinned').append(itemToCopy);
   console.log('pinned '+itemToCopy.id);
@@ -384,7 +391,7 @@ function addPreviewListener(file, path, extension, img, isImageFile){
         function() {
           //do nothing if in gallery view preview is already set on image files
           if (isImageFile && !$(file).hasClass('folderItem-list')) return;
-          
+
           timeout = setTimeout(function() {
             preview.setAttribute('src', 'file:///'+path);
             $(preview).removeClass('hidden'); //
