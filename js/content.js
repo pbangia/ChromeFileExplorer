@@ -342,12 +342,15 @@ function createFolderViewElement(dirFile) {
     var img = fvClone.getElementsByTagName('img')[0];
     var imgPath = fileName.split(".");
     var extension = imgPath[imgPath.length-1] + '.png';
+    var isImageFile = imageFiles[extension];
+    if (isImageFile){
+      setImgThumbnail(fvClone, img, path);
+    }
     if (!fileTypeIcons[extension]) extension = 'file.png';
+
     img.setAttribute("src", 'resources/fileTypeIcons/'+extension);
-
-    //add preview
-    addPreviewListener(fvClone, path, extension, img);
-
+      //add preview
+    addPreviewListener(fvClone, path, extension, img, isImageFile);
     // Event handler for clicking*/
     fvClone.addEventListener('click', (function(e) {return openFile(this);}), false);
   }
@@ -357,7 +360,21 @@ function createFolderViewElement(dirFile) {
   contentList.appendChild(fvClone);
 }
 
-function addPreviewListener(file, path, extension, img){
+function setImgThumbnail(fvClone, fileIcon, path){
+  var imgFileIcon = fvClone.getElementsByTagName('img')[1];
+  imgFileIcon.onload = function(){
+    var imgH = imgFileIcon.height;
+    var padding = 100 - imgH;
+    console.log(imgH + " "+padding);
+    $(imgFileIcon).css("padding-top",padding/2);
+    $(imgFileIcon).css("padding-bottom",padding/2);
+  }
+  $(imgFileIcon).removeClass('hidden');
+  $(fileIcon).addClass('hidden');
+  imgFileIcon.setAttribute("src", 'file:///'+path);
+}
+
+function addPreviewListener(file, path, extension, img, isImageFile){
     var img = file.getElementsByTagName('img')[0];
     // if preview available, set preview settings
     var preview = file.getElementsByTagName('iframe')[0];
@@ -365,7 +382,9 @@ function addPreviewListener(file, path, extension, img){
 
       $(file).hover(
         function() {
-
+          //do nothing if in gallery view preview is already set on image files
+          if (isImageFile && !$(file).hasClass('folderItem-list')) return;
+          
           timeout = setTimeout(function() {
             preview.setAttribute('src', 'file:///'+path);
             $(preview).removeClass('hidden'); //
@@ -384,6 +403,9 @@ function addPreviewListener(file, path, extension, img){
         }
         , function() {
             clearTimeout(timeout);
+            //do nothing if in gallery view preview is already set on image files
+            if (isImageFile && !$(file).hasClass('folderItem-list')) return;
+
             $(preview).addClass('hidden');
             $(img).removeClass('hidden');
             if (!$(file).hasClass('folderItem-list')){
