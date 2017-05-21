@@ -1,26 +1,7 @@
-// navbar height
-var h = 45;
-
-/* function to enable/disable buttons if file is selected */
-function disableButtons(boolean){
-	$("#buttons :button").attr("disabled", boolean);
-}
-
 $( document ).ready(function() {
-    //disable buttons on load
-    disableButtons(true);
-    var nav = $("#nav");
+
 	// When index.html is loaded, save it's path to the local machine.
 	localStorage.setItem('WoburyIndexPath', window.location.href);
-
-	// set body height on navbar overlap
-	$( window ).resize(function() {
-		if ($(nav).height() > h || $(nav).height() < h - 20) {
-			h = $('#nav').height();
-			$('body').animate({ paddingTop: h-5 });
-			$('#wrapper').animate({ paddingBottom: h-45+5 });
-		}
-	});
 
 });
 

@@ -8,6 +8,7 @@ var pinnedFiles = {};
 var pinnedIDgenerator = 0;
 var selectedNode;
 var sortType = null;
+var h = 45;
 
 /* Sort primers */
 var sortStringPrimer = function(a) {return a.toUpperCase();}
@@ -72,7 +73,18 @@ $(document).ready(function () {
   }
 });
 
+/* Handles resizing of navbar on overlap */
+function checkNavbarOverlap(){
+  var nav = $("#nav");
+  if ($(nav).height() > h || $(nav).height() < h - 20) {
+    h = $('#nav').height();
+    $('body').animate({ paddingTop: h-5 });
+    $('#wrapper').animate({ paddingBottom: h-45+5 });
+  }
+}
+
 function start() {
+
   var storedDir = localStorage.getItem('WoburyDefaultDir');
   if (storedDir === null){
     setDefaultPaths();
@@ -93,6 +105,10 @@ function start() {
         copyToPinned(oldPinnedFiles[keys[i]], keys[i]);
       }
     }
+
+    // set body height on navbar overlap, also on resize
+    checkNavbarOverlap();
+    $( window ).resize(checkNavbarOverlap);
   }
 
   setUpListeners();
@@ -241,6 +257,7 @@ function loadPage(path) {
     readFiles();
     toggleHiddenFiles();
     if (sortType) {sortFiles(sortType[0], sortType[1]);}
+    checkNavbarOverlap();
   });
 }
 
@@ -379,7 +396,6 @@ function setImgThumbnail(fvClone, fileIcon, path){
   imgFileIcon.onload = function(){
     var imgH = imgFileIcon.height;
     var padding = 100 - imgH;
-    console.log(imgH + " "+padding);
     $(imgFileIcon).css("padding-top",padding/2);
     $(imgFileIcon).css("padding-bottom",padding/2);
   }
