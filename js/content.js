@@ -153,56 +153,72 @@ function copyToPinned(item, path) {
     return;
   }
 
-  // If the pin menu is collapsed when something is pinned, expland it.
-  if (document.getElementsByClassName('togglePinned').length){
-    $('#pinned').children().slice(1).toggleClass('hidden');
-	  $('#pinned').toggleClass('togglePinned');
-	  $('#arrowDown').toggleClass('hidden');
-	  $('#arrowUp').toggleClass('hidden');
-  }
+  // If the file has been moved or deleted, remove the pin from storage and don't copy it in.
+  $.ajax({
+    url: "file:///" + path,
+    type: 'GET',
+    success: function(data) {
+			// Code to execute if file exists
 
-  var itemToCopy = null;
-  // If the item is a loaded pin, and isn't on the page, then the item's HTML is passed in.
-  if (document.getElementById(item.id)===null){
+      // If the pin menu is collapsed when something is pinned, expland it.
+      if (document.getElementsByClassName('togglePinned').length){
+        $('#pinned').children().slice(1).toggleClass('hidden');
+        $('#pinned').toggleClass('togglePinned');
+        $('#arrowDown').toggleClass('hidden');
+        $('#arrowUp').toggleClass('hidden');
+      }
 
-    document.getElementsByClassName('pinned')[0].insertAdjacentHTML('beforeend', item);
-    itemToCopy = document.getElementById(idFromHTML(item));
-    // This is toggled later, and comes in with the wrong value.
-    $(itemToCopy.getElementsByClassName('pin')[0]).toggleClass('pinnedIcon');
+      var itemToCopy = null;
+      // If the item is a loaded pin, and isn't on the page, then the item's HTML is passed in.
+      if (document.getElementById(item.id)===null){
 
-  }else{
-    itemToCopy = item.cloneNode(true);
-  }
+        document.getElementsByClassName('pinned')[0].insertAdjacentHTML('beforeend', item);
+        itemToCopy = document.getElementById(idFromHTML(item));
+        // This is toggled later, and comes in with the wrong value.
+        $(itemToCopy.getElementsByClassName('pin')[0]).toggleClass('pinnedIcon');
 
-  // make pinned copy
-  pinnedIDgenerator++;
-  itemToCopy.id = "pin"+pinnedIDgenerator;
-  if (path.endsWith('/')){
-    itemToCopy.addEventListener('click', (function(e) { changeDir(path);}), false);
-  } else {
-    itemToCopy.addEventListener('click', (function(e) { return openFile(this);}), false);
-  }
+      }else{
+        itemToCopy = item.cloneNode(true);
+      }
 
-  // set pinned copy to unpin itself on click
-  var pinIcon = itemToCopy.getElementsByClassName('pin')[0];
-  $(pinIcon).toggleClass('pinnedIcon');
-  pinIcon.addEventListener('click', (function(e) { return unpin(path); }), false);
+      // make pinned copy
+      pinnedIDgenerator++;
+      itemToCopy.id = "pin"+pinnedIDgenerator;
+      if (path.endsWith('/')){
+        itemToCopy.addEventListener('click', (function(e) { changeDir(path);}), false);
+      } else {
+        itemToCopy.addEventListener('click', (function(e) { return openFile(this);}), false);
+      }
 
-  // make entry for pinned item, associate pinned item's id, and remove the list view classes.
-  pinnedFiles[path]=itemToCopy.outerHTML.split("-list").join("").split("list-attribute").join("list-attribute hidden");
+      // set pinned copy to unpin itself on click
+      var pinIcon = itemToCopy.getElementsByClassName('pin')[0];
+      $(pinIcon).toggleClass('pinnedIcon');
+      pinIcon.addEventListener('click', (function(e) { return unpin(path); }), false);
 
-  localStorage.setItem('WoburyPinnedFiles', JSON.stringify(pinnedFiles));
+      // make entry for pinned item, associate pinned item's id, and remove the list view classes.
+      pinnedFiles[path]=itemToCopy.outerHTML.split("-list").join("").split("list-attribute").join("list-attribute hidden");
 
-  //Show thumbnail if it is an image file
-  var icon = itemToCopy.getElementsByTagName('img')[0];
-  var thumbnail = itemToCopy.getElementsByTagName('img')[1];
-  if (thumbnail.getAttribute('src') && !$(itemToCopy).hasClass('folderItem-list')){
-    $(icon).addClass('hidden');
-    $(thumbnail).removeClass('hidden');
-  }
+      localStorage.setItem('WoburyPinnedFiles', JSON.stringify(pinnedFiles));
 
-  $('#pinned').append(itemToCopy);
-  console.log('pinned '+itemToCopy.id);
+      //Show thumbnail if it is an image file
+      var icon = itemToCopy.getElementsByTagName('img')[0];
+      var thumbnail = itemToCopy.getElementsByTagName('img')[1];
+      if (thumbnail.getAttribute('src') && !$(itemToCopy).hasClass('folderItem-list')){
+        $(icon).addClass('hidden');
+        $(thumbnail).removeClass('hidden');
+      }
+
+      $('#pinned').append(itemToCopy);
+      console.log('pinned '+itemToCopy.id);
+		},
+    error: function(data) {
+      alert('Could not find file: ' + path + '. It may have moved or been deleted.');
+      delete pinnedFiles[path];
+      // Rather than pinnedFiles holding an id, use localstorage and a stringified list of divs.
+      localStorage.setItem('WoburyPinnedFiles', JSON.stringify(pinnedFiles));
+      return;
+    }
+  });
 }
 
 // Gets the id attribute of an html tag passed as a string.
