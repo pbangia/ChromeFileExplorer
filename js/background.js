@@ -17,7 +17,7 @@ chrome.runtime.onMessage.addListener(
       console.log('new tab');
         chrome.storage.local.get(['index_file_path'], function(result) {
           if (!result.index_file_path) {
-            alert("Index.html path not set.");
+            alert("WoburyIndex.html path not set.");
           } else {
             chrome.tabs.create({"url": result.index_file_path});
           }

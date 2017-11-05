@@ -1,6 +1,6 @@
 $( document ).ready(function() {
 
-	// When index.html is loaded, save it's path to the local machine.
+	// When woburyIndex.html is loaded, save it's path to the local machine.
 	localStorage.setItem('WoburyIndexPath', window.location.href);
 
 });
