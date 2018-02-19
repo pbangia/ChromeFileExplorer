@@ -1,5 +1,5 @@
 var constants = {
-  'indexFile': "index.html",
+  'indexFile': "woburyIndex.html",
   'urlBase': "file:///"
 }
 

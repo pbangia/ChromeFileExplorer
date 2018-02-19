@@ -62,7 +62,7 @@ class DirectoryFile {
 
 $(document).ready(function () {
   var url = window.location.href;
-  if (url.endsWith('/index.html')) {
+  if (url.endsWith('/woburyIndex.html')) {
     chrome.storage.local.get(["index_file_path"], function(result) {
       if ((!result.index_file_path) || (result.index_file_path !== url)) {
         var url = window.location.href;
@@ -595,7 +595,7 @@ chrome.runtime.onMessage.addListener(
         var url = localStorage.getItem('WoburyIndexPath');
         if (url === null){
           url = window.URL;
-          alert("To launch Chrome File Explorer, navigate to it's index.html first, then try again.");
+          alert("To launch Chrome File Explorer, navigate to it's woburyIndex.html first, then try again.");
         }
         chrome.runtime.sendMessage({"message": "open_new_tab", "url": url});
         break;
